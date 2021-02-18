@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>check</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="col-12">
+    <div class="card bg-light mb-2">
+      <div class="card-body">
+        <h5 class="card-title">Table des pressions</h5>
+        <table class="table table-borderless table-sm text-center mb-0">
+          <thead>
+            <tr>
+              <th>Intensité</th>
+              <th>Entrée B1 [bar]</th>
+              <th>Entrée B2 [bar]</th>
+              <th>Sortie [bar]</th>
+              <th>Sortie réf. [bar]</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of co2PresOutRef;let i = index;">
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</ion-content>

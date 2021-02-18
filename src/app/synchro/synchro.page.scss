@@ -1,0 +1,34 @@
+@media (orientation: landscape) {
+    div {
+        display: flex;
+        flex-direction: row;
+    }
+    .infosform{
+        display: none !important;
+    }
+    .infosformhours{
+        display: none !important;
+    }   
+  } 
+@media (orientation: portrait){
+ .form{
+    display: flex;
+    flex-direction: row;  
+ }
+
+ .infosform{
+     margin-top:4.5%;
+ }
+
+ .infosformhours{
+     margin-top: 6%;
+ }
+
+ .hoursrange{
+     display: none;
+ }
+.landscaperow {
+    display: none;
+ }
+
+} 

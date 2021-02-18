@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{name.name}}</ion-title>
+    <ion-buttons slot="end" *ngIf="!global.isBBAM">
+      <ion-button fill="clear"> <ion-icon name="globe" color="light"></ion-icon>ADMIN</ion-button> 
+     </ion-buttons>
+     <ion-buttons slot="end" *ngIf="global.isBBAM">
+      <ion-button fill="clear"> <ion-icon name="wifi" color="light"></ion-icon>{{global.ssid}}</ion-button> 
+     </ion-buttons>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content>
+  <ion-list>
+      <div *ngFor="let s of stock; let i = index;">
+      <!--<ion-item-divider><ion-label>{{s.rack}}</ion-label></ion-item-divider>-->
+      
+
+      <div *ngIf="stock[i+1] != null">
+
+      
+      <ion-item-divider sticky="true" *ngIf="s.rack != stock[i+1].rack">
+        <ion-label *ngIf="s.rack == '' || s.rack == null">Bouteilles Non associés au rack</ion-label>
+        <ion-label *ngIf="s.rack != '' || s.rack != null">{{s.rack}}</ion-label>
+      </ion-item-divider> 
+      </div>
+    <ion-item> 
+      <ion-label>{{s.bottleString}}</ion-label>
+      <ion-badge color="success" *ngIf="s.state === 'FULL'">Plein</ion-badge>
+      <ion-badge color="secondary" *ngIf="s.state === 'IN_USE'">Entamée</ion-badge>
+      <ion-badge color="danger" *ngIf="s.state === 'EMPTY'">Vide</ion-badge>
+    </ion-item>
+  </div>
+    
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-button *ngIf="addStock" expand="block" (click)="addBottle();">
+      Ajouter une Bouteille
+  </ion-button>
+  <ion-button *ngIf="retStock" expand="block" (click)="retBottles();">
+    Retour au dépôt
+  </ion-button>
+  <ion-button *ngIf="remStock" color="danger" expand="block" (click)="delBottle();">
+    Enlever une Bouteille
+</ion-button>
+<ion-button *ngIf="addStock" expand="block" (click)="addRack();">
+    Ajouter un Rack
+</ion-button>
+<ion-button *ngIf="retStock" expand="block" (click)="retRack();">
+  Retour au Rack
+</ion-button>
+<!--<ion-button *ngIf="remStock" expand="block" color="danger" (click)="remRack();">
+  Enlever un Rack
+</ion-button>-->
+</ion-footer>
