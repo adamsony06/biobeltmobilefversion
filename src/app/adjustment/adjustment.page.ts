@@ -67,14 +67,14 @@ export class AdjustmentPage implements OnInit {
     this.upc3s = JSON.parse(localStorage.getItem("upc3"));
     this.upc3s.forEach(item=>{
       
-        if(item.upcNameId == "Test4G1"){
+        //if(item.upcNameId == "Test4G1"){
           this.outputref = item.generalParameters.co2PresOutRef5/1000;
           this.inputref = 2+0.8*(item.generalParameters.upcTrapNum-10)/90;
           //this.fluxref = 5*(0.17*item.generalParameters.upcTrapNum)/10;
-        }
+       // }
       
     })
-    if(this.platform.is("ios")){
+    /*if(this.platform.is("ios")){
       this.platform.ready().then(async res=>{
         if(localStorage.getItem("BBAM") != "true"){
           WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(async ()=>{
@@ -125,6 +125,11 @@ export class AdjustmentPage implements OnInit {
                                       //40435
                                       var iFlux = [res[19],res[20]]
                                       this.input = this.upc.client.registerToFloat(iFlux);
+                                      if(Math.abs(((this.input-this.inputref)/this.inputref))*100 <10){
+                                        this.backgroundPE = true;
+                                      } else {
+                                        this.backgroundPE = false;
+                                      }
             
                                       //40437
                                       var out = [res[21],res[22]]
@@ -133,6 +138,16 @@ export class AdjustmentPage implements OnInit {
                                       //40439
                                       var f = [res[23],res[24]];
                                       this.flux = this.upc.client.registerToFloat(f);
+                                      if(Math.abs(((this.flux-this.fluxref)/this.fluxref)*100) <5){
+                                        this.backgroundDeb = true;
+                                        this.bgdebwarning = false;
+                                      } else if(Math.abs(((this.flux-this.fluxref)/this.fluxref)*100)<10) {
+                                        
+                                        this.bgdebwarning = true;
+                                      } else {
+                                        this.backgroundDeb = false;
+                                        this.bgdebwarning = false;
+                                      }
             
                                       //40451
                                       var tmp = [res[35],res[36]];
@@ -141,6 +156,15 @@ export class AdjustmentPage implements OnInit {
                                       //40463
                                       var outcomp = [res[47],res[48]];
                                       this.outputcomp = this.upc.client.registerToFloat(outcomp);
+                                      if(Math.abs((this.outputcomp-this.outputref)/this.outputref)*100 <5){
+                                        this.backgroundPS = true;
+                                        this.bgpswarning = false;
+                                      } else if(Math.abs((this.outputcomp-this.outputref)/this.outputref)*100 <10){
+                                        this.bgpswarning = true;
+                                      } else {
+                                        this.backgroundPS = false;
+                                        this.bgpswarning = false;
+                                      }
             
                                       this.cd.detectChanges();
                                       loading.dismiss();
@@ -303,7 +327,7 @@ export class AdjustmentPage implements OnInit {
                         //},500)
                         //})
                           
-                      },5000)
+                     // },5000)
                   /*this.network.onConnect().subscribe(async res=>{
                     //if (this.network.type === this.network.Connection.WIFI) {
                       
@@ -311,7 +335,7 @@ export class AdjustmentPage implements OnInit {
                     //}
                   })*/
     
-                }
+                /*}
               }
             )
           })
@@ -350,17 +374,9 @@ export class AdjustmentPage implements OnInit {
                             await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
                           
                             
-                              //40435
-                              var iFlux = [res[19],res[20]]
-                              this.input = this.upc.client.registerToFloat(iFlux);
+                              
     
-                              //40437
-                              var out = [res[21],res[22]]
-                              this.output = this.upc.client.registerToFloat(out); 
-    
-                              //40439
-                              var f = [res[23],res[24]];
-                              this.flux = this.upc.client.registerToFloat(f);
+                      
     
                               //40451
                               var tmp = [res[35],res[36]];
@@ -369,7 +385,45 @@ export class AdjustmentPage implements OnInit {
                               //40463
                               var outcomp = [res[47],res[48]];
                               this.outputcomp = this.upc.client.registerToFloat(outcomp);
+                              if(Math.abs((this.outputcomp-this.outputref)/this.outputref)*100 <5){
+                                this.backgroundPS = true;
+                                this.bgpswarning = false;
+                              } else if(Math.abs((this.outputcomp-this.outputref)/this.outputref)*100 <10){
+                                this.bgpswarning = true;
+                              } else {
+                                this.backgroundPS = false;
+                                this.bgpswarning = false;
+                              }
     
+                              
+                              
+                              //40435
+                              var iFlux = [res[19],res[20]]
+                              this.input = this.upc.client.registerToFloat(iFlux);
+                              if(Math.abs(((this.input-this.inputref)/this.inputref))*100 <10){
+                                this.backgroundPE = true;
+                              } else {
+                                this.backgroundPE = false;
+                              }
+    
+                              //40437
+                              var out = [res[21],res[22]]
+                              this.output = this.upc.client.registerToFloat(out); 
+    
+                              //40439
+                              var f = [res[23],res[24]];
+                              this.flux = this.upc.client.registerToFloat(f);
+                              if(Math.abs(((this.flux-this.fluxref)/this.fluxref)*100) <5){
+                                this.backgroundDeb = true;
+                                this.bgdebwarning = false;
+                              } else if(Math.abs(((this.flux-this.fluxref)/this.fluxref)*100)<10) {
+                                
+                                this.bgdebwarning = true;
+                              } else {
+                                this.backgroundDeb = false;
+                                this.bgdebwarning = false;
+                              }
+
                               this.cd.detectChanges();
                               //loading.dismiss();
     
@@ -531,20 +585,20 @@ export class AdjustmentPage implements OnInit {
                 //},500)
                 //})
                   
-              },1000)
+              /*},1000)
         }
         
       })
       
-    }
-    else if(this.platform.is("android")) {
+    }*/
+    //else if(this.platform.is("android")) {
       if(localStorage.getItem("BBAM") != "true") {
-        this.hotspot.connectToWifi("BBAM","BioBeltService").then(async res=>{
-          var loading = await this.loadingCTRL.create({
+        //this.hotspot.connectToWifi("BBAM","BioBeltService").then(async res=>{
+          /*var loading = await this.loadingCTRL.create({
             message : "Connection à l'UPC en cours...",
             duration : 10000
           })
-          loading.present();
+          loading.present();*/
           this.global.isBBAM = true;
           this.platform.ready().then(
             async readySource => {
@@ -584,6 +638,11 @@ export class AdjustmentPage implements OnInit {
                                   //40435
                                   var iFlux = [res[19],res[20]]
                                   this.input = this.upc.client.registerToFloat(iFlux);
+                                  if(Math.abs(((this.input-this.inputref)/this.inputref))*100 <10){
+                                    this.backgroundPE = true;
+                                  } else {
+                                    this.backgroundPE = false;
+                                  }
         
                                   //40437
                                   var out = [res[21],res[22]]
@@ -592,6 +651,16 @@ export class AdjustmentPage implements OnInit {
                                   //40439
                                   var f = [res[23],res[24]];
                                   this.flux = this.upc.client.registerToFloat(f);
+                                  if(Math.abs(((this.flux-this.fluxref)/this.fluxref)*100) <5){
+                                    this.backgroundDeb = true;
+                                    this.bgdebwarning = false;
+                                  } else if(Math.abs(((this.flux-this.fluxref)/this.fluxref)*100)<10) {
+                                    
+                                    this.bgdebwarning = true;
+                                  } else {
+                                    this.backgroundDeb = false;
+                                    this.bgdebwarning = false;
+                                  }
         
                                   //40451
                                   var tmp = [res[35],res[36]];
@@ -600,10 +669,24 @@ export class AdjustmentPage implements OnInit {
                                   //40463
                                   var outcomp = [res[47],res[48]];
                                   this.outputcomp = this.upc.client.registerToFloat(outcomp);
+                                  if(Math.abs((this.outputcomp-this.outputref)/this.outputref)*100 <5){
+                                    this.backgroundPS = true;
+                                    this.bgpswarning = false;
+                                  } else if(Math.abs((this.outputcomp-this.outputref)/this.outputref)*100 <10){
+                                    this.bgpswarning = true;
+                                  } else {
+                                    this.backgroundPS = false;
+                                    this.bgpswarning = false;
+                                  }
         
                                   this.cd.detectChanges();
-                                  loading.dismiss();
+                                  //loading.dismiss();
         
+                                }).catch(err=>{
+                                  alert("Veuiller vous connectez à BBAM");
+                                  this.global.ssid = "ADMIN";
+                                  this.global.isBBAM = false;
+                                  clearInterval(this.global.interval);
                                 })
                               },500)
                               
@@ -791,14 +874,14 @@ export class AdjustmentPage implements OnInit {
                           } 
                         }
                         },500)*/
-                    },5000)
+                    },1000)
   
                   
   
               }
             }
           )
-        })
+        //})
       } else {
         this.upc = new UPCModbus(state => {
           this.ngZone.run(() => {
@@ -1045,7 +1128,7 @@ export class AdjustmentPage implements OnInit {
             },5000)
       }
       
-    }
+    //}
   }
   doRefresh(event) {
     this.ngOnInit();

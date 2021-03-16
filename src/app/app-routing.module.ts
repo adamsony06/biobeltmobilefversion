@@ -82,6 +82,22 @@ const routes: Routes = [
   {
     path: 'cdiff',
     loadChildren: () => import('./cdiff/cdiff.module').then( m => m.CdiffPageModule)
+  },
+  {
+    path: 'connection',
+    loadChildren: () => import('./connection/connection.module').then( m => m.ConnectionPageModule)
+  },
+  {
+    path: 'interventionceinture',
+    loadChildren: () => import('./interventionceinture/interventionceinture.module').then( m => m.InterventionceinturePageModule)
+  },
+  {
+    path: 'interventionceinture2',
+    loadChildren: () => import('./interventionceinture2/interventionceinture2.module').then( m => m.Interventionceinture2PageModule)
+  },
+  {
+    path: 'retfournmodal',
+    loadChildren: () => import('./retfournmodal/retfournmodal.module').then( m => m.RetfournmodalPageModule)
   }
 ];
 

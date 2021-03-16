@@ -606,6 +606,9 @@ var GlobalService = /** @class */ (function () {
         this.designationB2 = [];
         this.ssid = "";
         this.isBBAM = false;
+        this.proprietaire = "Bernard Dupont";
+        this.objetIntervention = [];
+        this.intervenants = [];
     }
     GlobalService.prototype.onSynchroB1B2 = function (token) {
         var _this = this;
@@ -753,7 +756,7 @@ var Upcv3serviceService = /** @class */ (function () {
     function Upcv3serviceService(http, storage) {
         this.http = http;
         this.storage = storage;
-        this.apiUrl = 'http://dev-api.biobelt.com/';
+        this.apiUrl = 'http://api.biobelt.com/';
     }
     Upcv3serviceService.prototype.getUPC3 = function (token) {
         var headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_2__["HttpHeaders"]().set('Content-Type', 'application/json')
@@ -1150,15 +1153,15 @@ var routes = [
     },
     {
         path: 'list',
-        loadChildren: function () { return Promise.all(/*! import() | list-list-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("list-list-module")]).then(__webpack_require__.bind(null, /*! ./list/list.module */ "./src/app/list/list.module.ts")).then(function (m) { return m.ListPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | list-list-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("list-list-module")]).then(__webpack_require__.bind(null, /*! ./list/list.module */ "./src/app/list/list.module.ts")).then(function (m) { return m.ListPageModule; }); }
     },
     {
         path: 'instalpieges',
-        loadChildren: function () { return Promise.all(/*! import() | instalpieges-instalpieges-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("default~canvas-canvas-module~instalpieges-instalpieges-module"), __webpack_require__.e("instalpieges-instalpieges-module")]).then(__webpack_require__.bind(null, /*! ./instalpieges/instalpieges.module */ "./src/app/instalpieges/instalpieges.module.ts")).then(function (m) { return m.InstalpiegesPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | instalpieges-instalpieges-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("default~canvas-canvas-module~instalpieges-instalpieges-module"), __webpack_require__.e("instalpieges-instalpieges-module")]).then(__webpack_require__.bind(null, /*! ./instalpieges/instalpieges.module */ "./src/app/instalpieges/instalpieges.module.ts")).then(function (m) { return m.InstalpiegesPageModule; }); }
     },
     {
         path: 'bottles',
-        loadChildren: function () { return Promise.all(/*! import() | bottles-bottles-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("bottles-bottles-module")]).then(__webpack_require__.bind(null, /*! ./bottles/bottles.module */ "./src/app/bottles/bottles.module.ts")).then(function (m) { return m.BottlesPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | bottles-bottles-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("bottles-bottles-module")]).then(__webpack_require__.bind(null, /*! ./bottles/bottles.module */ "./src/app/bottles/bottles.module.ts")).then(function (m) { return m.BottlesPageModule; }); }
     },
     {
         path: 'bottlemodal',
@@ -1182,15 +1185,15 @@ var routes = [
     },
     {
         path: 'stock',
-        loadChildren: function () { return Promise.all(/*! import() | stock-stock-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("default~addbottlemodal-addbottlemodal-module~stock-stock-module"), __webpack_require__.e("common"), __webpack_require__.e("stock-stock-module")]).then(__webpack_require__.bind(null, /*! ./stock/stock.module */ "./src/app/stock/stock.module.ts")).then(function (m) { return m.StockPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | stock-stock-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("default~addbottlemodal-addbottlemodal-module~stock-stock-module"), __webpack_require__.e("common"), __webpack_require__.e("stock-stock-module")]).then(__webpack_require__.bind(null, /*! ./stock/stock.module */ "./src/app/stock/stock.module.ts")).then(function (m) { return m.StockPageModule; }); }
     },
     {
         path: 'addbottlemodal',
-        loadChildren: function () { return Promise.all(/*! import() | addbottlemodal-addbottlemodal-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("default~addbottlemodal-addbottlemodal-module~stock-stock-module"), __webpack_require__.e("addbottlemodal-addbottlemodal-module")]).then(__webpack_require__.bind(null, /*! ./addbottlemodal/addbottlemodal.module */ "./src/app/addbottlemodal/addbottlemodal.module.ts")).then(function (m) { return m.AddbottlemodalPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | addbottlemodal-addbottlemodal-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("default~addbottlemodal-addbottlemodal-module~stock-stock-module"), __webpack_require__.e("addbottlemodal-addbottlemodal-module")]).then(__webpack_require__.bind(null, /*! ./addbottlemodal/addbottlemodal.module */ "./src/app/addbottlemodal/addbottlemodal.module.ts")).then(function (m) { return m.AddbottlemodalPageModule; }); }
     },
     {
         path: 'addbottleceint',
-        loadChildren: function () { return Promise.all(/*! import() | addbottleceint-addbottleceint-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("addbottleceint-addbottleceint-module")]).then(__webpack_require__.bind(null, /*! ./addbottleceint/addbottleceint.module */ "./src/app/addbottleceint/addbottleceint.module.ts")).then(function (m) { return m.AddbottleceintPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | addbottleceint-addbottleceint-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("addbottleceint-addbottleceint-module")]).then(__webpack_require__.bind(null, /*! ./addbottleceint/addbottleceint.module */ "./src/app/addbottleceint/addbottleceint.module.ts")).then(function (m) { return m.AddbottleceintPageModule; }); }
     },
     {
         path: 'rackcontent',
@@ -1202,23 +1205,35 @@ var routes = [
     },
     {
         path: 'adjustment',
-        loadChildren: function () { return Promise.all(/*! import() | adjustment-adjustment-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("adjustment-adjustment-module")]).then(__webpack_require__.bind(null, /*! ./adjustment/adjustment.module */ "./src/app/adjustment/adjustment.module.ts")).then(function (m) { return m.AdjustmentPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | adjustment-adjustment-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("adjustment-adjustment-module")]).then(__webpack_require__.bind(null, /*! ./adjustment/adjustment.module */ "./src/app/adjustment/adjustment.module.ts")).then(function (m) { return m.AdjustmentPageModule; }); }
     },
     {
         path: 'check',
-        loadChildren: function () { return Promise.all(/*! import() | check-check-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("check-check-module")]).then(__webpack_require__.bind(null, /*! ./check/check.module */ "./src/app/check/check.module.ts")).then(function (m) { return m.CheckPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | check-check-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("check-check-module")]).then(__webpack_require__.bind(null, /*! ./check/check.module */ "./src/app/check/check.module.ts")).then(function (m) { return m.CheckPageModule; }); }
     },
     {
         path: 'controldiff',
-        loadChildren: function () { return Promise.all(/*! import() | controldiff-controldiff-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("controldiff-controldiff-module")]).then(__webpack_require__.bind(null, /*! ./controldiff/controldiff.module */ "./src/app/controldiff/controldiff.module.ts")).then(function (m) { return m.ControldiffPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | controldiff-controldiff-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("controldiff-controldiff-module")]).then(__webpack_require__.bind(null, /*! ./controldiff/controldiff.module */ "./src/app/controldiff/controldiff.module.ts")).then(function (m) { return m.ControldiffPageModule; }); }
     },
     {
         path: 'synchro',
-        loadChildren: function () { return Promise.all(/*! import() | synchro-synchro-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("synchro-synchro-module")]).then(__webpack_require__.bind(null, /*! ./synchro/synchro.module */ "./src/app/synchro/synchro.module.ts")).then(function (m) { return m.SynchroPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | synchro-synchro-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("synchro-synchro-module")]).then(__webpack_require__.bind(null, /*! ./synchro/synchro.module */ "./src/app/synchro/synchro.module.ts")).then(function (m) { return m.SynchroPageModule; }); }
     },
     {
         path: 'cdiff',
-        loadChildren: function () { return Promise.all(/*! import() | cdiff-cdiff-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ed45397f"), __webpack_require__.e("cdiff-cdiff-module")]).then(__webpack_require__.bind(null, /*! ./cdiff/cdiff.module */ "./src/app/cdiff/cdiff.module.ts")).then(function (m) { return m.CdiffPageModule; }); }
+        loadChildren: function () { return Promise.all(/*! import() | cdiff-cdiff-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("cdiff-cdiff-module")]).then(__webpack_require__.bind(null, /*! ./cdiff/cdiff.module */ "./src/app/cdiff/cdiff.module.ts")).then(function (m) { return m.CdiffPageModule; }); }
+    },
+    {
+        path: 'connection',
+        loadChildren: function () { return Promise.all(/*! import() | connection-connection-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~ab283345"), __webpack_require__.e("connection-connection-module")]).then(__webpack_require__.bind(null, /*! ./connection/connection.module */ "./src/app/connection/connection.module.ts")).then(function (m) { return m.ConnectionPageModule; }); }
+    },
+    {
+        path: 'interventionceinture',
+        loadChildren: function () { return __webpack_require__.e(/*! import() | interventionceinture-interventionceinture-module */ "interventionceinture-interventionceinture-module").then(__webpack_require__.bind(null, /*! ./interventionceinture/interventionceinture.module */ "./src/app/interventionceinture/interventionceinture.module.ts")).then(function (m) { return m.InterventionceinturePageModule; }); }
+    },
+    {
+        path: 'interventionceinture2',
+        loadChildren: function () { return Promise.all(/*! import() | interventionceinture2-interventionceinture2-module */[__webpack_require__.e("default~addbottleceint-addbottleceint-module~addbottlemodal-addbottlemodal-module~adjustment-adjustm~12ba7172"), __webpack_require__.e("interventionceinture2-interventionceinture2-module")]).then(__webpack_require__.bind(null, /*! ./interventionceinture2/interventionceinture2.module */ "./src/app/interventionceinture2/interventionceinture2.module.ts")).then(function (m) { return m.Interventionceinture2PageModule; }); }
     }
 ];
 var AppRoutingModule = /** @class */ (function () {
@@ -1291,38 +1306,32 @@ var AppComponent = /** @class */ (function () {
         this.hotspot = hotspot;
         this.appPages = [
             {
-                title: 'Installation',
-                url: '/home',
-                icon: 'home'
+                title: 'Changement de bouteilles sur ceinture',
+                url: '/addbottleceint',
+                icon: 'barcode'
             },
             {
-                title: 'Visite Technique',
-                url: '/list',
-                icon: 'list'
+                title: 'Réglage des détendeurs',
+                url: '/adjustment',
+                icon: 'return-right'
             },
             {
-                title: 'Bouteilles',
-                icon: 'barcode',
-                url: "/optionbottle",
+                title: "Contrôle débits Mini/Maxi",
+                url: "/controldiff",
+                icon: "infinite",
             },
             {
                 title: 'Programmation',
-                icon: 'snow',
-                url: "/synchro"
+                icon: 'sunny',
+                url: "/synchro",
             },
             {
-                title: 'Réglages Pression',
-                url: '/adjustment'
-            },
-            {
-                title: "Max/Min",
-                url: "/controldiff"
-            },
-            {
-                title: "Contrôle Diff",
-                url: "/cdiff"
+                title: "Connexion",
+                icon: "globe",
+                url: "/connection"
             }
         ];
+        localStorage.setItem("BBAM", "false");
         this.initializeApp();
     }
     AppComponent.prototype.initializeApp = function () {
@@ -1337,6 +1346,34 @@ var AppComponent = /** @class */ (function () {
                 }
             });
         });
+        /*setInterval(()=>{
+          if(this.platform.is("android")) {
+            this.hotspot.isConnectedToInternet().then(res=>{
+              if(res && localStorage.getItem("BBAM") == "true") {
+                
+                this.hotspot.connectToWifi("BBAM","BioBeltService").then(()=>{
+                  localStorage.setItem("BBAM","true");
+                  this.global.ssid = "BBAM";
+                  this.global.isBBAM = true;
+                })
+              } else if (res == false) {
+                localStorage.setItem("BBAM","false");
+              }
+            }).catch(err=>{
+              
+            })
+          } else if (this.platform.is("ios")) {
+            if(localStorage.getItem("BBAM") != "true"){
+              WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(res=>{
+                localStorage.setItem("BBAM","true");
+                this.global.ssid = "BBAM";
+                this.global.isBBAM = true;
+              })
+            }
+            
+          }
+          
+        },5000)*/
     };
     AppComponent.prototype.onClearInterval = function () {
         clearInterval(this.global.interval);

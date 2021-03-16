@@ -2,6 +2,7 @@
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="home"></ion-back-button>
     </ion-buttons>
     <ion-title>Contrôle diffusion CO2</ion-title>
     <ion-buttons slot="end" *ngIf="!global.isBBAM">
@@ -83,7 +84,7 @@
         <ion-row>
           <ion-col size="6"><ion-label color="dark">Débit (nl/min):</ion-label></ion-col>
           <ion-col size="3"><ion-label color="dark">{{debiRef.toFixed(3)}}</ion-label></ion-col>
-          <ion-col size="3" [ngClass]="{'bgsuccess':backgroundDeb,'bgdanger':!backgroundDeb, 'bgwarning':bgdebwarning}"><ion-label color="dark">{{debiMes.toFixed(3)}}</ion-label></ion-col>
+          <ion-col size="3" [ngClass]="{'bgsuccess':backgroundeb,'bgdanger':!backgroundeb, 'bgwarning':backgrounddangerdeb}"><ion-label color="dark">{{debiMes.toFixed(3)}}</ion-label></ion-col>
         </ion-row>
         <ion-row>
           <ion-col size="6"><ion-label color="dark">PE (Bars):</ion-label></ion-col>

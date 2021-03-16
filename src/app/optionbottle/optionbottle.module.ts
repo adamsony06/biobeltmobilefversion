@@ -7,7 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { OptionbottlePageRoutingModule } from './optionbottle-routing.module';
 
 import { OptionbottlePage } from './optionbottle.page';
-import { RackcontentPage } from '../rackcontent/rackcontent.page';
+
+import { RetfournmodalPage } from '../retfournmodal/retfournmodal.page';
 
 @NgModule({
   imports: [
@@ -16,8 +17,8 @@ import { RackcontentPage } from '../rackcontent/rackcontent.page';
     IonicModule,
     OptionbottlePageRoutingModule,
   ],
-  declarations: [OptionbottlePage,RackcontentPage],
-  entryComponents : [RackcontentPage]
+  declarations: [OptionbottlePage, RetfournmodalPage],
+  entryComponents : [RetfournmodalPage]
   
 })
 export class OptionbottlePageModule {}

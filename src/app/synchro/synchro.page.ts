@@ -12,12 +12,15 @@ import { Hotspot, HotspotNetwork } from '@ionic-native/hotspot/ngx';
 import { Chart } from 'chart.js';
 import * as d3 from "d3";
 import * as moment from 'moment';
+import { parse } from 'querystring';
+import { GlobalService } from '../api/global.service';
 //import { WifiWizard2 } from '@ionic-native/wifi-wizard-2';
 //import { Console } from 'console';
 
 declare var WifiWizard2: any;
 declare var google: { visualization: { arrayToDataTable: (arg0: (string | number)[][]) => any; BarChart: new (arg0: HTMLElement) => any; }; };
 declare var google2: { visualization: { arrayToDataTable: (arg0: (string | number)[][]) => any; BarChart: new (arg0: HTMLElement) => any; }; };
+
 
 @Component({
   selector: 'app-synchro',
@@ -34,24 +37,27 @@ export class SynchroPage implements OnInit {
   formattedHours;
   formattedMinutes;
   intensity = [];
-  finishRead = false;
-  //intensity2;
+  finishRead = false;  
   frequency = [];
   frequency2 = [];
+  sign = [];
+  signOptions = ["+","-"];
   intensityOptions = [0,1,2,3,4,5,6,7,8,9,10];
   frequencyOptions = ["Tous les jours","Semaine","Weekend","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
-  frequencyValue = [7,9,8,0,1,2,3,4,5,6];
-  colors =[];   
-  pastart = "00:00";		
-  pcstart = "00:00";		
-  paend = "00:00";		
-  pcend = "00:00";		  
-  paselect:String = "+";		
-  pcselect:String = "+";		
-  paintensity: String = "Désactivée";		
-  pcintensity: String = "Désactivée";
-  
-  				 		
+  frequencyValue = ["7","9","8","0","1","2","3","4","5","6"];
+  colors = [];  
+  currentDawnTime; 
+  currentDuskTime;
+  paDelay = [];
+  paDuration = [];		
+  pcDelay = [];	
+  pcDuration = [];
+  pAube = [];
+  pCrepuscule = []; 
+  pAubeStart = [];
+  pAubeEnd = [];
+  pCrepusculeStart = [];
+  pCrepusculeEnd = [];				 		
 
 
   constructor(
@@ -61,6 +67,7 @@ export class SynchroPage implements OnInit {
     private router:Router,
     private ngZone : NgZone, private network : Network,
     private hotspot : Hotspot,private cg :ChangeDetectorRef,
+    private global : GlobalService
   ) {
     
         
@@ -74,480 +81,219 @@ export class SynchroPage implements OnInit {
   googleChartLibrary;
   
   ngOnInit() {
-    if(this.platform.is("ios")){
+    /*if(this.platform.is("ios")){
       this.platform.ready().then(()=>{
         WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(async ()=>{
-          var loading = await this.loadingCTRL.create({
-            message : "Connection à l'UPC en cours...",
-            duration : 10000
-          })
-          loading.present();
-  
-          this.platform.ready().then(
-            async readySource => {
-              if (readySource == 'cordova') {
-                this.upc = new UPCModbus(state => {
-                  this.ngZone.run(() => {
-                    // Force refresh UI
-                    
-                      
-                      //this.readDiffusionParameters();
-                    
-                  });
-                });
-                
-                    await this.upc.client.connect()
-                    setTimeout(async ()=>{
-                      //this.ngZone.run(async ()=>{
-                        
-                        await this.upc.client.readHoldingRegisters(40072,100).then(res =>{
-
-                          //programme 1 
-                          var tab=[res[0],res[1]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                         
-                          var tab2 = [res[2],res[3]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab2));
-                        
-                          var tab3 = [res[4]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab3));
-                          
-                          var tab5 = [res[5]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab5));
-                         
-    
-                          //programme 2
-                          tab=[res[6],res[7]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[8],res[9]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[10]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[11]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab));
-    
-                          //programme 3
-                          tab=[res[12],res[13]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[14],res[15]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[16]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[17]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab));
-    
-                          //programme 4
-                          tab=[res[18],res[19]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[20],res[21]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[22]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[23]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab));
-    
-                          //programme 5
-                          tab=[res[24],res[25]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[26],res[27]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[28]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[29]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab));
-    
-                          //programme 6
-                          tab=[res[30],res[31]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[32],res[33]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[34]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[35]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab));
-    
-                          //programme 7
-                          tab=[res[36],res[37]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[38],res[39]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[40]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[41]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab));
-    
-                          //programme 8
-                          tab=[res[42],res[43]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[44],res[45]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[46]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[47]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab));
-    
-                          //programme 9
-                          tab=[res[48],res[49]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[50],res[51]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[52]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[53]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab));
-    
-                          //programme 10
-                          tab=[res[54],res[55]];
-                          this.pStart.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[56],res[57]];
-                          this.pEnd.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[58]];
-                          this.frequency2.push(this.upc.client.registerToUint32(tab));
-                          tab = [res[59]];
-                          this.intensity.push(this.upc.client.registerToUint32(tab));
-                          setTimeout(()=>{
-                            this.finishRead = true;
-                          },1000)
-                          
-                        })
-                      this.finishRead = true;
-                      //})
-                      
-                    },5000)
-                /*this.network.onConnect().subscribe(async res=>{
-                  if (this.network.type === this.network.Connection.WIFI) {
-                    
-  
-                  }
-                })*/
-  
-              }
-            }
-          )
-        })
+          this.pageInit();
+        }).catch(error => {alert(JSON.stringify(error))})
       })
-      
     }
+    
     else if(this.platform.is("android")) {
       this.hotspot.connectToWifi("BBAM","BioBeltService").then(async res=>{
-        
-        var loading = await this.loadingCTRL.create({
-          message : "Connection à l'UPC en cours...",
-          duration : 10000
-        })
-        loading.present();
-        this.platform.ready().then(
-          async readySource => {
-            if (readySource == 'cordova') {
-              this.upc = new UPCModbus(state => {
-                this.ngZone.run(() => {
-                  // Force refresh UI
-                  
-                    
-                    //this.readDiffusionParameters();
-                  
-                });
-              });
-              
-                  await this.upc.client.connect();
-
-                  setTimeout(async ()=>{    
-
-                    await this.upc.client.readHoldingRegisters(40072,100).then(res =>{
-
-                      //programme 1 
-                      var tab=[res[0],res[1]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                     
-                      var tab2 = [res[2],res[3]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab2));
-                    
-                      var tab3 = [res[4]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab3));
-                      
-                      var tab5 = [res[5]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab5));
-                     
-
-                      //programme 2
-                      tab=[res[6],res[7]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[8],res[9]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[10]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[11]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab));
-
-                      //programme 3
-                      tab=[res[12],res[13]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[14],res[15]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[16]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[17]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab));
-
-                      //programme 4
-                      tab=[res[18],res[19]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[20],res[21]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[22]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[23]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab));
-
-                      //programme 5
-                      tab=[res[24],res[25]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[26],res[27]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[28]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[29]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab));
-
-                      //programme 6
-                      tab=[res[30],res[31]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[32],res[33]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[34]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[35]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab));
-
-                      //programme 7
-                      tab=[res[36],res[37]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[38],res[39]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[40]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[41]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab));
-
-                      //programme 8
-                      tab=[res[42],res[43]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[44],res[45]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[46]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[47]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab));
-
-                      //programme 9
-                      tab=[res[48],res[49]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[50],res[51]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[52]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[53]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab));
-
-                      //programme 10
-                      tab=[res[54],res[55]];
-                      this.pStart.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[56],res[57]];
-                      this.pEnd.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[58]];
-                      this.frequency2.push(this.upc.client.registerToUint32(tab));
-                      tab = [res[59]];
-                      this.intensity.push(this.upc.client.registerToUint32(tab));
-                      setTimeout(()=>{
-                        this.finishRead = true;
-                      },1000)
-                      
-                    })
-                    /*
-                    //Program 1
-                    await this.upc.client.getIntFromHoldingRegister(40072,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40074,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40076,1).then(res=>{
-                      alert(this.frequencyOptions[this.convertDaysCode(res)]) 
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);                     
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40077,1).then(res=>{
-                      this.intensity.push(res);
-                    })
-
-                    //Program 2
-                    await this.upc.client.getIntFromHoldingRegister(40078,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40080,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40082,1).then(res=>{
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);                     
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40083,1).then(res=>{
-                      this.intensity.push(res);
-                    })
-
-                    //Program 3
-                    await this.upc.client.getIntFromHoldingRegister(40084,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40086,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40088,1).then(res=>{
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);                   
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40089,1).then(res=>{
-                      this.intensity.push(res);
-                    })
-                    
-                    //Program 4
-                    await this.upc.client.getIntFromHoldingRegister(40090,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40092,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40094,1).then(res=>{
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);                   
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40095,1).then(res=>{
-                      this.intensity.push(res);
-                    })
-                    
-                    //Program 5
-                    await this.upc.client.getIntFromHoldingRegister(40096,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40098,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40100,1).then(res=>{
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                           
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40101,1).then(res=>{
-                      this.intensity.push(res);
-                    })
-
-                    //Program 6
-                    await this.upc.client.getIntFromHoldingRegister(40102,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40104,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40106,1).then(res=>{
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40107,1).then(res=>{
-                      this.intensity.push(res);
-                    })
-
-                    //Program 7
-                    await this.upc.client.getIntFromHoldingRegister(40108,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                     
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40110,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40112,1).then(res=>{
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40113,1).then(res=>{
-                      this.intensity.push(res);
-                    })
-
-                    //Program 8
-                    await this.upc.client.getIntFromHoldingRegister(40114,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40116,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40118,1).then(res=>{
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);                     
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40119,1).then(res=>{
-                      this.intensity.push(res);
-                    })
-
-                    //Program 9
-                    await this.upc.client.getIntFromHoldingRegister(40120,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40122,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40124,1).then(res=>{
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);                     
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40125,1).then(res=>{
-                      this.intensity.push(res);
-                    })
-
-                    //Program 10
-                    await this.upc.client.getIntFromHoldingRegister(40126,2).then(res=>{
-                      this.pStart.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40128,2).then(res=>{
-                      this.pEnd.push(this.secondsToHoursMinutes(res));
-                      this.cg.detectChanges();                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40130,1).then(res=>{
-                      this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);                      
-                    })
-                    await this.upc.client.getIntFromHoldingRegister(40131,1).then(res=>{
-                      this.intensity.push(res);
-                    })*/
-                  },5000)
-                  this.drawChartjs();
-
-                
-
-            }
-          }
-        )
+        this.pageInit();
       }).catch(error => {alert(JSON.stringify(error))})
-    }
-    var user = new User();
-    user.username = "guillaume.barault@dipteratech.com"
-    user.password = "DIPTERA_AdminBioBelt_2020"
-
-    this.upcv3Service.login(user).subscribe(res=>{
-      this.token=res.result
-    })
-    
-    this.fillTab()
-    this.drawChartjs()
+    }*/
+        
+    this.pageInit();
   
    
   }
+
+  async pageInit(){
+   
+    this.platform.ready().then(
+      async readySource => {
+        if (readySource == 'cordova') {
+          this.upc = new UPCModbus(state => {
+            this.ngZone.run(() => {
+              // Force refresh UI
+              
+                
+                //this.readDiffusionParameters();
+              
+            });
+          });
+          
+              await this.upc.client.connect();
+              this.global.ssid = "BBAM";
+              this.global.isBBAM = true;
+              setTimeout(async ()=>{    
+
+                await this.upc.client.readHoldingRegisters(40068,100).then(res =>{                                         
+
+                  //programme 1 
+                  var tab=[res[4],res[5]];                      
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                                       
+                  var tab = [res[6],res[7]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                    
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[8])]);                      
+                  var tab = [res[9]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                 
+
+                  //programme 2
+                  tab=[res[10],res[11]];
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[12],res[13]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[14])]);                      
+                  tab = [res[15]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme 3
+                  tab=[res[16],res[17]];
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[18],res[19]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[20])]);
+                  tab = [res[21]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme 4
+                  tab=[res[22],res[23]];
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[24],res[25]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                   
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[26])]);
+                  tab = [res[27]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme 5
+                  tab=[res[28],res[29]];
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[30],res[31]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));              
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[32])]);
+                  tab = [res[33]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme 6
+                  tab=[res[34],res[35]];
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[36],res[37]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));          
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[38])]);
+                  tab = [res[39]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme 7
+                  tab=[res[40],res[41]];
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[42],res[43]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                 
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[44])]);
+                  tab = [res[45]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme 8
+                  tab=[res[46],res[47]];
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[48],res[49]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[50])]);
+                  tab = [res[51]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme 9
+                  tab=[res[52],res[53]];
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[54],res[55]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                   
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[56])]);
+                  tab = [res[57]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme 10
+                  tab=[res[58],res[59]];
+                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[60],res[61]];
+                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                      
+                  this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[62])]);
+                  tab = [res[63]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme aube
+                  tab=[res[64],res[65]];
+                  this.paDelay.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+                  tab = [res[66],res[67]];
+                  this.paDuration.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+                  tab = [res[69]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  
+                  //programme aube sign                      
+                  if (this.upc.client.registerToUint32([res[64],res[65]]) >= 0){
+                    this.sign.push("+");      
+                    this.currentDawnTime = this.upc.client.registerToUint32([res[0],res[1]]);                 
+                    this.pAubeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]])));
+                    this.pAubeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]]) + this.upc.client.registerToUint32([res[66],res[67]])));                    
+                  }
+                  else {
+                    this.sign.push("-");
+                    this.currentDawnTime = this.upc.client.registerToUint32([res[0],res[1]]);                      
+                    this.pAubeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]])));      
+                    this.pAubeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]]) + this.upc.client.registerToUint32([res[66],res[67]])))
+                  }
+
+                  //programme crepuscule
+                  tab=[res[70],res[71]];
+                  this.pcDelay.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  tab = [res[72],res[73]];
+                  this.pcDuration.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                     
+                  tab = [res[75]];
+                  this.intensity.push(this.upc.client.registerToUint32(tab));
+
+                  //programme crepuscule sign
+                  if (this.upc.client.registerToUint32([res[70],res[71]]) >= 0){
+                    this.sign.push("+");                  
+                    this.currentDuskTime = this.upc.client.registerToUint32([res[2],res[3]]);    
+                    this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]])));
+                    this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]) + this.upc.client.registerToUint32([res[72],res[73]])))
+                  }
+                  else {
+                    this.sign.push("-");
+                    this.currentDuskTime = this.upc.client.registerToUint32([res[2],res[3]]);    
+                    this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]])));
+                    this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]) + this.upc.client.registerToUint32([res[72],res[73]])))
+                  }
+                  
+                  this.drawChartjs();
+
+
+                  setTimeout(()=>{
+                    this.finishRead = true;
+                  },1000)
+                  
+                }).catch(err=>{
+                  alert("Veuillez vous connecter à BBAM !");
+                  this.global.ssid = "ADMIN";
+                  this.global.isBBAM = false;
+                  
+                })
+                
+              },1000)
+              
+
+            
+
+        }
+      }
+    )
+  
+
+
+
+var user = new User();
+user.username = "guillaume.barault@dipteratech.com"
+user.password = "DIPTERA_AdminBioBelt_2020"
+
+this.upcv3Service.login(user).subscribe(res=>{
+  this.token=res.result
+})
+
+this.fillTab()
+//this.drawChartjs()
+}
 
   fillTab(){
     for (var i = 0; i<10;i++){
@@ -566,6 +312,9 @@ export class SynchroPage implements OnInit {
 
 
   secondsToHoursMinutes(secs){
+    if (secs < 0){
+      secs = Math.abs(secs);
+    }
     var hours = Math.trunc(secs / 3600);
     var minutes = Math.trunc((secs % 3600) / 60);  
     if (hours < 10){
@@ -586,9 +335,14 @@ export class SynchroPage implements OnInit {
 
   hoursMinutesToSeconds(hm){
     var splitted = hm.split(":");
-    var hours = splitted[0]*3600;
-    var minutes = splitted[1]*60;
+    var hours = parseInt(splitted[0])*3600;
+    var minutes = parseInt(splitted[1])*60;
     var res = hours + minutes;
+    return(res);
+  }
+
+  positiveToNegative(pos){
+    var res = -Math.abs(pos);
     return(res);
   }
  
@@ -670,285 +424,167 @@ export class SynchroPage implements OnInit {
   
   getUPCparams(){
     setTimeout(async ()=>{   
-      await this.upc.client.readHoldingRegisters(40072,100).then(res =>{
+      await this.upc.client.readHoldingRegisters(40068,100).then(res =>{
 
         //programme 1 
-        var tab=[res[0],res[1]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-    
-        tab = [res[2],res[3]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-   
-        tab = [res[4]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        
-        tab = [res[5]];
+        var tab=[res[4],res[5]];                      
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                                       
+        var tab = [res[6],res[7]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                    
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[8])]);                      
+        var tab = [res[9]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
-        
-        
+       
 
         //programme 2
-        tab=[res[6],res[7]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-        tab = [res[8],res[9]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-        tab = [res[10]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        tab = [res[11]];
+        tab=[res[10],res[11]];
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[12],res[13]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[14])]);                      
+        tab = [res[15]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
 
         //programme 3
-        tab=[res[12],res[13]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-        tab = [res[14],res[15]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-        tab = [res[16]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        tab = [res[17]];
+        tab=[res[16],res[17]];
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[18],res[19]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[20])]);
+        tab = [res[21]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
 
         //programme 4
-        tab=[res[18],res[19]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-        tab = [res[20],res[21]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-        tab = [res[22]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        tab = [res[23]];
+        tab=[res[22],res[23]];
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[24],res[25]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                   
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[26])]);
+        tab = [res[27]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
 
         //programme 5
-        tab=[res[24],res[25]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-        tab = [res[26],res[27]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-        tab = [res[28]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        tab = [res[29]];
+        tab=[res[28],res[29]];
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[30],res[31]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));              
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[32])]);
+        tab = [res[33]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
 
         //programme 6
-        tab=[res[30],res[31]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-        tab = [res[32],res[33]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-        tab = [res[34]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        tab = [res[35]];
+        tab=[res[34],res[35]];
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[36],res[37]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));          
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[38])]);
+        tab = [res[39]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
 
         //programme 7
-        tab=[res[36],res[37]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-        tab = [res[38],res[39]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-        tab = [res[40]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        tab = [res[41]];
+        tab=[res[40],res[41]];
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[42],res[43]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                 
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[44])]);
+        tab = [res[45]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
 
         //programme 8
-        tab=[res[42],res[43]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-        tab = [res[44],res[45]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-        tab = [res[46]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        tab = [res[47]];
+        tab=[res[46],res[47]];
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[48],res[49]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[50])]);
+        tab = [res[51]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
 
         //programme 9
-        tab=[res[48],res[49]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-        tab = [res[50],res[51]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-        tab = [res[52]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        tab = [res[53]];
+        tab=[res[52],res[53]];
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[54],res[55]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                   
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[56])]);
+        tab = [res[57]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
 
         //programme 10
-        tab=[res[54],res[55]];
-        this.pStart.push(this.upc.client.registerToUint32(tab));
-        tab = [res[56],res[57]];
-        this.pEnd.push(this.upc.client.registerToUint32(tab));
-        tab = [res[58]];
-        this.frequency2.push(this.upc.client.registerToUint32(tab));
-        tab = [res[59]];
+        tab=[res[58],res[59]];
+        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[60],res[61]];
+        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                      
+        this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[62])]);
+        tab = [res[63]];
         this.intensity.push(this.upc.client.registerToUint32(tab));
 
-      }) 
-       /*             
-      //Program 1
-      await this.upc.client.getIntFromHoldingRegister(40072,2).then(res=>{
-        this.pStart[0]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40074,2).then(res=>{
-        this.pEnd[0]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40076,1).then(res=>{
-        this.frequency2[0]=this.frequencyOptions[this.convertDaysCode(res)];                     
-      })
-      await this.upc.client.getIntFromHoldingRegister(40077,1).then(res=>{
-        this.intensity[0]=res;
-      })
+        //programme aube
+        tab=[res[64],res[65]];
+        this.paDelay.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));        
+        tab = [res[66],res[67]];
+        this.paDuration.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+        tab = [res[69]];
+        this.intensity.push(this.upc.client.registerToUint32(tab));
 
-      //Program 2
-      await this.upc.client.getIntFromHoldingRegister(40078,2).then(res=>{
-        this.pStart[1]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40080,2).then(res=>{
-        this.pEnd[1]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40082,1).then(res=>{
-        this.frequency2[1]=this.frequencyOptions[this.convertDaysCode(res)];                    
-      })
-      await this.upc.client.getIntFromHoldingRegister(40083,1).then(res=>{
-        this.intensity[1]=res;
-      })
+        //programme aube sign                      
+        if (this.upc.client.registerToUint32([res[64],res[65]]) >= 0){
+          this.sign.push("+");      
+          this.currentDawnTime = this.upc.client.registerToUint32([res[0],res[1]]);                 
+          this.pAubeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]])));
+          this.pAubeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]]) + this.upc.client.registerToUint32([res[66],res[67]])));
+        }
+        else {
+          this.sign.push("-");
+          this.currentDawnTime = this.upc.client.registerToUint32([res[0],res[1]]);             
+          this.pAubeStart[0]=this.secondsToHoursMinutes(this.currentDawnTime + this.hoursMinutesToSeconds(this.paDelay[0]));
+          this.pAubeEnd[0]=this.secondsToHoursMinutes(this.currentDawnTime + this.hoursMinutesToSeconds(this.paDelay[0]) + this.hoursMinutesToSeconds(this.paDuration[0]));
+        }
 
-      //Program 3
-      await this.upc.client.getIntFromHoldingRegister(40084,2).then(res=>{
-        this.pStart[2]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40086,2).then(res=>{
-        this.pEnd[2]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40088,1).then(res=>{
-        this.frequency2[2]=this.frequencyOptions[this.convertDaysCode(res)];                  
-      })
-      await this.upc.client.getIntFromHoldingRegister(40089,1).then(res=>{
-        this.intensity[2]=res;
-      })
-      
-      //Program 4
-      await this.upc.client.getIntFromHoldingRegister(40090,2).then(res=>{
-        this.pStart[3]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40092,2).then(res=>{
-        this.pEnd[3]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40094,1).then(res=>{
-        this.frequency2[3]=this.frequencyOptions[this.convertDaysCode(res)];                   
-      })
-      await this.upc.client.getIntFromHoldingRegister(40095,1).then(res=>{
-        this.intensity[3]=res;
-      })
-      
-      //Program 5
-      await this.upc.client.getIntFromHoldingRegister(40096,2).then(res=>{
-        this.pStart[4]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40098,2).then(res=>{
-        this.pEnd[4]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40100,1).then(res=>{
-        this.frequency2[4]=this.frequencyOptions[this.convertDaysCode(res)];                       
-      })
-      await this.upc.client.getIntFromHoldingRegister(40101,1).then(res=>{
-        this.intensity[4]=res;
-      })
+        //programme crepuscule
+        tab=[res[70],res[71]];
+        this.pcDelay.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        tab = [res[72],res[73]];
+        this.pcDuration.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                     
+        tab = [res[75]];
+        this.intensity.push(this.upc.client.registerToUint32(tab));
 
-      //Program 6
-      await this.upc.client.getIntFromHoldingRegister(40102,2).then(res=>{
-        this.pStart[5]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40104,2).then(res=>{
-        this.pEnd[5]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40106,1).then(res=>{
-        this.frequency2[5]=this.frequencyOptions[this.convertDaysCode(res)];                        
-      })
-      await this.upc.client.getIntFromHoldingRegister(40107,1).then(res=>{
-        this.intensity[5]=res;
-      })
+        //programme crepuscule sign
+        if (this.upc.client.registerToUint32([res[70],res[71]]) >= 0){
+          this.sign.push("+");       
+          this.currentDuskTime = this.upc.client.registerToUint32([res[2],res[3]]);    
+          this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]])));
+          this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]) + this.upc.client.registerToUint32([res[72],res[73]])));
+        }
+        else {
+          this.sign.push("-");
+          this.currentDuskTime = this.upc.client.registerToUint32([res[2],res[3]]);    
+          this.pCrepusculeStart[0]=this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]));
+          this.pCrepusculeEnd[0]=this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]) + this.upc.client.registerToUint32([res[72],res[73]]));
+        }
+        
+        this.drawChartjs();
 
-      //Program 7
-      await this.upc.client.getIntFromHoldingRegister(40108,2).then(res=>{
-        this.pStart[6]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                     
-      })
-      await this.upc.client.getIntFromHoldingRegister(40110,2).then(res=>{
-        this.pEnd[6]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40112,1).then(res=>{
-        this.frequency2[6]=this.frequencyOptions[this.convertDaysCode(res)];                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40113,1).then(res=>{
-        this.intensity[6]=res;
-      })
 
-      //Program 8
-      await this.upc.client.getIntFromHoldingRegister(40114,2).then(res=>{
-        this.pStart[7]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
+        setTimeout(()=>{
+          this.finishRead = true;
+        },1000)
+        
+      }).catch(err=>{
+        alert("Veuillez vous connecter à BBAM !");
+        this.global.ssid = "ADMIN";
+        this.global.isBBAM = false;
+        
       })
-      await this.upc.client.getIntFromHoldingRegister(40116,2).then(res=>{
-        this.pEnd[7]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40118,1).then(res=>{
-        this.frequency2[7]=this.frequencyOptions[this.convertDaysCode(res)];                    
-      })
-      await this.upc.client.getIntFromHoldingRegister(40119,1).then(res=>{
-        this.intensity[7]=res;
-      })
-
-      //Program 9
-      await this.upc.client.getIntFromHoldingRegister(40120,2).then(res=>{
-        this.pStart[8]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40122,2).then(res=>{
-        this.pEnd[8]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40124,1).then(res=>{
-        this.frequency2[8]=this.frequencyOptions[this.convertDaysCode(res)];                    
-      })
-      await this.upc.client.getIntFromHoldingRegister(40125,1).then(res=>{
-        this.intensity[8]=res;
-      })
-
-      //Program 10
-      await this.upc.client.getIntFromHoldingRegister(40126,2).then(res=>{
-        this.pStart[9]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40128,2).then(res=>{
-        this.pEnd[9]=this.secondsToHoursMinutes(res);
-        this.cg.detectChanges();                      
-      })
-      await this.upc.client.getIntFromHoldingRegister(40130,1).then(res=>{
-        this.frequency2[9]=this.frequencyOptions[this.convertDaysCode(res)];                 
-      })
-      await this.upc.client.getIntFromHoldingRegister(40131,1).then(res=>{
-        this.intensity[9]=res;
-      })*/
+       
     },5000)
   }
   
 
 
  async onEdit(i){ //set UPC params    
-       if(this.finishRead){
+       if(this.finishRead){         
         switch(i){
           case 0:         
-            //Program 1
-            
+            //Program 1            
             await this.upc.client.setIntInHoldingRegister(40072,2,this.hoursMinutesToSeconds(this.pStart[0])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
               
             }).catch(err=>{
@@ -974,23 +610,23 @@ export class SynchroPage implements OnInit {
   
           case 1:
                 //Program 2
-            await this.upc.client.setIntInHoldingRegister(40078,2,this.hoursMinutesToSeconds(this.pStart[1])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40078,2,this.hoursMinutesToSeconds(this.pStart[1])).then(data=>{  
               
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40080,2,this.hoursMinutesToSeconds(this.pEnd[1])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40080,2,this.hoursMinutesToSeconds(this.pEnd[1])).then(data=>{
             
             }).catch(err=>{
               alert(JSON.stringify(err));
             });;
-            await this.upc.client.setIntInHoldingRegister(40082,1,this.reverseConvertDaysCode(this.frequency2[1])).then(data=>{//daycode 1, taille 1
+            await this.upc.client.setIntInHoldingRegister(40082,1,this.reverseConvertDaysCode(this.frequency2[1])).then(data=>{
             
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40083,1,this.intensity[1]).then(data=>{//intensité premier programme, taille 1
+            await this.upc.client.setIntInHoldingRegister(40083,1,this.intensity[1]).then(data=>{
               
             }).catch(err=>{
               alert(JSON.stringify(err));
@@ -999,23 +635,23 @@ export class SynchroPage implements OnInit {
   
           case 2: 
               //Program 3
-            await this.upc.client.setIntInHoldingRegister(40084,2,this.hoursMinutesToSeconds(this.pStart[2])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40084,2,this.hoursMinutesToSeconds(this.pStart[2])).then(data=>{ 
               
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40086,2,this.hoursMinutesToSeconds(this.pEnd[2])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40086,2,this.hoursMinutesToSeconds(this.pEnd[2])).then(data=>{
              
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40088,1,this.reverseConvertDaysCode(this.frequency2[2])).then(data=>{//daycode 1, taille 1
+            await this.upc.client.setIntInHoldingRegister(40088,1,this.reverseConvertDaysCode(this.frequency2[2])).then(data=>{
            
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40089,1,this.intensity[2]).then(data=>{//intensité premier programme, taille 1
+            await this.upc.client.setIntInHoldingRegister(40089,1,this.intensity[2]).then(data=>{
               
             }).catch(err=>{
               alert(JSON.stringify(err));
@@ -1024,23 +660,23 @@ export class SynchroPage implements OnInit {
   
           case 3:
                 //Program 4
-            await this.upc.client.setIntInHoldingRegister(40090,2,this.hoursMinutesToSeconds(this.pStart[3])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40090,2,this.hoursMinutesToSeconds(this.pStart[3])).then(data=>{ 
               
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40092,2,this.hoursMinutesToSeconds(this.pEnd[3])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40092,2,this.hoursMinutesToSeconds(this.pEnd[3])).then(data=>{
               
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40094,1,this.reverseConvertDaysCode(this.frequency2[3])).then(data=>{//daycode 1, taille 1
+            await this.upc.client.setIntInHoldingRegister(40094,1,this.reverseConvertDaysCode(this.frequency2[3])).then(data=>{
      
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40095,1,this.intensity[3]).then(data=>{//intensité premier programme, taille 1
+            await this.upc.client.setIntInHoldingRegister(40095,1,this.intensity[3]).then(data=>{
               
             }).catch(err=>{
               alert(JSON.stringify(err));
@@ -1049,23 +685,23 @@ export class SynchroPage implements OnInit {
   
           case 4:
             //Program 5
-            await this.upc.client.setIntInHoldingRegister(40096,2,this.hoursMinutesToSeconds(this.pStart[4])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40096,2,this.hoursMinutesToSeconds(this.pStart[4])).then(data=>{  
               
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
   
-            await this.upc.client.setIntInHoldingRegister(40098,2,this.hoursMinutesToSeconds(this.pEnd[4])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40098,2,this.hoursMinutesToSeconds(this.pEnd[4])).then(data=>{ 
            
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40100,1,this.reverseConvertDaysCode(this.frequency2[4])).then(data=>{//daycode 1, taille 1
+            await this.upc.client.setIntInHoldingRegister(40100,1,this.reverseConvertDaysCode(this.frequency2[4])).then(data=>{
            
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40101,1,this.intensity[4]).then(data=>{//intensité premier programme, taille 1
+            await this.upc.client.setIntInHoldingRegister(40101,1,this.intensity[4]).then(data=>{
             
             }).catch(err=>{
               alert(JSON.stringify(err));
@@ -1074,23 +710,23 @@ export class SynchroPage implements OnInit {
   
           case 5:
             //Program 6
-            await this.upc.client.setIntInHoldingRegister(40102,2,this.hoursMinutesToSeconds(this.pStart[5])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40102,2,this.hoursMinutesToSeconds(this.pStart[5])).then(data=>{ 
               
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40104,2,this.hoursMinutesToSeconds(this.pEnd[5])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40104,2,this.hoursMinutesToSeconds(this.pEnd[5])).then(data=>{
              
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40106,1,this.reverseConvertDaysCode(this.frequency2[5])).then(data=>{//daycode 1, taille 1
+            await this.upc.client.setIntInHoldingRegister(40106,1,this.reverseConvertDaysCode(this.frequency2[5])).then(data=>{
              
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40107,1,this.intensity[5]).then(data=>{//intensité premier programme, taille 1
+            await this.upc.client.setIntInHoldingRegister(40107,1,this.intensity[5]).then(data=>{
               
             }).catch(err=>{
               alert(JSON.stringify(err));
@@ -1099,23 +735,23 @@ export class SynchroPage implements OnInit {
   
           case 6:
             //Program 7
-            await this.upc.client.setIntInHoldingRegister(40108,2,this.hoursMinutesToSeconds(this.pStart[6])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40108,2,this.hoursMinutesToSeconds(this.pStart[6])).then(data=>{ 
      
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
   
-            await this.upc.client.setIntInHoldingRegister(40110,2,this.hoursMinutesToSeconds(this.pEnd[6])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40110,2,this.hoursMinutesToSeconds(this.pEnd[6])).then(data=>{
               
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40112,1,this.reverseConvertDaysCode(this.frequency2[6])).then(data=>{//daycode 1, taille 1
+            await this.upc.client.setIntInHoldingRegister(40112,1,this.reverseConvertDaysCode(this.frequency2[6])).then(data=>{
               
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40113,1,this.intensity[6]).then(data=>{//intensité premier programme, taille 1
+            await this.upc.client.setIntInHoldingRegister(40113,1,this.intensity[6]).then(data=>{
          
             }).catch(err=>{
               alert(JSON.stringify(err));
@@ -1124,23 +760,23 @@ export class SynchroPage implements OnInit {
   
           case 7:          
             //Program 8
-            await this.upc.client.setIntInHoldingRegister(40114,2,this.hoursMinutesToSeconds(this.pStart[7])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40114,2,this.hoursMinutesToSeconds(this.pStart[7])).then(data=>{ 
          
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40116,2,this.hoursMinutesToSeconds(this.pEnd[7])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40116,2,this.hoursMinutesToSeconds(this.pEnd[7])).then(data=>{
             
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40118,1,this.reverseConvertDaysCode(this.frequency2[7])).then(data=>{//daycode 1, taille 1
+            await this.upc.client.setIntInHoldingRegister(40118,1,this.reverseConvertDaysCode(this.frequency2[7])).then(data=>{
              
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40119,1,this.intensity[7]).then(data=>{//intensité premier programme, taille 1
+            await this.upc.client.setIntInHoldingRegister(40119,1,this.intensity[7]).then(data=>{
              
             }).catch(err=>{
               alert(JSON.stringify(err));
@@ -1149,23 +785,23 @@ export class SynchroPage implements OnInit {
   
           case 8:
                 //Program 9
-            await this.upc.client.setIntInHoldingRegister(40120,2,this.hoursMinutesToSeconds(this.pStart[8])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40120,2,this.hoursMinutesToSeconds(this.pStart[8])).then(data=>{ 
    
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40122,2,this.hoursMinutesToSeconds(this.pEnd[8])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40122,2,this.hoursMinutesToSeconds(this.pEnd[8])).then(data=>{ 
             
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40124,1,this.reverseConvertDaysCode(this.frequency2[8])).then(data=>{//daycode 1, taille 1
+            await this.upc.client.setIntInHoldingRegister(40124,1,this.reverseConvertDaysCode(this.frequency2[8])).then(data=>{
              
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40125,1,this.intensity[8]).then(data=>{//intensité premier programme, taille 1
+            await this.upc.client.setIntInHoldingRegister(40125,1,this.intensity[8]).then(data=>{
              
             }).catch(err=>{
               alert(JSON.stringify(err));
@@ -1173,33 +809,106 @@ export class SynchroPage implements OnInit {
             break;
   
           case 9:
-                  //Program 10
-            await this.upc.client.setIntInHoldingRegister(40126,2,this.hoursMinutesToSeconds(this.pStart[9])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+            //Program 10
+            await this.upc.client.setIntInHoldingRegister(40126,2,this.hoursMinutesToSeconds(this.pStart[9])).then(data=>{ 
            
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40128,2,this.hoursMinutesToSeconds(this.pEnd[9])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+            await this.upc.client.setIntInHoldingRegister(40128,2,this.hoursMinutesToSeconds(this.pEnd[9])).then(data=>{
             
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40130,1,this.reverseConvertDaysCode(this.frequency2[9])).then(data=>{//daycode 1, taille 1
+            await this.upc.client.setIntInHoldingRegister(40130,1,this.reverseConvertDaysCode(this.frequency2[9])).then(data=>{
            
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40131,1,this.intensity[9]).then(data=>{//intensité premier programme, taille 1
+            await this.upc.client.setIntInHoldingRegister(40131,1,this.intensity[9]).then(data=>{
               
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             break;
+
+          case 10:
+            //Programme aube
+            if (this.sign[0] == "+"){
+              await this.upc.client.setIntInHoldingRegister(40132,2,this.hoursMinutesToSeconds(this.paDelay[0])).then(data=>{ 
+                            
+              }).catch(err=>{
+               alert(JSON.stringify(err));
+              });
+
+              this.pAubeStart[0]=this.secondsToHoursMinutes(this.currentDawnTime + this.hoursMinutesToSeconds(this.paDelay[0]));
+              this.pAubeEnd[0]=this.secondsToHoursMinutes(this.currentDawnTime + this.hoursMinutesToSeconds(this.paDelay[0]) + this.hoursMinutesToSeconds(this.paDuration[0]));
+                          
+            }
+            else{              
+              await this.upc.client.setIntInHoldingRegister(40132,2,this.positiveToNegative(this.hoursMinutesToSeconds(this.paDelay[0]))).then(data=>{ 
+           
+              }).catch(err=>{
+               alert(JSON.stringify(err));
+              });
+              this.pAubeStart[0]=this.secondsToHoursMinutes(this.currentDawnTime - this.hoursMinutesToSeconds(this.paDelay[0]));
+              this.pAubeEnd[0]=this.secondsToHoursMinutes(this.currentDawnTime - this.hoursMinutesToSeconds(this.paDelay[0]) + this.hoursMinutesToSeconds(this.paDuration[0]));
+            }
+            await this.upc.client.setIntInHoldingRegister(40134,2,this.hoursMinutesToSeconds(this.paDuration[0])).then(data=>{
+            
+            }).catch(err=>{
+              alert(JSON.stringify(err));
+            });
+            
+            await this.upc.client.setIntInHoldingRegister(40137,1,this.intensity[10]).then(data=>{
+              
+            }).catch(err=>{
+              alert(JSON.stringify(err));
+            });
+            break;
+
+          case 11:
+            //Programme crépuscule
+            if (this.sign[1] == "+"){
+              await this.upc.client.setIntInHoldingRegister(40138,2,this.hoursMinutesToSeconds(this.pcDelay[0])).then(data=>{ 
+                         
+              }).catch(err=>{
+                alert(JSON.stringify(err));
+              });
+
+              this.pCrepusculeStart[0]=this.secondsToHoursMinutes(this.currentDuskTime + this.hoursMinutesToSeconds(this.pcDelay[0]));
+              this.pCrepusculeEnd[0]=this.secondsToHoursMinutes(this.currentDuskTime + this.hoursMinutesToSeconds(this.pcDelay[0]) + this.hoursMinutesToSeconds(this.pcDuration[0]));
+            }
+            else{
+              await this.upc.client.setIntInHoldingRegister(40138,2,this.positiveToNegative(this.hoursMinutesToSeconds(this.pcDelay[0]))).then(data=>{ 
+           
+              }).catch(err=>{
+                alert(JSON.stringify(err));
+              });
+
+              this.pCrepusculeStart[0]=this.secondsToHoursMinutes(this.currentDuskTime - this.hoursMinutesToSeconds(this.pcDelay[0]));
+              this.pCrepusculeEnd[0]=this.secondsToHoursMinutes(this.currentDuskTime - this.hoursMinutesToSeconds(this.pcDelay[0]) + this.hoursMinutesToSeconds(this.pcDuration[0]));
+            }
+            
+            await this.upc.client.setIntInHoldingRegister(40140,2,this.hoursMinutesToSeconds(this.pcDuration[0])).then(data=>{
+            
+            }).catch(err=>{
+              alert(JSON.stringify(err));
+            });
+            
+            await this.upc.client.setIntInHoldingRegister(40143,1,this.intensity[11]).then(data=>{
+              
+            }).catch(err=>{
+              alert(JSON.stringify(err));
+            });
+            break; 
+
+           
+            
         }    
-  
         this.getUPCparams();
-        this.drawChartjs();
+    
        }
       
       
@@ -1208,30 +917,53 @@ export class SynchroPage implements OnInit {
 
    
   
-    drawChartjs(){
+    drawChartjs(){      
       
-      var stringToIntProgrammes=[]
-      var barColors=[]
+    
+      var stringToIntStartProgrammes=[]
+      var stringToIntEndProgrammes=[]
+      var stringToIntpAS;
+      var stringToIntpAE;
+      var stringToIntpCS;
+      var stringToIntpCE;
+      var barColors=[]      
       
-      //console.log(this.programmes)
       
-      this.programmes.forEach(function(prog){//pour chaque programme (programmes[0], programmes[1] etc)
-        prog.forEach(function(element) {//pour chaque horaire (programmes[0][0],programmes[0][1],etc)
+      this.pStart.forEach(function(element){
           var parsed=element.split(":")
           var p = parseInt(parsed[1],10)/60
           var p2 = parseInt(parsed[0])+p
-          stringToIntProgrammes.push(p2)
-          
-        });
-        
-        
+          stringToIntStartProgrammes.push(p2)
+      });
+
+      this.pEnd.forEach(function(element){
+        var parsed=element.split(":")
+        var p = parseInt(parsed[1],10)/60
+        var p2 = parseInt(parsed[0])+p
+        stringToIntEndProgrammes.push(p2)
+      });   
       
-      });     
+      var parsedpAS = this.pAubeStart[0].split(":");
+      var p = parseInt(parsedpAS[1],10)/60
+      var p2 = parseInt(parsedpAS[0])+p
+      stringToIntpAS=p2;
+
+      var parsedpAE = this.pAubeEnd[0].split(":");
+      var p3 = parseInt(parsedpAE[1],10)/60
+      var p4 = parseInt(parsedpAE[0])+p3
+      stringToIntpAE=p4;
+
+      var parsedpCS = this.pCrepusculeStart[0].split(":");
+      var p5 = parseInt(parsedpCS[1],10)/60
+      var p6 = parseInt(parsedpCS[0])+p5
+      stringToIntpCS=p6;
+
+      var parsedpCE = this.pCrepusculeEnd[0].split(":");
+      var p7 = parseInt(parsedpCE[1],10)/60
+      var p8 = parseInt(parsedpCE[0])+p7
+      stringToIntpCE=p8;
       
-      //console.log("intensity :",this.intensity);
-      //console.log("frequency :",this.frequency);
       
-     
       
       this.intensity.forEach(intensityElement =>{
         switch (intensityElement) {
@@ -1270,27 +1002,27 @@ export class SynchroPage implements OnInit {
             break;  
         }  
       })
-     //console.log(barColors);
+     
       var data=[
-        [stringToIntProgrammes[0],stringToIntProgrammes[1]],
-        [stringToIntProgrammes[2],stringToIntProgrammes[3]],
-        [stringToIntProgrammes[4],stringToIntProgrammes[5]],
-        [stringToIntProgrammes[6],stringToIntProgrammes[7]],
-        [stringToIntProgrammes[8],stringToIntProgrammes[9]],
-        [stringToIntProgrammes[10],stringToIntProgrammes[11]],
-        [stringToIntProgrammes[12],stringToIntProgrammes[13]],
-        [stringToIntProgrammes[14],stringToIntProgrammes[15]],
-        [stringToIntProgrammes[16],stringToIntProgrammes[17]],
-        [stringToIntProgrammes[18],stringToIntProgrammes[19]]
-      ];
-
-      
+        [stringToIntStartProgrammes[0],stringToIntEndProgrammes[0]],
+        [stringToIntStartProgrammes[1],stringToIntEndProgrammes[1]],
+        [stringToIntStartProgrammes[2],stringToIntEndProgrammes[2]],
+        [stringToIntStartProgrammes[3],stringToIntEndProgrammes[3]],
+        [stringToIntStartProgrammes[4],stringToIntEndProgrammes[4]],
+        [stringToIntStartProgrammes[5],stringToIntEndProgrammes[5]],
+        [stringToIntStartProgrammes[6],stringToIntEndProgrammes[6]],
+        [stringToIntStartProgrammes[7],stringToIntEndProgrammes[7]],
+        [stringToIntStartProgrammes[8],stringToIntEndProgrammes[8]],
+        [stringToIntStartProgrammes[9],stringToIntEndProgrammes[9]],
+        [stringToIntpAS,stringToIntpAE],
+        [stringToIntpCS,stringToIntpCE]
+      ];      
 
       var ctx = 'myChart';
       var myChart = new Chart(ctx, {
         type: 'horizontalBar',
         data: {
-          labels:["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"],
+          labels:["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "Aube", "Crepuscule"],
           datasets: [
             {
               backgroundColor: barColors,          
@@ -1304,10 +1036,10 @@ export class SynchroPage implements OnInit {
            
 
           },
-          title: {
+          /*title: {
             display: true,
             text: 'Aube Crépuscule'
-          },
+          },*/
           scales: {
             xAxes: [{
                              
@@ -1324,4 +1056,5 @@ export class SynchroPage implements OnInit {
         }
     });   
     }
+
 }

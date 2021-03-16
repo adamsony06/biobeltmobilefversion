@@ -16,6 +16,10 @@ export class GlobalService {
   public designationB2 = [];
   public ssid = "";
   public isBBAM = false;
+  public proprietaire = "Bernard Dupont";
+  public objetIntervention = [];
+  public intervenants = [];
+
   interval : any;
   constructor(public platform : Platform, public loadingCTRL : LoadingController,private upcv3Service : Upcv3serviceService) { }
 

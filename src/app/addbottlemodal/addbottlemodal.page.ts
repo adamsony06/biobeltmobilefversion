@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { ModalController, Platform, LoadingController } from '@ionic/angular';
 import { Upcv3serviceService } from '../api/upcv3service.service';
@@ -43,7 +43,7 @@ export class AddbottlemodalPage implements OnInit {
   isBBAM = false;
   listbottlesRack = [];
 
-  constructor(private scan : BarcodeScanner,private modal : ModalController,private upcv3Service : Upcv3serviceService,private storage : Storage,private router : Router,private platform :Platform,private network : Network, private ngZone : NgZone,private loadingCTRL : LoadingController,private global : GlobalService) { }
+  constructor(private scan : BarcodeScanner,private modal : ModalController,private upcv3Service : Upcv3serviceService,private storage : Storage,private router : Router,private platform :Platform,private network : Network, private ngZone : NgZone,private loadingCTRL : LoadingController,private global : GlobalService,private cd : ChangeDetectorRef) { }
 
   ngOnInit() {
     //alert(this.barcode);
@@ -56,7 +56,7 @@ export class AddbottlemodalPage implements OnInit {
           WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(res=>{
             this.isBBAM = true;
             this.platform.ready().then(
-              readySource => {
+              async readySource => {
                 if (readySource == 'cordova') {
                   
                   this.upc = new UPCModbus(state => {
@@ -68,8 +68,16 @@ export class AddbottlemodalPage implements OnInit {
                       
                     });
                   });
-                  
-                  this.network.onConnect().subscribe(() => {
+                  await this.upc.client.connect();
+                  setTimeout(async ()=>{
+                    await this.upc.client.getStringFromHoldingRegister(40001, 10).then(res=>{
+                      this.stockRet = {
+                        name : res 
+                      }
+                      this.cd.detectChanges();
+                    })
+                  },2000)
+                  /*this.network.onConnect().subscribe(() => {
                     
                     if (this.network.type === this.network.Connection.WIFI) {
                       this.upc.reconnect();
@@ -81,7 +89,7 @@ export class AddbottlemodalPage implements OnInit {
                       
                       
                     }
-                  });
+                  });*/
                 }
               }
             );

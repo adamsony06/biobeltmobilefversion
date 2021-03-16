@@ -1,37 +1,6 @@
 cordova.define('cordova/plugin_list', function(require, exports, module) {
   module.exports = [
     {
-      "id": "cordova-plugin-chrome-apps-common.events",
-      "file": "plugins/cordova-plugin-chrome-apps-common/events.js",
-      "pluginId": "cordova-plugin-chrome-apps-common",
-      "clobbers": [
-        "chrome.Event"
-      ]
-    },
-    {
-      "id": "cordova-plugin-chrome-apps-common.errors",
-      "file": "plugins/cordova-plugin-chrome-apps-common/errors.js",
-      "pluginId": "cordova-plugin-chrome-apps-common"
-    },
-    {
-      "id": "cordova-plugin-chrome-apps-common.stubs",
-      "file": "plugins/cordova-plugin-chrome-apps-common/stubs.js",
-      "pluginId": "cordova-plugin-chrome-apps-common"
-    },
-    {
-      "id": "cordova-plugin-chrome-apps-common.helpers",
-      "file": "plugins/cordova-plugin-chrome-apps-common/helpers.js",
-      "pluginId": "cordova-plugin-chrome-apps-common"
-    },
-    {
-      "id": "cordova-plugin-chrome-apps-sockets-tcp.sockets.tcp",
-      "file": "plugins/cordova-plugin-chrome-apps-sockets-tcp/sockets.tcp.js",
-      "pluginId": "cordova-plugin-chrome-apps-sockets-tcp",
-      "clobbers": [
-        "chrome.sockets.tcp"
-      ]
-    },
-    {
       "id": "cordova-plugin-device.device",
       "file": "plugins/cordova-plugin-device/www/device.js",
       "pluginId": "cordova-plugin-device",
@@ -40,16 +9,8 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       ]
     },
     {
-      "id": "cordova-plugin-hotspot.HotSpotPlugin",
-      "file": "plugins/cordova-plugin-hotspot/www/HotSpotPlugin.js",
-      "pluginId": "cordova-plugin-hotspot",
-      "clobbers": [
-        "cordova.plugins.hotspot"
-      ]
-    },
-    {
       "id": "cordova-plugin-ionic-keyboard.keyboard",
-      "file": "plugins/cordova-plugin-ionic-keyboard/www/ios/keyboard.js",
+      "file": "plugins/cordova-plugin-ionic-keyboard/www/android/keyboard.js",
       "pluginId": "cordova-plugin-ionic-keyboard",
       "clobbers": [
         "window.Keyboard"
@@ -61,14 +22,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "pluginId": "cordova-plugin-ionic-webview",
       "clobbers": [
         "Ionic.WebView"
-      ]
-    },
-    {
-      "id": "cordova-plugin-ionic-webview.ios-wkwebview-exec",
-      "file": "plugins/cordova-plugin-ionic-webview/src/www/ios/ios-wkwebview-exec.js",
-      "pluginId": "cordova-plugin-ionic-webview",
-      "clobbers": [
-        "cordova.exec"
       ]
     },
     {
@@ -104,6 +57,45 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       ]
     },
     {
+      "id": "cordova-plugin-chrome-apps-common.events",
+      "file": "plugins/cordova-plugin-chrome-apps-common/events.js",
+      "pluginId": "cordova-plugin-chrome-apps-common",
+      "clobbers": [
+        "chrome.Event"
+      ]
+    },
+    {
+      "id": "cordova-plugin-chrome-apps-common.errors",
+      "file": "plugins/cordova-plugin-chrome-apps-common/errors.js",
+      "pluginId": "cordova-plugin-chrome-apps-common"
+    },
+    {
+      "id": "cordova-plugin-chrome-apps-common.stubs",
+      "file": "plugins/cordova-plugin-chrome-apps-common/stubs.js",
+      "pluginId": "cordova-plugin-chrome-apps-common"
+    },
+    {
+      "id": "cordova-plugin-chrome-apps-common.helpers",
+      "file": "plugins/cordova-plugin-chrome-apps-common/helpers.js",
+      "pluginId": "cordova-plugin-chrome-apps-common"
+    },
+    {
+      "id": "cordova-plugin-chrome-apps-sockets-tcp.sockets.tcp",
+      "file": "plugins/cordova-plugin-chrome-apps-sockets-tcp/sockets.tcp.js",
+      "pluginId": "cordova-plugin-chrome-apps-sockets-tcp",
+      "clobbers": [
+        "chrome.sockets.tcp"
+      ]
+    },
+    {
+      "id": "cordova-plugin-hotspot.HotSpotPlugin",
+      "file": "plugins/cordova-plugin-hotspot/www/HotSpotPlugin.js",
+      "pluginId": "cordova-plugin-hotspot",
+      "clobbers": [
+        "cordova.plugins.hotspot"
+      ]
+    },
+    {
       "id": "cordova-plugin-network-information.network",
       "file": "plugins/cordova-plugin-network-information/www/network.js",
       "pluginId": "cordova-plugin-network-information",
@@ -135,45 +127,22 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       ]
     },
     {
-      "id": "cordova-plugin-geolocation.Coordinates",
-      "file": "plugins/cordova-plugin-geolocation/www/Coordinates.js",
+      "id": "cordova-plugin-geolocation.geolocation",
+      "file": "plugins/cordova-plugin-geolocation/www/android/geolocation.js",
       "pluginId": "cordova-plugin-geolocation",
       "clobbers": [
-        "Coordinates"
+        "navigator.geolocation"
       ]
     },
     {
       "id": "cordova-plugin-geolocation.PositionError",
       "file": "plugins/cordova-plugin-geolocation/www/PositionError.js",
       "pluginId": "cordova-plugin-geolocation",
-      "clobbers": [
-        "PositionError"
-      ]
-    },
-    {
-      "id": "cordova-plugin-geolocation.Position",
-      "file": "plugins/cordova-plugin-geolocation/www/Position.js",
-      "pluginId": "cordova-plugin-geolocation",
-      "clobbers": [
-        "Position"
-      ]
-    },
-    {
-      "id": "cordova-plugin-geolocation.geolocation",
-      "file": "plugins/cordova-plugin-geolocation/www/geolocation.js",
-      "pluginId": "cordova-plugin-geolocation",
-      "clobbers": [
-        "navigator.geolocation"
-      ]
+      "runs": true
     }
   ];
   module.exports.metadata = {
-    "cordova-plugin-chrome-apps-common": "1.0.7",
-    "cordova-plugin-chrome-apps-iossocketscommon": "1.0.2",
-    "cordova-plugin-chrome-apps-sockets-tcp": "1.3.7",
-    "cordova-plugin-compat": "1.2.0",
     "cordova-plugin-device": "2.0.2",
-    "cordova-plugin-hotspot": "1.2.10",
     "cordova-plugin-ionic-keyboard": "2.2.0",
     "cordova-plugin-ionic-webview": "4.1.3",
     "cordova-plugin-splashscreen": "5.0.2",
@@ -181,6 +150,9 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-whitelist": "1.3.3",
     "cordova-sqlite-storage": "4.0.0",
     "phonegap-plugin-barcodescanner": "8.1.0",
+    "cordova-plugin-chrome-apps-common": "1.0.7",
+    "cordova-plugin-chrome-apps-sockets-tcp": "1.3.7",
+    "cordova-plugin-hotspot": "1.2.10",
     "cordova-plugin-network-information": "2.0.2",
     "es6-promise-plugin": "4.1.0",
     "wifiwizard2": "3.1.1",

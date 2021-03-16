@@ -14,10 +14,11 @@ import { Hotspot } from '@ionic-native/hotspot/ngx';
 import { WifiWizard2 } from '@ionic-native/wifi-wizard-2/ngx';
 import { AddbottlemodalPage } from './addbottlemodal/addbottlemodal.page';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { RackcontentPage } from './rackcontent/rackcontent.page';
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent,RackcontentPage,AddbottlemodalPage],
+  entryComponents: [RackcontentPage,AddbottlemodalPage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

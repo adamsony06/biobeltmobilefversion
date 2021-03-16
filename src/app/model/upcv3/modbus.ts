@@ -496,7 +496,7 @@ export class ModbusClient extends StateMachine {
   autoreconnect: boolean = false;
   verbose: boolean = true;
   
-  constructor(timeout: number = 15000, autoreconnect: boolean = false, verbose: boolean = false) {
+  constructor(timeout: number = 15000, autoreconnect: boolean = false, verbose: boolean = true) {
     super('init');
     this.timeout = timeout;
     this.autoreconnect = autoreconnect;

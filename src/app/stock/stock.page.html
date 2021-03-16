@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-back-button defaultHref="home"></ion-back-button>
     </ion-buttons>
     <ion-title>{{name.name}}</ion-title>
     <ion-buttons slot="end" *ngIf="!global.isBBAM">
@@ -41,7 +41,7 @@
 
 <ion-footer>
   <ion-button *ngIf="addStock" expand="block" (click)="addBottle();">
-      Ajouter une Bouteille
+    Réception de Bouteilles
   </ion-button>
   <ion-button *ngIf="retStock" expand="block" (click)="retBottles();">
     Retour au dépôt
@@ -50,10 +50,10 @@
     Enlever une Bouteille
 </ion-button>
 <ion-button *ngIf="addStock" expand="block" (click)="addRack();">
-    Ajouter un Rack
+    Ajouter/Sélectionner un Rack
 </ion-button>
 <ion-button *ngIf="retStock" expand="block" (click)="retRack();">
-  Retour au Rack
+  Sélectionner un Rack
 </ion-button>
 <!--<ion-button *ngIf="remStock" expand="block" color="danger" (click)="remRack();">
   Enlever un Rack

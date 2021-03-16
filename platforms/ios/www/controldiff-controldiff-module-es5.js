@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button></ion-menu-button>\n    </ion-buttons>\n    <ion-title>Contrôle Mini/Maxi</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <ion-refresher slot=\"fixed\" id=\"refresher\" (ionRefresh)=\"doRefresh($event)\">\n    <ion-refresher-content></ion-refresher-content>\n  </ion-refresher>\n  <ion-grid>\n    <ion-row style=\"text-align: center;\">\n      <ion-col size=\"12\"><ion-button shape=\"round\" size=\"large\" [color]=\"colordif\" (click)=\"startstop();\">{{textdiff}}</ion-button></ion-col>\n    </ion-row>\n\n  </ion-grid>\n  <ion-card>\n    <ion-card-header>\n      <ion-card-title style=\"text-align: center;\">Mesures</ion-card-title>\n    </ion-card-header>\n    <ion-card-content>\n      <ion-grid>\n        <ion-row>\n          <ion-col size=\"6\">\n            <ion-label color=\"dark\">{{\"Intensité : \"+ intensity}}</ion-label>\n          </ion-col>\n          <ion-col size=\"6\">\n            <ion-label color=\"dark\">{{\"Température : \"+temp.toFixed(2)+\" °C\"}}</ion-label>\n        </ion-col>\n        </ion-row>\n        <!--<ion-row>\n          <ion-col size=\"6\"></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\" style=\"font-weight :bolder\"> Réf</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\" style=\"font-weight :bolder\">Mesure</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"6\"><ion-label color=\"dark\">Débit (nl/min):</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{fluxref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{flux.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"6\"><ion-label color=\"dark\">PE (Bars):</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{inputref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{input.toFixed(3)}}</ion-label></ion-col>\n\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"6\"><ion-label color=\"dark\">PS (Bars):</ion-label></ion-col>\n          <ion-col size=\"3\"></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{output.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"6\"><ion-label color=\"dark\">PS comp (Bars):</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{outputref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{outputcomp.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>-->\n      </ion-grid>\n    </ion-card-content>\n  </ion-card> \n  <ion-card>\n    <ion-card-content>\n      <ion-grid>\n        <ion-row>\n          <ion-col size=\"6\"></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1}\"><ion-label color=\"dark\">B1</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1}\"><ion-label color=\"dark\">B2</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"3\"></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">ref</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1}\"><ion-label color=\"dark\">mes</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1}\"><ion-label color=\"dark\">mes</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"3\">PE (bar)</ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{inputref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1}\"><ion-label color=\"dark\">{{PEB1Int1.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1}\"><ion-label color=\"dark\">{{PEB2Int1.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"3\">PSc (bar)</ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{outputref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1}\"><ion-label color=\"dark\">{{PSB1Int1.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1}\"><ion-label color=\"dark\">{{PSB2Int1.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"3\">Deb (l/mn)</ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{fluxref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1}\"><ion-label color=\"dark\">{{DebB1Int1.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1}\"><ion-label color=\"dark\">{{DebB2Int1.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n      </ion-grid>\n    </ion-card-content>\n  </ion-card> \n  <ion-card>\n    <ion-card-content>\n      <ion-row>\n        <ion-col size=\"6\"></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10}\"><ion-label color=\"dark\">B1</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10}\"><ion-label color=\"dark\">B2</ion-label></ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"3\"></ion-col>\n        <ion-col size=\"3\"><ion-label color=\"dark\">ref</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10}\"><ion-label color=\"dark\">mes</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10}\"><ion-label color=\"dark\">mes</ion-label></ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"3\">PE (bar)</ion-col>\n        <ion-col size=\"3\"><ion-label color=\"dark\">{{inputref.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10}\"><ion-label color=\"dark\">{{PEB1Int10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10}\"><ion-label color=\"dark\">{{PEB2Int10.toFixed(3)}}</ion-label></ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"3\">PSc (bar)</ion-col>\n        <ion-col size=\"3\"><ion-label color=\"dark\">{{outputref10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10}\"><ion-label color=\"dark\">{{PSB1Int10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10}\"><ion-label color=\"dark\">{{PSB2Int10.toFixed(3)}}</ion-label></ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"3\">Deb (l/mn)</ion-col>\n        <ion-col size=\"3\"><ion-label color=\"dark\">{{fluxref10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10}\"><ion-label color=\"dark\">{{DebB1Int10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10}\"><ion-label color=\"dark\">{{DebB2Int10.toFixed(3)}}</ion-label></ion-col>\n      </ion-row>\n    </ion-card-content>\n  </ion-card>\n</ion-content>\n"
+module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button></ion-menu-button>\n    </ion-buttons>\n    <ion-title>Contrôle Mini/Maxi</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <ion-refresher slot=\"fixed\" id=\"refresher\" (ionRefresh)=\"doRefresh($event)\">\n    <ion-refresher-content></ion-refresher-content>\n  </ion-refresher>\n  <ion-grid>\n    <ion-row style=\"text-align: center;\">\n      <ion-col size=\"12\"><ion-button shape=\"round\" size=\"large\" [color]=\"colordif\" (click)=\"startstop();\">{{textdiff}}</ion-button></ion-col>\n    </ion-row>\n\n  </ion-grid>\n  <ion-card>\n    <ion-card-header>\n      <ion-card-title style=\"text-align: center;\">Mesures</ion-card-title>\n    </ion-card-header>\n    <ion-card-content>\n      <ion-grid>\n        <ion-row>\n          <ion-col size=\"6\">\n            <ion-label color=\"dark\">{{\"Intensité : \"+ intensity}}</ion-label>\n          </ion-col>\n          <ion-col size=\"6\">\n            <ion-label color=\"dark\">{{\"Température : \"+temp.toFixed(2)+\" °C\"}}</ion-label>\n        </ion-col>\n        </ion-row>\n        <!--<ion-row>\n          <ion-col size=\"6\"></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\" style=\"font-weight :bolder\"> Réf</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\" style=\"font-weight :bolder\">Mesure</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"6\"><ion-label color=\"dark\">Débit (nl/min):</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{fluxref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{flux.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"6\"><ion-label color=\"dark\">PE (Bars):</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{inputref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{input.toFixed(3)}}</ion-label></ion-col>\n\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"6\"><ion-label color=\"dark\">PS (Bars):</ion-label></ion-col>\n          <ion-col size=\"3\"></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{output.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"6\"><ion-label color=\"dark\">PS comp (Bars):</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{outputref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{outputcomp.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>-->\n      </ion-grid>\n    </ion-card-content>\n  </ion-card> \n  <ion-card>\n    <ion-card-content>\n      <ion-grid>\n        <ion-row>\n          <ion-col size=\"6\"></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1}\"><ion-label color=\"dark\">B1</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1}\"><ion-label color=\"dark\">B2</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"3\"></ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">ref</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1}\"><ion-label color=\"dark\">mes</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1}\"><ion-label color=\"dark\">mes</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"3\">PE (bar)</ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{inputref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1,'bgsuccess':backgroundPEB1Int1,'bgdanger':!backgroundPEB1Int1}\"><ion-label color=\"dark\">{{PEB1Int1.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1,'bgsuccess':backgroundPEB2Int1,'bgdanger':!backgroundPEB2Int1}\"><ion-label color=\"dark\">{{PEB2Int1.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"3\">PSc (bar)</ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{outputref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1,'bgsuccess':backgroundPSB1Int1,'bgdanger':!backgroundPSB1Int1,'bgwarning':bgpswarningB1Int1}\"><ion-label color=\"dark\">{{PSB1Int1.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1,'bgsuccess':backgroundPSB2Int1,'bgdanger':!backgroundPSB2Int1,'bgwarning':bgpswarningB2Int1}\"><ion-label color=\"dark\">{{PSB2Int1.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n        <ion-row>\n          <ion-col size=\"3\">Deb (l/mn)</ion-col>\n          <ion-col size=\"3\"><ion-label color=\"dark\">{{fluxref.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I1,'bgsuccess':backgroundDebB1Int1,'bgdanger':!backgroundDebB1Int1, 'bgwarning':bgdebwarningB1Int1}\"><ion-label color=\"dark\">{{DebB1Int1.toFixed(3)}}</ion-label></ion-col>\n          <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I1,'bgsuccess':backgroundDebB2Int1,'bgdanger':!backgroundDebB2Int1, 'bgwarning':bgdebwarningB2Int1}\"><ion-label color=\"dark\">{{DebB2Int1.toFixed(3)}}</ion-label></ion-col>\n        </ion-row>\n      </ion-grid>\n    </ion-card-content>\n  </ion-card> \n  <ion-card>\n    <ion-card-content>\n      <ion-row>\n        <ion-col size=\"6\"></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10}\"><ion-label color=\"dark\">B1</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10}\"><ion-label color=\"dark\">B2</ion-label></ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"3\"></ion-col>\n        <ion-col size=\"3\"><ion-label color=\"dark\">ref</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10}\"><ion-label color=\"dark\">mes</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10}\"><ion-label color=\"dark\">mes</ion-label></ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"3\">PE (bar)</ion-col>\n        <ion-col size=\"3\"><ion-label color=\"dark\">{{inputref.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10,'bgsuccess':backgroundPEB1Int10,'bgdanger':!backgroundPEB1Int10}\"><ion-label color=\"dark\">{{PEB1Int10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10,'bgsuccess':backgroundPEB2Int10,'bgdanger':!backgroundPEB2Int10}\"><ion-label color=\"dark\">{{PEB2Int10.toFixed(3)}}</ion-label></ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"3\">PSc (bar)</ion-col>\n        <ion-col size=\"3\"><ion-label color=\"dark\">{{outputref10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10,'bgsuccess':backgroundPSB1Int10,'bgdanger':!backgroundPSB1Int10,'bgwarning':bgpswarningB1Int10}\"><ion-label color=\"dark\">{{PSB1Int10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10,'bgsuccess':backgroundPSB2Int10,'bgdanger':!backgroundPSB2Int10,'bgwarning':bgpswarningB2Int10}\"><ion-label color=\"dark\">{{PSB2Int10.toFixed(3)}}</ion-label></ion-col>\n      </ion-row>\n      <ion-row>\n        <ion-col size=\"3\">Deb (l/mn)</ion-col>\n        <ion-col size=\"3\"><ion-label color=\"dark\">{{fluxref10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB1I10,'bgsuccess':backgroundDebB1Int10,'bgdanger':!backgroundDebB1Int10, 'bgwarning':bgdebwarningB1Int10}\"><ion-label color=\"dark\">{{DebB1Int10.toFixed(3)}}</ion-label></ion-col>\n        <ion-col size=\"3\" [ngClass]=\"{'highlight' : highlightB2I10,'bgsuccess':backgroundDebB2Int10,'bgdanger':!backgroundDebB2Int10, 'bgwarning':bgdebwarningB2Int10}\"><ion-label color=\"dark\">{{DebB2Int10.toFixed(3)}}</ion-label></ion-col>\n      </ion-row>\n    </ion-card-content>\n  </ion-card>\n</ion-content>\n"
 
 /***/ }),
 
@@ -150,16 +150,31 @@ var ControldiffPage = /** @class */ (function () {
         this.fluxref10 = 0;
         this.fluxmax = 0;
         this.flux = 0;
-        this.backgroundDeb = false;
-        this.bgdebwarning = false;
-        this.backgroundPE = false;
+        this.backgroundDebB1Int1 = false;
+        this.backgroundDebB1Int10 = false;
+        this.backgroundDebB2Int1 = false;
+        this.backgroundDebB2Int10 = false;
+        this.bgdebwarningB1Int1 = false;
+        this.bgdebwarningB1Int10 = false;
+        this.bgdebwarningB2Int1 = false;
+        this.bgdebwarningB2Int10 = false;
+        this.backgroundPEB1Int1 = false;
+        this.backgroundPEB1Int10 = false;
+        this.backgroundPEB2Int1 = false;
+        this.backgroundPEB2Int10 = false;
         this.inputref = 0;
         this.outputref10 = 0;
         this.input = 0;
         this.output = 0;
         this.outputref = 0;
-        this.backgroundPS = false;
-        this.bgpswarning = false;
+        this.backgroundPSB1Int1 = false;
+        this.backgroundPSB1Int10 = false;
+        this.backgroundPSB2Int1 = false;
+        this.backgroundPSB2Int10 = false;
+        this.bgpswarningB1Int1 = false;
+        this.bgpswarningB1Int10 = false;
+        this.bgpswarningB2Int1 = false;
+        this.bgpswarningB2Int10 = false;
         this.outputcomp = 0;
         this.PEB1Int1 = 0;
         this.PEB2Int1 = 0;
@@ -179,269 +194,404 @@ var ControldiffPage = /** @class */ (function () {
         this.highlightB2I10 = false;
     }
     ControldiffPage.prototype.ngOnInit = function () {
-        var _this = this;
-        this.upc3s = JSON.parse(localStorage.getItem("upc3"));
-        this.upc3s.forEach(function (item) {
-            if (item.upcNameId == "Test4G1") {
-                _this.inputref = 2 + 0.8 * (item.generalParameters.upcTrapNum - 10) / 90;
-                //this.fluxref = 0.2;
-                //this.fluxref10 = 2;
-                _this.outputref = item.generalParameters.co2PresOutRef1 / 1000;
-                _this.outputref10 = item.generalParameters.co2PresOutRef10 / 1000;
-            }
-        });
-        if (this.platform.is('ios')) {
-            this.platform.ready().then(function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                var _this = this;
-                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                    if (localStorage.getItem("BBAM") != "true") {
-                        WifiWizard2.iOSConnectNetwork("BBAM", "BioBeltService").then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                            var loading;
-                            var _this = this;
-                            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this.loadingCTRL.create({
-                                            message: "Connection à l'UPC en cours...",
-                                            duration: 10000
-                                        })];
-                                    case 1:
-                                        loading = _a.sent();
-                                        loading.present();
-                                        this.global.isBBAM = true;
-                                        localStorage.setItem("BBAM", "" + true);
-                                        this.platform.ready().then(function (readySource) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                            var _this = this;
-                                            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0:
-                                                        if (!(readySource == "cordova")) return [3 /*break*/, 2];
-                                                        this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_6__["UPCModbus"](function (state) {
-                                                            _this.ngZone.run(function () {
-                                                                // Force refresh UI
-                                                                //this.readDiffusionParameters();
-                                                            });
-                                                        });
-                                                        return [4 /*yield*/, this.upc.client.connect()];
-                                                    case 1:
-                                                        _a.sent();
-                                                        this.readParams(loading);
-                                                        _a.label = 2;
-                                                    case 2: return [2 /*return*/];
-                                                }
-                                            });
-                                        }); });
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                    }
-                    else {
-                        this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_6__["UPCModbus"](function (state) {
-                            _this.ngZone.run(function () {
-                                // Force refresh UI
-                                //this.readDiffusionParameters();
-                            });
-                        });
-                        //await this.upc.client.connect();
-                        setTimeout(function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                            var _this = this;
-                            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: 
-                                    //this.ngZone.run(async ()=>{
-                                    return [4 /*yield*/, this.upc.client.getFloatFromHoldingRegister(40018).then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                            var _this = this;
-                                            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                                switch (_a.label) {
-                                                    case 0:
-                                                        this.fluxmax = res;
-                                                        this.fluxref = this.fluxmax / 10;
-                                                        this.fluxref10 = this.fluxmax;
-                                                        return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40065, 1, 1).then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                                                var _this = this;
-                                                                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                                                    switch (_a.label) {
-                                                                        case 0:
-                                                                            this.intensity = 1;
-                                                                            return [4 /*yield*/, this.upc.client.getFloatFromHoldingRegister(40451).then(function (res) {
-                                                                                    _this.temp = res;
-                                                                                })
-                                                                                /*this.global.interval = setInterval(async ()=>{
-                                                                                  await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
-                                                                                    //40435
-                                                                                    var iFlux = [res[19],res[20]]
-                                                                                    this.input = this.upc.client.registerToFloat(iFlux);
-                                                                                    
-                                                                                    //40437
-                                                                                    var out = [res[21],res[22]]
-                                                                                    this.output = this.upc.client.registerToFloat(out);
-                                                                    
-                                                                                    //40439
-                                                                                    var f = [res[23],res[24]];
-                                                                                    this.flux = this.upc.client.registerToFloat(f);
-                                                                    
-                                                                                    //40451
-                                                                                    var tmp = [res[35],res[36]];
-                                                                                    this.temp = this.upc.client.registerToFloat(tmp);
-                                                                                    
-                                                                                    //40463
-                                                                                    var outcomp = [res[47],res[48]];
-                                                                                    this.outputcomp = this.upc.client.registerToFloat(outcomp);
-                                                                  
-                                                                                    this.global.ssid = "BBAM";
-                                                                                    this.global.isBBAM = true;
-                                                                    
-                                                                                    this.cd.detectChanges();
-                                                                                    //loading.dismiss();
-                                                                                  }).catch(err=>{
-                                                                                    this.ngOnInit();
-                                                                                  })
-                                                                                },2000)*/
-                                                                            ];
-                                                                        case 1:
-                                                                            _a.sent();
-                                                                            return [2 /*return*/];
-                                                                    }
-                                                                });
-                                                            }); }).catch(function (err) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                                                var _this = this;
-                                                                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                                                    switch (_a.label) {
-                                                                        case 0: return [4 /*yield*/, this.upc.client.readHoldingRegisters(40416, 100).then(function (res) {
-                                                                                //40435
-                                                                                var iFlux = [res[19], res[20]];
-                                                                                _this.input = _this.upc.client.registerToFloat(iFlux);
-                                                                                //40437
-                                                                                var out = [res[21], res[22]];
-                                                                                _this.output = _this.upc.client.registerToFloat(out);
-                                                                                //40439
-                                                                                var f = [res[23], res[24]];
-                                                                                _this.flux = _this.upc.client.registerToFloat(f);
-                                                                                //40451
-                                                                                var tmp = [res[35], res[36]];
-                                                                                _this.temp = _this.upc.client.registerToFloat(tmp);
-                                                                                //40463
-                                                                                var outcomp = [res[47], res[48]];
-                                                                                _this.outputcomp = _this.upc.client.registerToFloat(outcomp);
-                                                                                _this.cd.detectChanges();
-                                                                                //loading.dismiss();
-                                                                            }).catch(function (err) {
-                                                                            })];
-                                                                        case 1:
-                                                                            _a.sent();
-                                                                            return [2 /*return*/];
-                                                                    }
-                                                                });
-                                                            }); })];
-                                                    case 1:
-                                                        _a.sent();
-                                                        return [2 /*return*/];
-                                                }
-                                            });
-                                        }); })
-                                        /*await this.upc.client.getIntFromHoldingRegister(40015,1).then(res=>{
-                                          this.inputref = 2+0.8*(res-10)/90;
-                                          this.fluxref = 0.017*res;
-                                          this.fluxref10 = 0.17*res;
-                                          this.cd.detectChanges();
-                                })*/
-                                        /*await this.upc.client.getFloatFromHoldingRegister(40435).then(res=>{
-                                          this.input = res;
-                                          this.cd.detectChanges();
-                                        }).catch(err=>{
-                                          
-                                        })*/
-                                        /*await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
-                                          this.temp = res;
-                                        })*/
-                                        /*await this.upc.client.setFloatInHoldingRegister(40018,1).then(res=>{
-                                          this.fluxmax = 1;
-                                          this.cd.detectChanges();
-                                        })
-                                        await this.upc.client.setIntInHoldingRegister(40065,1,1).then(res=>{
-                                            this.intensity = 1;
-                                            this.cd.detectChanges();
-                                        })*/
-                                        /*await this.upc.client.getFloatFromHoldingRegister(40463).then(res=>{
-                                          this.outputcomp = res;
-                                          this.cd.detectChanges();
-                                        })*/
-                                        /*this.upc.client.getStringFromHoldingRegister(40045,10).then(res=>{
-                                          this.global.ssid = res;
-                                        })*/
-                                        /*await this.upc.client.getStringFromHoldingRegister(40001,10).then(res=>{
-                                          //var upc = res.replace(/[^a-zA-Z0-9]/g,'');
-                                          var upc = "Test4G1";
-                                          this.upc3s.forEach(item=>{
-                                            if(item.upcNameId == upc){
-                                              this.outputref = item.generalParameters.co2PresOutRef1/1000;
-                                              this.outputref10 = item.generalParameters.co2PresOutRef10/1000;
-                                            }
-                                          })
-                                          this.cd.detectChanges();
-                                        })*/
-                                        /*await this.upc.client.getFloatFromHoldingRegister(40437).then(res=>{
-                                          this.output = res;
-                                          this.cd.detectChanges();
-                                        })*/
-                                        /*await this.upc.client.getFloatFromHoldingRegister(40439).then(res=>{
-                                          this.flux = res;
-                                          this.cd.detectChanges();
-                                        })*/
-                                        //})
-                                    ];
-                                    case 1:
-                                        //this.ngZone.run(async ()=>{
-                                        _a.sent();
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); }, 2000);
-                    }
-                    return [2 /*return*/];
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                this.upc3s = JSON.parse(localStorage.getItem("upc3"));
+                this.upc3s.forEach(function (item) {
+                    //if(item.upcNameId == "Test4G1"){
+                    _this.inputref = 2 + 0.8 * (item.generalParameters.upcTrapNum - 10) / 90;
+                    //this.fluxref = 0.2;
+                    //this.fluxref10 = 2;
+                    _this.outputref = item.generalParameters.co2PresOutRef1 / 1000;
+                    _this.outputref10 = item.generalParameters.co2PresOutRef10 / 1000;
+                    //}
                 });
-            }); });
-        }
-        else if (this.platform.is("android")) {
-            this.hotspot.connectToWifi("BBAM", "BioBeltService").then(function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                var loading;
-                var _this = this;
-                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.loadingCTRL.create({
-                                message: "Connection à l'UPC en cours...",
-                                duration: 10000
-                            })];
-                        case 1:
-                            loading = _a.sent();
-                            loading.present();
-                            this.global.isBBAM = true;
-                            this.platform.ready().then(function (readySource) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                var _this = this;
-                                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            if (!(readySource == 'cordova')) return [3 /*break*/, 2];
-                                            this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_6__["UPCModbus"](function (state) {
-                                                _this.ngZone.run(function () {
-                                                    // Force refresh UI
-                                                    //this.readDiffusionParameters();
-                                                });
-                                            });
-                                            return [4 /*yield*/, this.upc.client.connect()];
-                                        case 1:
-                                            _a.sent();
-                                            this.readParams(loading);
-                                            _a.label = 2;
-                                        case 2: return [2 /*return*/];
-                                    }
+                /*if(this.platform.is('ios')){
+                  this.platform.ready().then(async ()=>{
+                    if(localStorage.getItem("BBAM") != "true"){
+                      WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(async res=>{
+                        var loading = await this.loadingCTRL.create({
+                          message : "Connection à l'UPC en cours...",
+                          duration : 10000
+                        })
+                        loading.present();
+                        this.global.isBBAM = true;
+                        this.global.ssid = "BBAM";
+                        localStorage.setItem("BBAM",""+true);
+                        this.platform.ready().then(async readySource => {
+                            if(readySource == "cordova"){
+                              this.upc = new UPCModbus(state => {
+                                this.ngZone.run(() => {
+                                  // Force refresh UI
+                                  
+                                    
+                                    //this.readDiffusionParameters();
+                                  
                                 });
-                            }); });
-                            return [2 /*return*/];
+                              });
+                              await this.upc.client.connect();
+                              this.readParams(loading);
+                            }
+                        })
+                        
+                      })
+                    } else {
+                      this.upc = new UPCModbus(state => {
+                        this.ngZone.run(() => {
+                          // Force refresh UI
+                          
+                            
+                            //this.readDiffusionParameters();
+                          
+                        });
+                      });
+                      //await this.upc.client.connect();
+                      setTimeout(async ()=>{
+                        //this.ngZone.run(async ()=>{
+                        await this.upc.client.getFloatFromHoldingRegister(40018).then(async res =>{
+                          this.global.isBBAM = true;
+                          this.global.ssid = "BBAM";
+                          this.fluxmax = res;
+                          this.fluxref = this.fluxmax/10;
+                          this.fluxref10 = this.fluxmax;
+                          await this.upc.client.setIntInHoldingRegister(40065,1,1).then(async res=>{
+                            this.intensity = 1;
+                            await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
+                              this.temp = res;
+                              
+                            })
+                           /*this.global.interval = setInterval(async ()=>{
+                             await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
+                               //40435
+                               var iFlux = [res[19],res[20]]
+                               this.input = this.upc.client.registerToFloat(iFlux);
+                               
+                               //40437
+                               var out = [res[21],res[22]]
+                               this.output = this.upc.client.registerToFloat(out);
+               
+                               //40439
+                               var f = [res[23],res[24]];
+                               this.flux = this.upc.client.registerToFloat(f);
+               
+                               //40451
+                               var tmp = [res[35],res[36]];
+                               this.temp = this.upc.client.registerToFloat(tmp);
+                               
+                               //40463
+                               var outcomp = [res[47],res[48]];
+                               this.outputcomp = this.upc.client.registerToFloat(outcomp);
+             
+                               this.global.ssid = "BBAM";
+                               this.global.isBBAM = true;
+               
+                               this.cd.detectChanges();
+                               //loading.dismiss();
+                             }).catch(err=>{
+                               this.ngOnInit();
+                             })
+                           },2000)*/
+                /*}).catch(async err=>{
+                 await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
+                   //40435
+                   var iFlux = [res[19],res[20]]
+                   this.input = this.upc.client.registerToFloat(iFlux);
+                   
+                   //40437
+                   var out = [res[21],res[22]]
+                   this.output = this.upc.client.registerToFloat(out);
+   
+                   //40439
+                   var f = [res[23],res[24]];
+                   this.flux = this.upc.client.registerToFloat(f);
+   
+                   //40451
+                   var tmp = [res[35],res[36]];
+                   this.temp = this.upc.client.registerToFloat(tmp);
+                   
+                   //40463
+                   var outcomp = [res[47],res[48]];
+                   this.outputcomp = this.upc.client.registerToFloat(outcomp);
+   
+                   this.cd.detectChanges();
+                   //loading.dismiss();
+                 }).catch(err=>{
+                   
+                 })
+                })
+              })*/
+                /*await this.upc.client.getIntFromHoldingRegister(40015,1).then(res=>{
+                  this.inputref = 2+0.8*(res-10)/90;
+                  this.fluxref = 0.017*res;
+                  this.fluxref10 = 0.17*res;
+                  this.cd.detectChanges();
+        })*/
+                /*await this.upc.client.getFloatFromHoldingRegister(40435).then(res=>{
+                  this.input = res;
+                  this.cd.detectChanges();
+                }).catch(err=>{
+                  
+                })*/
+                /*await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
+                  this.temp = res;
+                })*/
+                /*await this.upc.client.setFloatInHoldingRegister(40018,1).then(res=>{
+                  this.fluxmax = 1;
+                  this.cd.detectChanges();
+                })
+                await this.upc.client.setIntInHoldingRegister(40065,1,1).then(res=>{
+                    this.intensity = 1;
+                    this.cd.detectChanges();
+                })*/
+                /*await this.upc.client.getFloatFromHoldingRegister(40463).then(res=>{
+                  this.outputcomp = res;
+                  this.cd.detectChanges();
+                })*/
+                /*this.upc.client.getStringFromHoldingRegister(40045,10).then(res=>{
+                  this.global.ssid = res;
+                })*/
+                /*await this.upc.client.getStringFromHoldingRegister(40001,10).then(res=>{
+                  //var upc = res.replace(/[^a-zA-Z0-9]/g,'');
+                  var upc = "Test4G1";
+                  this.upc3s.forEach(item=>{
+                    if(item.upcNameId == upc){
+                      this.outputref = item.generalParameters.co2PresOutRef1/1000;
+                      this.outputref10 = item.generalParameters.co2PresOutRef10/1000;
                     }
-                });
-            }); });
-        }
+                  })
+                  this.cd.detectChanges();
+                })*/
+                /*await this.upc.client.getFloatFromHoldingRegister(40437).then(res=>{
+                  this.output = res;
+                  this.cd.detectChanges();
+                })*/
+                /*await this.upc.client.getFloatFromHoldingRegister(40439).then(res=>{
+                  this.flux = res;
+                  this.cd.detectChanges();
+                })*/
+                //})
+                /*},2000)
+              }
+              
+            })
+            
+          }*/ //else if(this.platform.is("android")){
+                //this.hotspot.connectToWifi("BBAM","BioBeltService").then(async()=>{
+                /*var loading = await this.loadingCTRL.create({
+                  message : "Connection à l'UPC en cours...",
+                  duration : 10000
+                })
+                loading.present();*/
+                this.global.isBBAM = true;
+                this.global.ssid = "BBAM";
+                this.platform.ready().then(function (readySource) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                    var _this = this;
+                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!(readySource == 'cordova')) return [3 /*break*/, 2];
+                                this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_6__["UPCModbus"](function (state) {
+                                    _this.ngZone.run(function () {
+                                        // Force refresh UI
+                                        //this.readDiffusionParameters();
+                                    });
+                                });
+                                return [4 /*yield*/, this.upc.client.connect()];
+                            case 1:
+                                _a.sent();
+                                //this.readParams(loading);
+                                setTimeout(function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                                    var _this = this;
+                                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: 
+                                            //this.ngZone.run(async ()=>{
+                                            return [4 /*yield*/, this.upc.client.getFloatFromHoldingRegister(40018).then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                                                    var _this = this;
+                                                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                                                        switch (_a.label) {
+                                                            case 0:
+                                                                this.fluxmax = res;
+                                                                this.fluxref = this.fluxmax / 10;
+                                                                this.fluxref10 = this.fluxmax;
+                                                                return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40065, 1, 1).then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                                                                        var _this = this;
+                                                                        return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                                                                            switch (_a.label) {
+                                                                                case 0:
+                                                                                    this.intensity = 1;
+                                                                                    return [4 /*yield*/, this.upc.client.getFloatFromHoldingRegister(40451).then(function (res) {
+                                                                                            _this.temp = res;
+                                                                                            //loading.dismiss();
+                                                                                        })
+                                                                                        /*this.global.interval = setInterval(async ()=>{
+                                                                                          await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
+                                                                                            //40435
+                                                                                            var iFlux = [res[19],res[20]]
+                                                                                            this.input = this.upc.client.registerToFloat(iFlux);
+                                                                                            
+                                                                                            //40437
+                                                                                            var out = [res[21],res[22]]
+                                                                                            this.output = this.upc.client.registerToFloat(out);
+                                                                             
+                                                                                            //40439
+                                                                                            var f = [res[23],res[24]];
+                                                                                            this.flux = this.upc.client.registerToFloat(f);
+                                                                             
+                                                                                            //40451
+                                                                                            var tmp = [res[35],res[36]];
+                                                                                            this.temp = this.upc.client.registerToFloat(tmp);
+                                                                                            
+                                                                                            //40463
+                                                                                            var outcomp = [res[47],res[48]];
+                                                                                            this.outputcomp = this.upc.client.registerToFloat(outcomp);
+                                                                             
+                                                                                            this.global.ssid = "BBAM";
+                                                                             
+                                                                                            this.cd.detectChanges();
+                                                                                            loading.dismiss();
+                                                                                          }).catch(err=>{
+                                                                                            this.ngOnInit();
+                                                                                          })
+                                                                                        },2000) */
+                                                                                    ];
+                                                                                case 1:
+                                                                                    _a.sent();
+                                                                                    return [2 /*return*/];
+                                                                            }
+                                                                        });
+                                                                    }); })]; /*.catch(async err=>{
+                                                                 await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
+                                                                   //40435
+                                                                   var iFlux = [res[19],res[20]]
+                                                                   this.input = this.upc.client.registerToFloat(iFlux);
+                                                                   
+                                                                   //40437
+                                                                   var out = [res[21],res[22]]
+                                                                   this.output = this.upc.client.registerToFloat(out);
+                                                      
+                                                                   //40439
+                                                                   var f = [res[23],res[24]];
+                                                                   this.flux = this.upc.client.registerToFloat(f);
+                                                      
+                                                                   //40451
+                                                                   var tmp = [res[35],res[36]];
+                                                                   this.temp = this.upc.client.registerToFloat(tmp);
+                                                                   
+                                                                   //40463
+                                                                   var outcomp = [res[47],res[48]];
+                                                                   this.outputcomp = this.upc.client.registerToFloat(outcomp);
+                                                      
+                                                                   this.cd.detectChanges();
+                                                                   loading.dismiss();
+                                                                 }).catch(err=>{
+                                                                   
+                                                                 })
+                                                                })*/
+                                                            case 1:
+                                                                _a.sent(); /*.catch(async err=>{
+                                                                 await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
+                                                                   //40435
+                                                                   var iFlux = [res[19],res[20]]
+                                                                   this.input = this.upc.client.registerToFloat(iFlux);
+                                                                   
+                                                                   //40437
+                                                                   var out = [res[21],res[22]]
+                                                                   this.output = this.upc.client.registerToFloat(out);
+                                                      
+                                                                   //40439
+                                                                   var f = [res[23],res[24]];
+                                                                   this.flux = this.upc.client.registerToFloat(f);
+                                                      
+                                                                   //40451
+                                                                   var tmp = [res[35],res[36]];
+                                                                   this.temp = this.upc.client.registerToFloat(tmp);
+                                                                   
+                                                                   //40463
+                                                                   var outcomp = [res[47],res[48]];
+                                                                   this.outputcomp = this.upc.client.registerToFloat(outcomp);
+                                                      
+                                                                   this.cd.detectChanges();
+                                                                   loading.dismiss();
+                                                                 }).catch(err=>{
+                                                                   
+                                                                 })
+                                                                })*/
+                                                                return [2 /*return*/];
+                                                        }
+                                                    });
+                                                }); }).catch(function (err) {
+                                                    alert("Veuillez vous connecter à BBAM !");
+                                                    _this.global.ssid = "ADMIN";
+                                                    _this.global.isBBAM = false;
+                                                })
+                                                /*await this.upc.client.getIntFromHoldingRegister(40015,1).then(res=>{
+                                                  this.inputref = 2+0.8*(res-10)/90;
+                                                  this.fluxref = 0.017*res;
+                                                  this.fluxref10 = 0.17*res;
+                                                  this.cd.detectChanges();
+                                        })*/
+                                                /*await this.upc.client.getFloatFromHoldingRegister(40435).then(res=>{
+                                                  this.input = res;
+                                                  this.cd.detectChanges();
+                                                }).catch(err=>{
+                                                  
+                                                })*/
+                                                /*await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
+                                                  this.temp = res;
+                                                })*/
+                                                /*await this.upc.client.setFloatInHoldingRegister(40018,1).then(res=>{
+                                                  this.fluxmax = 1;
+                                                  this.cd.detectChanges();
+                                                })
+                                                await this.upc.client.setIntInHoldingRegister(40065,1,1).then(res=>{
+                                                    this.intensity = 1;
+                                                    this.cd.detectChanges();
+                                                })*/
+                                                /*await this.upc.client.getFloatFromHoldingRegister(40463).then(res=>{
+                                                  this.outputcomp = res;
+                                                  this.cd.detectChanges();
+                                                })*/
+                                                /*this.upc.client.getStringFromHoldingRegister(40045,10).then(res=>{
+                                                  this.global.ssid = res;
+                                                })*/
+                                                /*await this.upc.client.getStringFromHoldingRegister(40001,10).then(res=>{
+                                                  //var upc = res.replace(/[^a-zA-Z0-9]/g,'');
+                                                  var upc = "Test4G1";
+                                                  this.upc3s.forEach(item=>{
+                                                    if(item.upcNameId == upc){
+                                                      this.outputref = item.generalParameters.co2PresOutRef1/1000;
+                                                      this.outputref10 = item.generalParameters.co2PresOutRef10/1000;
+                                                    }
+                                                  })
+                                                  this.cd.detectChanges();
+                                                })*/
+                                                /*await this.upc.client.getFloatFromHoldingRegister(40437).then(res=>{
+                                                  this.output = res;
+                                                  this.cd.detectChanges();
+                                                })*/
+                                                /*await this.upc.client.getFloatFromHoldingRegister(40439).then(res=>{
+                                                  this.flux = res;
+                                                  this.cd.detectChanges();
+                                                })*/
+                                                //})
+                                            ];
+                                            case 1:
+                                                //this.ngZone.run(async ()=>{
+                                                _a.sent();
+                                                return [2 /*return*/];
+                                        }
+                                    });
+                                }); }, 1000);
+                                _a.label = 2;
+                            case 2: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
+            });
+        });
     }; //+-2%
     ControldiffPage.prototype.startstop = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
@@ -499,7 +649,11 @@ var ControldiffPage = /** @class */ (function () {
                                             return [2 /*return*/];
                                     }
                                 });
-                            }); })];
+                            }); }).catch(function (err) {
+                                alert("Veuillez vous connecter à BBAM !");
+                                _this.global.ssid = "ADMIN";
+                                _this.global.isBBAM = false;
+                            })];
                     case 1:
                         _a.sent();
                         return [3 /*break*/, 3];
@@ -716,10 +870,35 @@ var ControldiffPage = /** @class */ (function () {
                                         _this.intervalva = setInterval(function () {
                                             _this.upc.client.getFloatFromHoldingRegister(40435).then(function (res) {
                                                 _this.PEB1Int1 = res;
+                                                if (Math.abs(_this.PEB1Int1 - _this.inputref) / _this.inputref < 0.1) {
+                                                    _this.backgroundPEB1Int1 = true;
+                                                }
+                                                else {
+                                                    _this.backgroundPEB1Int1 = false;
+                                                }
                                                 _this.cd.detectChanges();
+                                            }).catch(function (err) {
+                                                alert("Veuillez vous connecter à BBAM !");
+                                                _this.global.ssid = "ADMIN";
+                                                _this.global.isBBAM = false;
+                                                clearInterval(_this.intervalva);
+                                                //clearInterval(this.int);
+                                                _this.highlightB1I1 = false;
+                                                //resolve();
                                             });
                                             _this.upc.client.getFloatFromHoldingRegister(40437).then(function (res) {
                                                 _this.PSB1Int1 = res;
+                                                if (Math.abs((_this.PSB1Int1 - _this.outputref) / _this.outputref) * 100 < 5) {
+                                                    _this.backgroundPSB1Int1 = true;
+                                                    _this.bgpswarningB1Int1 = false;
+                                                }
+                                                else if (Math.abs((_this.PSB1Int1 - _this.outputref) / _this.outputref) * 100 < 10) {
+                                                    _this.bgpswarningB1Int1 = true;
+                                                }
+                                                else {
+                                                    _this.backgroundPSB1Int1 = false;
+                                                    _this.bgpswarningB1Int1 = false;
+                                                }
                                                 _this.cd.detectChanges();
                                             });
                                             _this.upc.client.getFloatFromHoldingRegister(40439).then(function (res) {
@@ -727,6 +906,17 @@ var ControldiffPage = /** @class */ (function () {
                                                     DebB1 = res;
                                                 }
                                                 _this.DebB1Int1 = res;
+                                                if (Math.abs(((_this.DebB1Int1 - _this.fluxref) / _this.fluxref) * 100) < 5) {
+                                                    _this.backgroundDebB1Int1 = true;
+                                                    _this.bgdebwarningB1Int1 = false;
+                                                }
+                                                else if (Math.abs(((_this.DebB1Int1 - _this.fluxref) / _this.fluxref) * 100) < 10) {
+                                                    _this.bgdebwarningB1Int1 = true;
+                                                }
+                                                else {
+                                                    _this.backgroundDebB1Int1 = false;
+                                                    _this.bgdebwarningB1Int1 = false;
+                                                }
                                                 cpt++;
                                                 _this.cd.detectChanges();
                                             });
@@ -789,10 +979,35 @@ var ControldiffPage = /** @class */ (function () {
                                     _this.intervalB2I1 = setInterval(function () {
                                         _this.upc.client.getFloatFromHoldingRegister(40435).then(function (res) {
                                             _this.PEB2Int1 = res;
+                                            if (Math.abs(_this.PEB2Int1 - _this.inputref) / _this.inputref < 0.1) {
+                                                _this.backgroundPEB2Int1 = true;
+                                            }
+                                            else {
+                                                _this.backgroundPEB2Int1 = false;
+                                            }
                                             _this.cd.detectChanges();
+                                        }).catch(function (err) {
+                                            alert("Veuillez vous connecter à BBAM !");
+                                            _this.global.ssid = "ADMIN";
+                                            _this.global.isBBAM = false;
+                                            clearInterval(_this.intervalB2I1);
+                                            //clearInterval(this.int);
+                                            _this.highlightB2I1 = false;
+                                            //resolve();
                                         });
                                         _this.upc.client.getFloatFromHoldingRegister(40437).then(function (res) {
                                             _this.PSB2Int1 = res;
+                                            if (Math.abs((_this.PSB2Int1 - _this.outputref) / _this.outputref) * 100 < 5) {
+                                                _this.backgroundPSB2Int1 = true;
+                                                _this.bgpswarningB2Int1 = false;
+                                            }
+                                            else if (Math.abs((_this.PSB2Int1 - _this.outputref) / _this.outputref) * 100 < 10) {
+                                                _this.bgpswarningB2Int1 = true;
+                                            }
+                                            else {
+                                                _this.backgroundPSB2Int1 = false;
+                                                _this.bgpswarningB2Int1 = false;
+                                            }
                                             _this.cd.detectChanges();
                                         });
                                         _this.upc.client.getFloatFromHoldingRegister(40439).then(function (res) {
@@ -801,6 +1016,17 @@ var ControldiffPage = /** @class */ (function () {
                                             }
                                             cpt++;
                                             _this.DebB2Int1 = res;
+                                            if (Math.abs(((_this.DebB2Int1 - _this.fluxref) / _this.fluxref) * 100) < 5) {
+                                                _this.backgroundDebB2Int1 = true;
+                                                _this.bgdebwarningB2Int1 = false;
+                                            }
+                                            else if (Math.abs(((_this.DebB2Int1 - _this.fluxref) / _this.fluxref) * 100) < 10) {
+                                                _this.bgdebwarningB2Int1 = true;
+                                            }
+                                            else {
+                                                _this.backgroundDebB2Int1 = false;
+                                                _this.bgdebwarningB2Int1 = false;
+                                            }
                                             _this.cd.detectChanges();
                                         });
                                         if (cpt >= 20) {
@@ -868,10 +1094,35 @@ var ControldiffPage = /** @class */ (function () {
                                     _this.intervalB1I10 = setInterval(function () {
                                         _this.upc.client.getFloatFromHoldingRegister(40435).then(function (res) {
                                             _this.PEB1Int10 = res;
+                                            if (Math.abs(_this.PEB1Int10 - _this.inputref) / _this.inputref < 0.1) {
+                                                _this.backgroundPEB1Int10 = true;
+                                            }
+                                            else {
+                                                _this.backgroundPEB1Int10 = false;
+                                            }
                                             _this.cd.detectChanges();
+                                        }).catch(function (err) {
+                                            alert("Veuillez vous connecter à BBAM !");
+                                            _this.global.ssid = "ADMIN";
+                                            _this.global.isBBAM = false;
+                                            clearInterval(_this.intervalB1I10);
+                                            //clearInterval(this.int);
+                                            _this.highlightB1I10 = false;
+                                            //resolve();
                                         });
                                         _this.upc.client.getFloatFromHoldingRegister(40437).then(function (res) {
                                             _this.PSB1Int10 = res;
+                                            if (Math.abs((_this.PSB1Int10 - _this.outputref10) / _this.outputref10) * 100 < 5) {
+                                                _this.backgroundPSB1Int10 = true;
+                                                _this.bgpswarningB1Int10 = false;
+                                            }
+                                            else if (Math.abs((_this.PSB1Int10 - _this.outputref10) / _this.outputref10) * 100 < 10) {
+                                                _this.bgpswarningB1Int10 = true;
+                                            }
+                                            else {
+                                                _this.backgroundPSB1Int10 = false;
+                                                _this.bgpswarningB1Int10 = false;
+                                            }
                                             _this.cd.detectChanges();
                                         });
                                         _this.upc.client.getFloatFromHoldingRegister(40439).then(function (res) {
@@ -880,6 +1131,17 @@ var ControldiffPage = /** @class */ (function () {
                                             }
                                             cpt++;
                                             _this.DebB1Int10 = res;
+                                            if (Math.abs(((_this.DebB1Int10 - _this.fluxref10) / _this.fluxref10) * 100) < 5) {
+                                                _this.backgroundDebB1Int10 = true;
+                                                _this.bgdebwarningB1Int10 = false;
+                                            }
+                                            else if (Math.abs(((_this.DebB1Int10 - _this.fluxref10) / _this.fluxref10) * 100) < 10) {
+                                                _this.bgdebwarningB1Int10 = true;
+                                            }
+                                            else {
+                                                _this.backgroundDebB1Int10 = false;
+                                                _this.bgdebwarningB1Int10 = false;
+                                            }
                                             _this.cd.detectChanges();
                                         });
                                         if (cpt >= 20) {
@@ -925,10 +1187,35 @@ var ControldiffPage = /** @class */ (function () {
                                     _this.intervalB2I10 = setInterval(function () {
                                         _this.upc.client.getFloatFromHoldingRegister(40435).then(function (res) {
                                             _this.PEB2Int10 = res;
+                                            if (Math.abs(_this.PEB2Int10 - _this.inputref) / _this.inputref < 0.1) {
+                                                _this.backgroundPEB2Int10 = true;
+                                            }
+                                            else {
+                                                _this.backgroundPEB2Int10 = false;
+                                            }
                                             _this.cd.detectChanges();
+                                        }).catch(function (err) {
+                                            alert("Veuillez vous connecter à BBAM !");
+                                            _this.global.ssid = "ADMIN";
+                                            _this.global.isBBAM = false;
+                                            clearInterval(_this.intervalB2I10);
+                                            clearInterval(_this.int);
+                                            _this.highlightB2I10 = false;
+                                            //resolve();
                                         });
                                         _this.upc.client.getFloatFromHoldingRegister(40437).then(function (res) {
                                             _this.PSB2Int10 = res;
+                                            if (Math.abs((_this.PSB2Int10 - _this.outputref10) / _this.outputref10) * 100 < 5) {
+                                                _this.backgroundPSB2Int10 = true;
+                                                _this.bgpswarningB2Int10 = false;
+                                            }
+                                            else if (Math.abs((_this.PSB2Int10 - _this.outputref10) / _this.outputref10) * 100 < 10) {
+                                                _this.bgpswarningB2Int10 = true;
+                                            }
+                                            else {
+                                                _this.backgroundPSB2Int10 = false;
+                                                _this.bgpswarningB2Int10 = false;
+                                            }
                                             _this.cd.detectChanges();
                                         });
                                         _this.upc.client.getFloatFromHoldingRegister(40439).then(function (res) {
@@ -937,6 +1224,17 @@ var ControldiffPage = /** @class */ (function () {
                                             }
                                             cpt++;
                                             _this.DebB2Int10 = res;
+                                            if (Math.abs(((_this.DebB2Int10 - _this.fluxref10) / _this.fluxref10) * 100) < 5) {
+                                                _this.backgroundDebB2Int10 = true;
+                                                _this.bgdebwarningB2Int10 = false;
+                                            }
+                                            else if (Math.abs(((_this.DebB2Int10 - _this.fluxref10) / _this.fluxref10) * 100) < 10) {
+                                                _this.bgdebwarningB2Int10 = true;
+                                            }
+                                            else {
+                                                _this.backgroundDebB2Int10 = false;
+                                                _this.bgdebwarningB2Int10 = false;
+                                            }
                                             _this.cd.detectChanges();
                                         });
                                         if (cpt >= 20) {
@@ -979,6 +1277,7 @@ var ControldiffPage = /** @class */ (function () {
             clearInterval(_this.intervalB2I1);
             clearInterval(_this.intervalva);
             clearInterval(_this.intervalB2I10);
+            _this.cd.detectChanges();
         });
     };
     ControldiffPage.ctorParameters = function () { return [

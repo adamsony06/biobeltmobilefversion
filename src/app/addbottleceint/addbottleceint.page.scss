@@ -1,0 +1,28 @@
+.item.item-trns {
+	border-color: rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0);
+	color: white; 
+}
+.bgreen {
+	background-color: green;
+}
+#one {
+	width: 200px;
+	//background: #ccc;
+}
+
+#two {
+	display: inline-block;
+	//background: blue;
+	position: relative;
+	left: 0;
+	width: 100px; height: 100px;
+}
+
+#three {
+	display: inline-block;
+	//background: red;
+	position: relative;
+	left: 0;
+	width: 100px; height: 100px;
+}

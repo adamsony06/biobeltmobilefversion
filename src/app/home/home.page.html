@@ -2,51 +2,44 @@
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>
-      Installation
-    </ion-title>
+    </ion-buttons>    
     <ion-buttons slot="end" *ngIf="!global.isBBAM">
       <ion-button fill="clear"> <ion-icon name="globe" color="light" (click)="onSynchroB1B2();"></ion-icon>ADMIN</ion-button> 
      </ion-buttons>
      <ion-buttons slot="end" *ngIf="global.isBBAM">
       <ion-button fill="clear"> <ion-icon name="wifi" color="light"></ion-icon>{{global.ssid}}</ion-button> 
      </ion-buttons>
+     <ion-title>Accueil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  
-  <ion-grid>
+<ion-content>  
+  <ion-grid>    
     <ion-row>
-      <ion-col size="12">
-        <ion-label>
-          Ceintures à installer 
-        </ion-label>
-      </ion-col>
-      <ion-col>
-        <ion-select placeholder="Ceintures" [(ngModel)]="value">
-          <ion-select-option *ngFor="let upc3 of upcv3;let i = index;" [value]="i">
-            {{upc3.upcNameId}} 
-          </ion-select-option>
-        </ion-select>
-      </ion-col>
+        <ion-col size="12" text-center style="padding-top: 5%;"><h3>Accueil</h3></ion-col>
+        <ion-col size="12">
+          <fieldset>
+            <legend>Type d'opération</legend> 
+          
+           <ion-select  [(ngModel)]="operationType">
+              <ion-select-option class="home-wrapper" *ngFor="let operationTypeOption of operationTypeOptions" [value]="operationTypeOption">
+                {{operationTypeOption}}
+              </ion-select-option>
+            </ion-select>
+          </fieldset>
+        </ion-col>
+      
+      
+       
+      
     </ion-row>
-    <ion-row>
-      <ion-col size="12"> Intervenants</ion-col>
-      <ion-col>
-        <ion-select placeholder="Intervenants" multiple="true" [(ngModel)]="op">
-          <ion-select-option *ngFor="let operator of operators" [value]="operator.lastName">
-            {{operator.lastName}}
-          </ion-select-option>
-        </ion-select>
-      </ion-col>
-    </ion-row>
+    
   </ion-grid>
  
 </ion-content>
 <ion-footer>
   
-    <ion-button color="primary" size="block" (click)="goToPieges();">Suivant</ion-button>
-  
+  <ion-button color="primary" size="block" (click)="goTo(operationType);">Suivant</ion-button>
+
 </ion-footer>
+

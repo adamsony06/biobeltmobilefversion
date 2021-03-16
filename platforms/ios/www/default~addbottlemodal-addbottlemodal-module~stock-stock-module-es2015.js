@@ -55,7 +55,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let AddbottlemodalPage = class AddbottlemodalPage {
-    constructor(scan, modal, upcv3Service, storage, router, platform, network, ngZone, loadingCTRL, global) {
+    constructor(scan, modal, upcv3Service, storage, router, platform, network, ngZone, loadingCTRL, global, cd) {
         this.scan = scan;
         this.modal = modal;
         this.upcv3Service = upcv3Service;
@@ -66,6 +66,7 @@ let AddbottlemodalPage = class AddbottlemodalPage {
         this.ngZone = ngZone;
         this.loadingCTRL = loadingCTRL;
         this.global = global;
+        this.cd = cd;
         this.barcode = "";
         this.barcodes = [];
         this.bottleadded = [];
@@ -96,7 +97,7 @@ let AddbottlemodalPage = class AddbottlemodalPage {
                 if (this.platform.is('ios')) {
                     WifiWizard2.iOSConnectNetwork("BBAM", "BioBeltService").then(res => {
                         this.isBBAM = true;
-                        this.platform.ready().then(readySource => {
+                        this.platform.ready().then((readySource) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
                             if (readySource == 'cordova') {
                                 this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_8__["UPCModbus"](state => {
                                     this.ngZone.run(() => {
@@ -104,18 +105,30 @@ let AddbottlemodalPage = class AddbottlemodalPage {
                                         //this.readDiffusionParameters();
                                     });
                                 });
-                                this.network.onConnect().subscribe(() => {
-                                    if (this.network.type === this.network.Connection.WIFI) {
-                                        this.upc.reconnect();
-                                        this.upc.client.getStringFromHoldingRegister(40001, 10).then(res => {
-                                            this.stockRet = {
-                                                name: res
-                                            };
-                                        });
-                                    }
-                                });
+                                yield this.upc.client.connect();
+                                setTimeout(() => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
+                                    yield this.upc.client.getStringFromHoldingRegister(40001, 10).then(res => {
+                                        this.stockRet = {
+                                            name: res
+                                        };
+                                        this.cd.detectChanges();
+                                    });
+                                }), 2000);
+                                /*this.network.onConnect().subscribe(() => {
+                                  
+                                  if (this.network.type === this.network.Connection.WIFI) {
+                                    this.upc.reconnect();
+                                    this.upc.client.getStringFromHoldingRegister(40001, 10).then(res=>{
+                                      this.stockRet = {
+                                        name : res
+                                      }
+                                    })
+                                    
+                                    
+                                  }
+                                });*/
                             }
-                        });
+                        }));
                     }).catch(err => {
                         this.stockRet = { name: "Erreur lors de la connexion UPC" };
                         alert("La connexion a echoué veuillez vous approcher de l'UPC et réessayer !");
@@ -358,7 +371,8 @@ AddbottlemodalPage.ctorParameters = () => [
     { type: _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_9__["Network"] },
     { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"] },
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"] },
-    { type: _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"] }
+    { type: _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"] },
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"] }
 ];
 AddbottlemodalPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -366,7 +380,7 @@ AddbottlemodalPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         template: __webpack_require__(/*! raw-loader!./addbottlemodal.page.html */ "./node_modules/raw-loader/index.js!./src/app/addbottlemodal/addbottlemodal.page.html"),
         styles: [__webpack_require__(/*! ./addbottlemodal.page.scss */ "./src/app/addbottlemodal/addbottlemodal.page.scss")]
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_2__["BarcodeScanner"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"], _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_4__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"], _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_9__["Network"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"], _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"]])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_2__["BarcodeScanner"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"], _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_4__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"], _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_9__["Network"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"], _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"]])
 ], AddbottlemodalPage);
 
 

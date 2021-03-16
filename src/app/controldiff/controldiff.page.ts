@@ -25,16 +25,33 @@ export class ControldiffPage implements OnInit {
   fluxref10 : number = 0;
   fluxmax : number=0;
   flux : number  = 0;
-  backgroundDeb  = false;
-  bgdebwarning = false;
-  backgroundPE = false;
+
+  backgroundDebB1Int1  = false;
+  backgroundDebB1Int10 = false;
+  backgroundDebB2Int1 = false;
+  backgroundDebB2Int10 = false;
+  bgdebwarningB1Int1 = false;
+  bgdebwarningB1Int10 = false;
+  bgdebwarningB2Int1 = false;
+  bgdebwarningB2Int10 = false;
+  backgroundPEB1Int1 = false;
+  backgroundPEB1Int10 = false;
+  backgroundPEB2Int1 = false;
+  backgroundPEB2Int10 = false;
+  
   inputref = 0;
   outputref10 = 0;
   input = 0;
   output = 0;
   outputref = 0;
-  backgroundPS = false;
-  bgpswarning = false;
+  backgroundPSB1Int1 = false;
+  backgroundPSB1Int10 = false;
+  backgroundPSB2Int1 = false;
+  backgroundPSB2Int10 = false;
+  bgpswarningB1Int1 = false;
+  bgpswarningB1Int10 = false;
+  bgpswarningB2Int1 = false;
+  bgpswarningB2Int10 = false;
   outputcomp = 0;
   PEB1Int1 = 0;
   PEB2Int1 = 0;
@@ -62,18 +79,19 @@ export class ControldiffPage implements OnInit {
   // Quantité CO2
   constructor(private platform : Platform, private loadingCTRL : LoadingController,private ngZone : NgZone,private network : Network,private hotspot : Hotspot,private cd: ChangeDetectorRef,private global : GlobalService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.upc3s = JSON.parse(localStorage.getItem("upc3"));
     this.upc3s.forEach(item=>{
-      if(item.upcNameId == "Test4G1"){
+      //if(item.upcNameId == "Test4G1"){
+        
         this.inputref = 2+0.8*(item.generalParameters.upcTrapNum-10)/90;
         //this.fluxref = 0.2;
         //this.fluxref10 = 2;
         this.outputref = item.generalParameters.co2PresOutRef1/1000;
         this.outputref10 = item.generalParameters.co2PresOutRef10/1000;
-      }
+      //}
     })
-    if(this.platform.is('ios')){
+    /*if(this.platform.is('ios')){
       this.platform.ready().then(async ()=>{
         if(localStorage.getItem("BBAM") != "true"){
           WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(async res=>{
@@ -83,6 +101,7 @@ export class ControldiffPage implements OnInit {
             })
             loading.present();
             this.global.isBBAM = true;
+            this.global.ssid = "BBAM";
             localStorage.setItem("BBAM",""+true);
             this.platform.ready().then(async readySource => {
                 if(readySource == "cordova"){
@@ -115,6 +134,8 @@ export class ControldiffPage implements OnInit {
           setTimeout(async ()=>{
             //this.ngZone.run(async ()=>{
             await this.upc.client.getFloatFromHoldingRegister(40018).then(async res =>{
+              this.global.isBBAM = true;
+              this.global.ssid = "BBAM";
               this.fluxmax = res;
               this.fluxref = this.fluxmax/10;
               this.fluxref10 = this.fluxmax;
@@ -156,7 +177,7 @@ export class ControldiffPage implements OnInit {
                  })
                },2000)*/ 
                
-              }).catch(async err=>{
+              /*}).catch(async err=>{
                await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
                  //40435
                  var iFlux = [res[19],res[20]]
@@ -184,7 +205,7 @@ export class ControldiffPage implements OnInit {
                  
                })
               })
-            })
+            })*/
              
                
                 /*await this.upc.client.getIntFromHoldingRegister(40015,1).then(res=>{
@@ -240,19 +261,20 @@ export class ControldiffPage implements OnInit {
               
               
             //})
-          },2000)
+          /*},2000)
         }
         
       })
       
-    } else if(this.platform.is("android")){
-        this.hotspot.connectToWifi("BBAM","BioBeltService").then(async()=>{
-            var loading = await this.loadingCTRL.create({
+    }*/ //else if(this.platform.is("android")){
+        //this.hotspot.connectToWifi("BBAM","BioBeltService").then(async()=>{
+            /*var loading = await this.loadingCTRL.create({
               message : "Connection à l'UPC en cours...",
               duration : 10000
             })
-            loading.present();
+            loading.present();*/
             this.global.isBBAM = true;
+            this.global.ssid = "BBAM";
             this.platform.ready().then(async readySource=>{
               if (readySource == 'cordova') {
                 this.upc = new UPCModbus(state => {
@@ -267,11 +289,145 @@ export class ControldiffPage implements OnInit {
 
                 await this.upc.client.connect();
 
-                this.readParams(loading);
+                //this.readParams(loading);
+                setTimeout(async ()=>{
+                  //this.ngZone.run(async ()=>{
+                    
+                    await this.upc.client.getFloatFromHoldingRegister(40018).then(async res=>{
+                      this.fluxmax = res;
+                      this.fluxref = this.fluxmax/10;
+                      this.fluxref10 = this.fluxmax;
+                      await this.upc.client.setIntInHoldingRegister(40065,1,1).then(async res=>{
+                        this.intensity = 1;
+                        await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
+                          this.temp = res;
+                          //loading.dismiss();
+                        })
+                       /*this.global.interval = setInterval(async ()=>{
+                         await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
+                           //40435
+                           var iFlux = [res[19],res[20]]
+                           this.input = this.upc.client.registerToFloat(iFlux);
+                           
+                           //40437
+                           var out = [res[21],res[22]]
+                           this.output = this.upc.client.registerToFloat(out); 
+            
+                           //40439
+                           var f = [res[23],res[24]];
+                           this.flux = this.upc.client.registerToFloat(f);
+            
+                           //40451
+                           var tmp = [res[35],res[36]];
+                           this.temp = this.upc.client.registerToFloat(tmp);
+                           
+                           //40463
+                           var outcomp = [res[47],res[48]];
+                           this.outputcomp = this.upc.client.registerToFloat(outcomp);
+            
+                           this.global.ssid = "BBAM";
+            
+                           this.cd.detectChanges();
+                           loading.dismiss();
+                         }).catch(err=>{
+                           this.ngOnInit();
+                         })
+                       },2000) */
+                       
+                      })/*.catch(async err=>{
+                       await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
+                         //40435
+                         var iFlux = [res[19],res[20]]
+                         this.input = this.upc.client.registerToFloat(iFlux);
+                         
+                         //40437
+                         var out = [res[21],res[22]]
+                         this.output = this.upc.client.registerToFloat(out); 
+            
+                         //40439
+                         var f = [res[23],res[24]];
+                         this.flux = this.upc.client.registerToFloat(f);
+            
+                         //40451
+                         var tmp = [res[35],res[36]];
+                         this.temp = this.upc.client.registerToFloat(tmp);
+                         
+                         //40463
+                         var outcomp = [res[47],res[48]];
+                         this.outputcomp = this.upc.client.registerToFloat(outcomp);
+            
+                         this.cd.detectChanges();
+                         loading.dismiss();
+                       }).catch(err=>{
+                         
+                       })
+                      })*/
+                    }).catch(err=>{
+                      alert("Veuillez vous connecter à BBAM !");
+                      this.global.ssid = "ADMIN";
+                      this.global.isBBAM = false;
+                      
+                    })
+                   
+                     
+                      /*await this.upc.client.getIntFromHoldingRegister(40015,1).then(res=>{
+                        this.inputref = 2+0.8*(res-10)/90;
+                        this.fluxref = 0.017*res;
+                        this.fluxref10 = 0.17*res;
+                        this.cd.detectChanges();
+              })*/
+              /*await this.upc.client.getFloatFromHoldingRegister(40435).then(res=>{
+                this.input = res;
+                this.cd.detectChanges();
+              }).catch(err=>{
+                
+              })*/
+              /*await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
+                this.temp = res;
+              })*/
+              /*await this.upc.client.setFloatInHoldingRegister(40018,1).then(res=>{
+                this.fluxmax = 1;
+                this.cd.detectChanges();
+              })
+              await this.upc.client.setIntInHoldingRegister(40065,1,1).then(res=>{
+                  this.intensity = 1;
+                  this.cd.detectChanges();
+              })*/
+              /*await this.upc.client.getFloatFromHoldingRegister(40463).then(res=>{
+                this.outputcomp = res;
+                this.cd.detectChanges();
+              })*/
+              /*this.upc.client.getStringFromHoldingRegister(40045,10).then(res=>{
+                this.global.ssid = res;
+              })*/
+              /*await this.upc.client.getStringFromHoldingRegister(40001,10).then(res=>{
+                //var upc = res.replace(/[^a-zA-Z0-9]/g,'');
+                var upc = "Test4G1";
+                this.upc3s.forEach(item=>{
+                  if(item.upcNameId == upc){
+                    this.outputref = item.generalParameters.co2PresOutRef1/1000;
+                    this.outputref10 = item.generalParameters.co2PresOutRef10/1000;
+                  }
+                })
+                this.cd.detectChanges();
+              })*/
+              /*await this.upc.client.getFloatFromHoldingRegister(40437).then(res=>{
+                this.output = res;
+                this.cd.detectChanges();
+              })*/
+              /*await this.upc.client.getFloatFromHoldingRegister(40439).then(res=>{
+                this.flux = res;
+                this.cd.detectChanges();
+              })*/
+                    
+                    
+                    
+                  //})
+                },1000)
               }
             })
-        })
-    }
+        //})
+    //}
   }//+-2%
   async startstop() {
     if(this.textdiff == "Start"){
@@ -289,6 +445,11 @@ export class ControldiffPage implements OnInit {
             });
           });
         });
+      }).catch(err=>{
+        alert("Veuillez vous connecter à BBAM !");
+        this.global.ssid = "ADMIN";
+        this.global.isBBAM = false;
+        
       })
     } else {
       this.onDisableDiff();
@@ -302,6 +463,7 @@ export class ControldiffPage implements OnInit {
   readParams (loading) {
     setTimeout(async ()=>{
       //this.ngZone.run(async ()=>{
+        
         await this.upc.client.getFloatFromHoldingRegister(40018).then(async res=>{
           this.fluxmax = res;
           this.fluxref = this.fluxmax/10;
@@ -449,10 +611,34 @@ export class ControldiffPage implements OnInit {
                 
                 this.upc.client.getFloatFromHoldingRegister(40435).then(res=>{
                   this.PEB1Int1 = res;
+
+                  if(Math.abs(this.PEB1Int1 -this.inputref)/this.inputref < 0.1) {
+                      this.backgroundPEB1Int1 = true;
+                  } else {
+                    this.backgroundPEB1Int1 = false;
+                  
+                  }
                   this.cd.detectChanges();
+                }).catch(err=>{
+                  alert("Veuillez vous connecter à BBAM !");
+                  this.global.ssid = "ADMIN";
+                  this.global.isBBAM = false;
+                  clearInterval(this.intervalva);
+                    //clearInterval(this.int);
+                  this.highlightB1I1 = false; 
+                  //resolve();
                 })
                 this.upc.client.getFloatFromHoldingRegister(40437).then(res=>{
                   this.PSB1Int1 = res;
+                  if(Math.abs((this.PSB1Int1-this.outputref)/this.outputref)*100 <5){
+                    this.backgroundPSB1Int1 = true;
+                    this.bgpswarningB1Int1 = false;
+                  } else if(Math.abs((this.PSB1Int1-this.outputref)/this.outputref)*100 <10){
+                    this.bgpswarningB1Int1 = true;
+                  } else {
+                    this.backgroundPSB1Int1 = false;
+                    this.bgpswarningB1Int1 = false;
+                  }
                   this.cd.detectChanges();
                 })
                 this.upc.client.getFloatFromHoldingRegister(40439).then(res=>{
@@ -463,6 +649,16 @@ export class ControldiffPage implements OnInit {
 
                   }
                   this.DebB1Int1 = res;
+                  if(Math.abs(((this.DebB1Int1-this.fluxref)/this.fluxref)*100) <5){
+                    this.backgroundDebB1Int1 = true;
+                    this.bgdebwarningB1Int1 = false;
+                  } else if(Math.abs(((this.DebB1Int1-this.fluxref)/this.fluxref)*100)<10) {
+                    
+                    this.bgdebwarningB1Int1 = true;
+                  } else {
+                    this.backgroundDebB1Int1 = false;
+                    this.bgdebwarningB1Int1 = false;
+                  }
                   cpt++;
                   
                   this.cd.detectChanges();
@@ -523,10 +719,33 @@ export class ControldiffPage implements OnInit {
           this.intervalB2I1 = setInterval(()=>{
             this.upc.client.getFloatFromHoldingRegister(40435).then(res=>{
               this.PEB2Int1 = res;
+              if(Math.abs(this.PEB2Int1 -this.inputref)/this.inputref < 0.1) {
+                this.backgroundPEB2Int1 = true;
+            } else {
+              this.backgroundPEB2Int1 = false;
+            
+            }
               this.cd.detectChanges();
+            }).catch(err=>{
+              alert("Veuillez vous connecter à BBAM !");
+              this.global.ssid = "ADMIN";
+              this.global.isBBAM = false;
+              clearInterval(this.intervalB2I1);
+                //clearInterval(this.int);
+              this.highlightB2I1 = false; 
+              //resolve();
             })
             this.upc.client.getFloatFromHoldingRegister(40437).then(res=>{
               this.PSB2Int1 = res;
+              if(Math.abs((this.PSB2Int1-this.outputref)/this.outputref)*100 <5){
+                this.backgroundPSB2Int1 = true;
+                this.bgpswarningB2Int1 = false;
+              } else if(Math.abs((this.PSB2Int1-this.outputref)/this.outputref)*100 <10){
+                this.bgpswarningB2Int1 = true;
+              } else {
+                this.backgroundPSB2Int1 = false;
+                this.bgpswarningB2Int1 = false;
+              }
               this.cd.detectChanges();
             })
             this.upc.client.getFloatFromHoldingRegister(40439).then(res=>{
@@ -537,6 +756,16 @@ export class ControldiffPage implements OnInit {
               } 
               cpt++;
               this.DebB2Int1 = res;
+              if(Math.abs(((this.DebB2Int1-this.fluxref)/this.fluxref)*100) <5){
+                this.backgroundDebB2Int1 = true;
+                this.bgdebwarningB2Int1 = false;
+              } else if(Math.abs(((this.DebB2Int1-this.fluxref)/this.fluxref)*100)<10) {
+                
+                this.bgdebwarningB2Int1 = true;
+              } else {
+                this.backgroundDebB2Int1 = false;
+                this.bgdebwarningB2Int1 = false;
+              }
               this.cd.detectChanges();
             })
             
@@ -601,10 +830,33 @@ export class ControldiffPage implements OnInit {
             this.intervalB1I10 = setInterval(()=>{
               this.upc.client.getFloatFromHoldingRegister(40435).then(res=>{
                 this.PEB1Int10 = res;
+                if(Math.abs(this.PEB1Int10 -this.inputref)/this.inputref < 0.1) {
+                  this.backgroundPEB1Int10 = true;
+              } else {
+                this.backgroundPEB1Int10 = false;
+              
+              }
                 this.cd.detectChanges();
+              }).catch(err=>{
+                alert("Veuillez vous connecter à BBAM !");
+                this.global.ssid = "ADMIN";
+                this.global.isBBAM = false;
+                clearInterval(this.intervalB1I10);
+                //clearInterval(this.int);
+                this.highlightB1I10 = false;
+                //resolve();
               })
               this.upc.client.getFloatFromHoldingRegister(40437).then(res=>{
                 this.PSB1Int10 = res;
+                if(Math.abs((this.PSB1Int10-this.outputref10)/this.outputref10)*100 <5){
+                  this.backgroundPSB1Int10 = true;
+                  this.bgpswarningB1Int10 = false;
+                } else if(Math.abs((this.PSB1Int10-this.outputref10)/this.outputref10)*100 <10){
+                  this.bgpswarningB1Int10 = true;
+                } else {
+                  this.backgroundPSB1Int10 = false;
+                  this.bgpswarningB1Int10 = false;
+                }
                 this.cd.detectChanges();
               })
               this.upc.client.getFloatFromHoldingRegister(40439).then(res=>{
@@ -615,6 +867,16 @@ export class ControldiffPage implements OnInit {
                 } 
                 cpt++;
                 this.DebB1Int10 = res;
+                if(Math.abs(((this.DebB1Int10-this.fluxref10)/this.fluxref10)*100) <5){
+                  this.backgroundDebB1Int10 = true;
+                  this.bgdebwarningB1Int10 = false;
+                } else if(Math.abs(((this.DebB1Int10-this.fluxref10)/this.fluxref10)*100)<10) {
+                  
+                  this.bgdebwarningB1Int10 = true;
+                } else {
+                  this.backgroundDebB1Int10 = false;
+                  this.bgdebwarningB1Int10 = false;
+                }
                 this.cd.detectChanges();
               })
               
@@ -657,10 +919,33 @@ export class ControldiffPage implements OnInit {
             this.intervalB2I10 = setInterval(()=>{
               this.upc.client.getFloatFromHoldingRegister(40435).then(res=>{
                 this.PEB2Int10 = res;
+                if(Math.abs(this.PEB2Int10 -this.inputref)/this.inputref < 0.1) {
+                  this.backgroundPEB2Int10 = true;
+              } else {
+                this.backgroundPEB2Int10 = false;
+              
+              }
                 this.cd.detectChanges();
+              }).catch(err=>{
+                alert("Veuillez vous connecter à BBAM !");
+                this.global.ssid = "ADMIN";
+                this.global.isBBAM = false;
+                clearInterval(this.intervalB2I10);
+                clearInterval(this.int);
+                this.highlightB2I10 = false;
+                //resolve();
               })
               this.upc.client.getFloatFromHoldingRegister(40437).then(res=>{
                 this.PSB2Int10 = res;
+                if(Math.abs((this.PSB2Int10-this.outputref10)/this.outputref10)*100 <5){
+                  this.backgroundPSB2Int10 = true;
+                  this.bgpswarningB2Int10 = false;
+                } else if(Math.abs((this.PSB2Int10-this.outputref10)/this.outputref10)*100 <10){
+                  this.bgpswarningB2Int10 = true;
+                } else {
+                  this.backgroundPSB2Int10 = false;
+                  this.bgpswarningB2Int10 = false;
+                }
                 this.cd.detectChanges();
               })
               this.upc.client.getFloatFromHoldingRegister(40439).then(res=>{
@@ -671,6 +956,16 @@ export class ControldiffPage implements OnInit {
                 } 
                 cpt++;
                 this.DebB2Int10 = res;
+                if(Math.abs(((this.DebB2Int10-this.fluxref10)/this.fluxref10)*100) <5){
+                  this.backgroundDebB2Int10 = true;
+                  this.bgdebwarningB2Int10 = false;
+                } else if(Math.abs(((this.DebB2Int10-this.fluxref10)/this.fluxref10)*100)<10) {
+                  
+                  this.bgdebwarningB2Int10 = true;
+                } else {
+                  this.backgroundDebB2Int10 = false;
+                  this.bgdebwarningB2Int10 = false;
+                }
                 this.cd.detectChanges();
               })
               
@@ -716,6 +1011,7 @@ export class ControldiffPage implements OnInit {
       clearInterval(this.intervalB2I1);
       clearInterval(this.intervalva);
       clearInterval(this.intervalB2I10);
+      this.cd.detectChanges();
       
     })
   }

@@ -30,6 +30,8 @@ export class CdiffPage implements OnInit {
   psComp : number = 0;
   psCompMes : number = 0;
   upc3s : UPCV3[];
+  backgroundeb = false;
+  backgrounddangerdeb = false;
   
   //diffusion à l'arrêt start reload front detectchange 
 
@@ -44,7 +46,7 @@ export class CdiffPage implements OnInit {
   ngOnInit() {
     this.upc3s = JSON.parse(localStorage.getItem("upc3"));
     this.platform.ready().then(async ()=>{
-      if (this.platform.is('ios')){
+      /*if (this.platform.is('ios')){
         if (localStorage.getItem("BBAM") != "true"){
           WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(async(res)=>{
             var loading = await this.loadingCTRL.create({
@@ -102,6 +104,16 @@ export class CdiffPage implements OnInit {
                            //40439
                            var f = [res[23],res[24]];
                            this.debiMes = this.upc.client.registerToFloat(f);
+                           if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100) <5){
+                            this.backgroundeb = true;
+                            this.backgrounddangerdeb = false;
+                          } else if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100)<10) {
+                            
+                            this.backgrounddangerdeb = true;
+                          } else {
+                            this.backgroundeb = false;
+                            this.backgrounddangerdeb = false;
+                          }
       
                            //40451
                            var tmp = [res[35],res[36]];
@@ -125,7 +137,7 @@ export class CdiffPage implements OnInit {
                     /*this.resActive = this.upc.client.registerToUint32(res[132]);
                     alert(this.resActive);*/
                     
-                  })
+                  //})
                   /*await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
                     this.temp = res;
                   })
@@ -149,7 +161,7 @@ export class CdiffPage implements OnInit {
                 //}) si connecté lecture uniquement 
                 //Mesure instantané mesure intensité 1 10 Activer diffusion fin B1 B2 voyant aucune diffusion 
                 //Mini Maxi Reactualiser les données 
-              },5000)
+              /*},5000)
           })
         } else {
           this.upc = new UPCModbus(async state => {
@@ -200,6 +212,16 @@ export class CdiffPage implements OnInit {
                          //40439
                          var f = [res[23],res[24]];
                          this.debiMes = this.upc.client.registerToFloat(f);
+                         if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100) <5){
+                          this.backgroundeb = true;
+                          this.backgrounddangerdeb = false;
+                        } else if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100)<10) {
+                          
+                          this.backgrounddangerdeb = true;
+                        } else {
+                          this.backgroundeb = false;
+                          this.backgrounddangerdeb = false;
+                        }
     
                          //40451
                          var tmp = [res[35],res[36]];
@@ -224,7 +246,7 @@ export class CdiffPage implements OnInit {
                   /*this.resActive = this.upc.client.registerToUint32(res[132]);
                   alert(this.resActive);*/
                   
-                })
+                //})
                 /*await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
                   this.temp = res;
                 })
@@ -248,16 +270,16 @@ export class CdiffPage implements OnInit {
               //}) si connecté lecture uniquement 
               //Mesure instantané mesure intensité 1 10 Activer diffusion fin B1 B2 voyant aucune diffusion 
               //Mini Maxi Reactualiser les données 
-            },2000)
+            /*},2000)
         }
         
-      } else if(this.platform.is('android')) {
-        this.hotspot.connectToWifi("BBAM","BioBeltService").then(async res=>{
-            var loading = await this.loadingCTRL.create({
+      }*/ //else if(this.platform.is('android')) {
+        //this.hotspot.connectToWifi("BBAM","BioBeltService").then(async res=>{
+            /*var loading = await this.loadingCTRL.create({
               message : "Connection à l'UPC en cours...",
               duration : 10000
             })
-            loading.present();
+            loading.present();*/
             this.global.isBBAM = true;
             this.upc = new UPCModbus(async state => {
               this.ngZone.run(() => {
@@ -307,6 +329,16 @@ export class CdiffPage implements OnInit {
                          //40439
                          var f = [res[23],res[24]];
                          this.debiMes = this.upc.client.registerToFloat(f);
+                         if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100) <5){
+                          this.backgroundeb = true;
+                          this.backgrounddangerdeb = false;
+                        } else if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100)<10) {
+                          
+                          this.backgrounddangerdeb = true;
+                        } else {
+                          this.backgroundeb = false;
+                          this.backgrounddangerdeb = false;
+                        }
     
                          //40451
                          var tmp = [res[35],res[36]];
@@ -318,7 +350,12 @@ export class CdiffPage implements OnInit {
                          this.global.ssid = "BBAM";
     
                          this.cd.detectChanges();
-                         loading.dismiss();
+                         //loading.dismiss();
+                        }).catch(err=>{
+                          alert("Veuillez vous connectez à BBAM");
+                          this.global.ssid = "ADMIN";
+                          this.global.isBBAM = false;
+                          clearInterval(this.global.interval);
                         });
                       },2000)
                       
@@ -354,9 +391,9 @@ export class CdiffPage implements OnInit {
               //}) si connecté lecture uniquement 
               //Mesure instantané mesure intensité 1 10 Activer diffusion fin B1 B2 voyant aucune diffusion 
               //Mini Maxi Reactualiser les données 
-            },5000)
-        })
-      }
+            },1000)
+        //})
+      //}
     })
   }
   /*ionViewWillLeave() {

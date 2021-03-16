@@ -37760,7 +37760,7 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n  <head> \n    <style>\n      .bar {fill: #3498db;}    \n      .bar:hover {fill: #2ecc71;}\n    \n      .axis {font: 10px sans-serif;}\n    \n      .axis path, .axis line {fill: none; stroke: #000; shape-rendering: crispEdges;}\n    \n    .legend {padding: 5px; font: 10px sans-serif; background: yellow; box-shadow: 2px 2px 1px #888;}\n    \n    .tooltip {background: #eee; box-shadow: 0 0 5px #999999; color: #333; font-size: 12px; left: 130px; padding: 10px; position: absolute; text-align: center; top: 95px; z-index: 10; display: block; opacity: 0;\n    }</style>\n</head>\n<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-title>Programmes</ion-title>\n  </ion-toolbar>  \n</ion-header>\n\n<ion-content class =\"ion-padding\">\n  <ion-card class=\"ion-padding\">\t\t\t\t\t\t\t\n    <!--<ion-card (click)=\"getInterventionById();\" class=\"ion-padding\">-->\t\t\t\t\t\t\t\n    <ion-card-header>\t\t\t\t\t\t\t\n    <ion-card-title>Programmes Aube / Crépuscule</ion-card-title>\t\t\t\t\t\t\t\n    </ion-card-header>\n    <ion-grid>\n      <ion-row class=\"landscaperow\"><ion-col size=\"2.75\"></ion-col><ion-col size=\"2.15\">Décalage Début</ion-col><ion-col size=\"1.8\">Durée</ion-col><ion-col>Intensité</ion-col></ion-row>\t\n      <ion-row>\n      <div>\t\n        <ion-col>\t\t\t\t\t\t\n          <p>Aube</p>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosformhours\">Décalage début:</div>\t            \t\t\t\t\t\t\n            <ion-select [(ngModel)]=\"paselect\" [ngModelOptions]=\"{standalone: true}\" value=\"+\" style=\"width:fit-content;\" >\t\t\t\t\t\t\t\n              <ion-select-option value=\"+\">+</ion-select-option>\t\t\t\t\t\t\t\n              <ion-select-option value=\"-\">-</ion-select-option>\t\t\t\t\t\t\t\n            </ion-select>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pastart\" [ngModelOptions]=\"{standalone: true}\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosformhours\">Durée :</div>   \t\t\t\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"paend\" [ngModelOptions]=\"{standalone: true}\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"paintensity\">\n              <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select>\n          </div>\n        </ion-col>\t\t   \t\t\t\t\n    </div>\t\n      </ion-row>\t\t\n      <ion-row>\t\t\n    <div>\t\n      <ion-col>\t\t\t\t\t\t\n       <p>Crépuscule</p>\t\n      </ion-col>\n      <ion-col>\n        <div class=\"form\">\n          <div class=\"infosformhours\">Décalage début :</div>\t\t\t\t\t\t\n          <ion-select [(ngModel)]=\"pcselect\" [ngModelOptions]=\"{standalone: true}\" value=\"+\" >\t\t\t\t\t\t\t\n            <ion-select-option value=\"+\">+</ion-select-option>\t\t\t\t\t\t\t\n            <ion-select-option value=\"-\">-</ion-select-option>\t\t\t\t\t\t\t\n          </ion-select> \n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pcstart\" [ngModelOptions]=\"{standalone: true}\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col>\n        <div class=\"form\">\n          <div class=\"infosformhours\">Durée :</div>\t   \t\t\t\t\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pcend\" [ngModelOptions]=\"{standalone: true}\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\t\n        </div>\n      </ion-col>\n      <ion-col>\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\t\t\t\t\t\n          <ion-select [(ngModel)]=\"pcintensity\">\n            <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select>\t\n        </div>\n      </ion-col>\t\t\t\t\t\n    </div>\t\n    </ion-row>\t\t   \t\n    </ion-grid>\t\t\t\t\t\t\n    </ion-card>\t\t\t\t\t\t\t\n    <ion-card class=\"ion-padding\">\t\t\t\t\t\t\t\n    <ion-card-header>\t\t\t\t\t\t\t\n      <ion-card-title>Programmes de diffusion</ion-card-title>\t\t\t\t\t\t\t\n    </ion-card-header>\t\n    <ion-grid>\t\t\n      <ion-row class=\"landscaperow\"><ion-col size=\"1\"></ion-col><ion-col size=\"3.15\">Fréquence</ion-col><ion-col size=\"2.5\">Début</ion-col><ion-col size=\"1.80\">Fin</ion-col><ion-col>Intensité</ion-col></ion-row>\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P1</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[0]' [(ngModel)]=\"frequency2[0]\" (ngModelChange)=\"onEdit(0)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[0]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(0)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[0]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(0)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[0]\" (ngModelChange)=\"onEdit(0)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>\t\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P2</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[1]' [(ngModel)]=\"frequency2[1]\" (ngModelChange)=\"onEdit(1)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime display-format=\"HH:mm\" [(ngModel)]=\"pStart[1]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(1)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pEnd[1]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(1)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[1]\" (ngModelChange)=\"onEdit(1)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P3</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[2]' [(ngModel)]=\"frequency2[2]\" (ngModelChange)=\"onEdit(2)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime display-format=\"HH:mm\" [(ngModel)]=\"pStart[2]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(2)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pEnd[2]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(2)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[2]\" (ngModelChange)=\"onEdit(2)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P4</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[3]' [(ngModel)]=\"frequency2[3]\" (ngModelChange)=\"onEdit(3)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime display-format=\"HH:mm\" [(ngModel)]=\"pStart[3]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(3)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pEnd[3]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(3)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[3]\" (ngModelChange)=\"onEdit(3)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P5</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[4]' [(ngModel)]=\"frequency2[4]\" (ngModelChange)=\"onEdit(4)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime display-format=\"HH:mm\" [(ngModel)]=\"pStart[4]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(4)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pEnd[4]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(4)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[4]\" (ngModelChange)=\"onEdit(4)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P6</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[5]' [(ngModel)]=\"frequency2[5]\" (ngModelChange)=\"onEdit(5)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime display-format=\"HH:mm\" [(ngModel)]=\"pStart[5]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(5)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pEnd[5]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(5)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[5]\" (ngModelChange)=\"onEdit(5)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P7</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[6]' [(ngModel)]=\"frequency2[6]\" (ngModelChange)=\"onEdit(6)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime display-format=\"HH:mm\" [(ngModel)]=\"pStart[6]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(6)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pEnd[6]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(6)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[6]\" (ngModelChange)=\"onEdit(6)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P8</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[7]' [(ngModel)]=\"frequency2[7]\" (ngModelChange)=\"onEdit(7)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime display-format=\"HH:mm\" [(ngModel)]=\"pStart[7]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(7)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pEnd[7]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(7)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[7]\" (ngModelChange)=\"onEdit(7)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P9</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[8]' [(ngModel)]=\"frequency2[8]\" (ngModelChange)=\"onEdit(8)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime display-format=\"HH:mm\" [(ngModel)]=\"pStart[8]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(8)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pEnd[8]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(8)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[8]\" (ngModelChange)=\"onEdit(8)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>\n      <ion-row>\n        <div>\t\n          <ion-col>\t\t\t\t\t\n            <p>P10</p>\t\t\t\t\n          </ion-col>\t\n          <ion-col>\t\t\n            <div class=\"form\">\t\n              <div class=\"infosform\">Fréquence :</div>\t\t\n              <ion-select *ngIf='frequency2[9]' [(ngModel)]=\"frequency2[9]\" (ngModelChange)=\"onEdit(9)\">\n                <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n              </ion-select>\t\n            </div>\n          </ion-col>\n          <ion-col>\t\n            <div class=\"form\">\t\n              <div class=\"infosformhours\">Début :</div>\t\t\t\t\n              <ion-item>\t\t\t\t\t\t\t\n                <ion-datetime display-format=\"HH:mm\" [(ngModel)]=\"pStart[9]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(9)\"></ion-datetime>\t\t\t\t\t\t\n              </ion-item>\t\n            </div>\n          </ion-col>\n        <ion-col>\n          <p class=\"hoursrange\">-</p>\t\n        </ion-col>\n        <ion-col>\t\n          <div class=\"form\"\t>\n            <div class=\"infosformhours\">Fin :</div>\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime value=\"00:00\" display-format=\"HH:mm\" [(ngModel)]=\"pEnd[9]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(9)\"></ion-datetime>\t\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col>\n          <div class=\"form\">\n            <div class=\"infosform\">Intensité :</div>\n            <ion-select [(ngModel)]=\"intensity[9]\" (ngModelChange)=\"onEdit(9)\">\n               <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n            </ion-select> \n          </div>\n        </ion-col>   \t\t\t\t\t\n        </div>\n      </ion-row>     \t\t\t\t\t\t\t\n    <div>\t\t\t    \n      <ion-button (click)=\"drawChartjs();\" color=\"primary\" type=\"submit\" block>Actualiser le graphe</ion-button>\t\t\t\t\t\t\t\t\t\t\t\t\n    </div>\n  </ion-grid>\t\t\t\t\t\t\t\n  </ion-card>\t\t\n\n  <ion-card class=\"ion-padding\">\n    <ion-card-header>\n      <ion-card-title>Graphique</ion-card-title>\n    </ion-card-header>\n\n    <canvas id=\"myChart\"></canvas>\n  </ion-card>\n</ion-content>\n\n"
+module.exports = "<head> \n  <style>\n    .bar {fill: #3498db;}    \n    .bar:hover {fill: #2ecc71;}\n  \n    .axis {font: 10px sans-serif;}\n  \n    .axis path, .axis line {fill: none; stroke: #000; shape-rendering: crispEdges;}\n  \n  .legend {padding: 5px; font: 10px sans-serif; background: yellow; box-shadow: 2px 2px 1px #888;}\n  \n  .tooltip {background: #eee; box-shadow: 0 0 5px #999999; color: #333; font-size: 12px; left: 130px; padding: 10px; position: absolute; text-align: center; top: 95px; z-index: 10; display: block; opacity: 0;\n  }</style>\n</head>\n<ion-header>\n<ion-toolbar color=\"primary\">\n  <ion-buttons slot=\"start\">\n    <ion-menu-button></ion-menu-button>\n  </ion-buttons>\n  <ion-title>Programmes</ion-title>\n  <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n    <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \n   </ion-buttons>\n   <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n    <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n   </ion-buttons>\n</ion-toolbar>  \n</ion-header>\n\n<ion-content class =\"ion-padding\">\n<ion-card class=\"ion-padding\">   \t\t\t\t\t\t\t\n  <ion-card-header>\t\t\t\t\t\t\t\n  <ion-card-title>Programmes Aube / Crépuscule</ion-card-title>\t\t\t\t\t\t\t\n  </ion-card-header>\n  <ion-grid>\n    <ion-row class=\"landscaperow\"><ion-col size=\"2\"></ion-col><ion-col size=\"2.75\"><p style=\"margin-left: 10%;\">Décalage Début</p></ion-col><ion-col size=\"1.8\"><p>Durée</p></ion-col><ion-col size=\"1.5\"><p style=\"margin-left: 14%;\">Intensité</p></ion-col></ion-row>\t\n    <ion-row>\n      \n      <ion-col size=\"12\" size-sm=\"2\">\t\t\t\t\t\t\n        <p>Aube</p>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.75\">\n        <div class=\"form\">\n          <div class=\"infosformhours\">Décalage début:</div>\t            \t\t\t\t\t\t\n          <ion-select [(ngModel)]=\"sign[0]\" (ngModelChange)=\"onEdit(10)\">\t\t\t\t\t\t\t\n            <ion-select-option *ngFor=\"let signOption of signOptions\" [value]=\"signOption\">{{signOption}}</ion-select-option>\t           \t\t\t\t\t\t\t\n          </ion-select> \n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"paDelay[0]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(10)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"1.8\">\n        <div class=\"form\">\n          <div class=\"infosformhours\">Durée :</div>   \t\t\t\t\t\t\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"paDuration[0]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(10)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\t\n        </div>\n        <p *ngIf=\"pAubeStart[0] && pAubeEnd[0]\">{{pAubeStart[0]}}-{{pAubeEnd[0]}}</p>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"1.25\">\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[10]\" (ngModelChange)=\"onEdit(10)\">\n            <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select>\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>\t\t   \t\t\t\t\n    \n    </ion-row>\t\t\n    <ion-row>\t\t\n  \n    <ion-col size=\"12\" size-sm=\"2\">\t\t\t\t\t\t\n     <p>Crépuscule</p>\t\n    </ion-col>\n    <ion-col size=\"12\" size-sm=\"2.75\">\n      <div class=\"form\">\n        <div class=\"infosformhours\">Décalage début :</div>\t\t\t\t\t\t\n        <ion-select [(ngModel)]=\"sign[1]\" (ngModelChange)=\"onEdit(11)\">\t\t\t\t\t\t\t\n          <ion-select-option *ngFor=\"let signOption of signOptions\" [value]=\"signOption\">{{signOption}}</ion-select-option>\t           \t\t\t\t\t\t\t\n        </ion-select> \n        <ion-item>\t\t\t\t\t\t\t\n          <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pcDelay[0]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(11)\"></ion-datetime>\t\t\t\t\t\t\t\n        </ion-item>\t\n      </div>\n    </ion-col>\n    <ion-col size=\"12\" size-sm=\"1.8\">\n      <div class=\"form\">\n        <div class=\"infosformhours\">Durée :</div>\t   \t\t\t\t\t\n        <ion-item>\t\t\t\t\t\t\t\n          <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pcDuration[0]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(11)\"></ion-datetime>\t\t\t\t\t\t\t\n        </ion-item>\t\t\n      </div>\n      <p *ngIf=\"pCrepusculeStart[0] && pCrepusculeEnd[0]\">{{pCrepusculeStart[0]}}-{{pCrepusculeEnd[0]}}</p>\n    </ion-col>\n    <ion-col size=\"12\" size-sm=\"1.25\">\n      <div class=\"form\">\n        <div class=\"infosform\">Intensité :</div>\t\t\t\t\t\n        <ion-select [(ngModel)]=\"intensity[11]\" (ngModelChange)=\"onEdit(11)\">\n          <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n        </ion-select>\t\n      </div>\n    </ion-col>\n    <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>\t\t\t\t\t\n    \n  </ion-row>\t\t   \t\n  </ion-grid>\t\t\t\t\t\t\n  </ion-card>\t\t\t\t\t\t\t\n  <ion-card class=\"ion-padding\">\t\t\t\t\t\t\t\n  <ion-card-header>\t\t\t\t\t\t\t\n    <ion-card-title>Programmes de diffusion</ion-card-title>\t\t\t\t\t\t\t\n  </ion-card-header>\t\n  <ion-grid [fixed]=\"true\">\t\t\n    <ion-row class=\"landscaperow\"><ion-col size=\"1\"></ion-col><ion-col size=\"3.15\"><p style=\"margin-left: 10%;\">Fréquence</p></ion-col><ion-col size=\"2.5\"><p style=\"margin-left:24%;\">Début</p></ion-col><ion-col size=\"0.5\"></ion-col><ion-col size=\"2.5\"><p style=\"margin-left:24%;\">Fin</p></ion-col><ion-col size=\"2\"><p style=\"margin-left:14%;\">Intensité</p></ion-col></ion-row>\n    <ion-row class=\"rowDisplay\">\n        \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\n          <p>P1</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select [(ngModel)]=\"frequency2[0]\" (ngModelChange)=\"onEdit(0)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\t\n          <div class=\"form\">\t\n            <div class=\"infosformhours\"><p>Début :</p></div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[0]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(0)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n      <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[0]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(0)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>          \n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[0]\" (ngModelChange)=\"onEdit(0)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>   \t\t\t\t\t\n      \n    </ion-row>\t\n    <ion-row class=\"rowDisplay\">\n      \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\t\t\t\n          <p>P2</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select [(ngModel)]=\"frequency2[1]\" (ngModelChange)=\"onEdit(1)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\n          <div class=\"form\">\t\n            <div class=\"infosformhours\">Début :</div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[1]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(1)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n      <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[1]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(1)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\t\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[1]\" (ngModelChange)=\"onEdit(1)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>   \t\t\t\t\t\n     \n    </ion-row>\n    <ion-row class=\"rowDisplay\">\n      \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\t\t\n          <p>P3</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select *ngIf='frequency2[2]' [(ngModel)]=\"frequency2[2]\" (ngModelChange)=\"onEdit(2)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\t\n          <div class=\"form\">\t\n            <div class=\"infosformhours\">Début :</div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[2]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(2)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[2]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(2)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\t\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[2]\" (ngModelChange)=\"onEdit(2)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col> \n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>  \t\t\t\t\t\n      \n    </ion-row>\n    <ion-row class=\"rowDisplay\">\n      \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\t\n          <p>P4</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select *ngIf='frequency2[3]' [(ngModel)]=\"frequency2[3]\" (ngModelChange)=\"onEdit(3)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\t\n          <div class=\"form\">\t\n            <div class=\"infosformhours\">Début :</div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[3]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(3)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n      <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[3]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(3)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\t\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[3]\" (ngModelChange)=\"onEdit(3)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>   \t\t\t\t\t\n      \n    </ion-row>\n    <ion-row class=\"rowDisplay\">\n      \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\t\n          <p>P5</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select *ngIf='frequency2[4]' [(ngModel)]=\"frequency2[4]\" (ngModelChange)=\"onEdit(4)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\t\n          <div class=\"form\">\t\n            <div class=\"infosformhours\">Début :</div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[4]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(4)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n      <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[4]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(4)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\t\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[4]\" (ngModelChange)=\"onEdit(4)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>   \t\t\t\t\t\n      \n    </ion-row>\n    <ion-row class=\"rowDisplay\">\n      \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\t\n          <p>P6</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select *ngIf='frequency2[5]' [(ngModel)]=\"frequency2[5]\" (ngModelChange)=\"onEdit(5)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\t\n          <div class=\"form\">\t\n            <div class=\"infosformhours\">Début :</div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[5]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(5)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n      <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[5]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(5)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\t\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[5]\" (ngModelChange)=\"onEdit(5)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>   \t\t\t\t\t\n      \n    </ion-row>\n    <ion-row class=\"rowDisplay\">\n        \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\t\n          <p>P7</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select *ngIf='frequency2[6]' [(ngModel)]=\"frequency2[6]\" (ngModelChange)=\"onEdit(6)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\t\n          <div class=\"form\">\t\n            <div class=\"infosformhours\">Début :</div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[6]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(6)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n      <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[6]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(6)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\t\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[6]\" (ngModelChange)=\"onEdit(6)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>   \t\t\t\t\t\n      \n    </ion-row>\n    <ion-row class=\"rowDisplay\">\n      \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\t\n          <p>P8</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select *ngIf='frequency2[7]' [(ngModel)]=\"frequency2[7]\" (ngModelChange)=\"onEdit(7)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\t\n          <div class=\"form\">\t\n            <div class=\"infosformhours\">Début :</div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[7]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(7)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n      <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[7]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(7)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\t\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[7]\" (ngModelChange)=\"onEdit(7)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>   \t\t\t\t\t\n     \n    </ion-row>\n    <ion-row class=\"rowDisplay\">\n      \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\t\n          <p>P9</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select *ngIf='frequency2[8]' [(ngModel)]=\"frequency2[8]\" (ngModelChange)=\"onEdit(8)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\t\n          <div class=\"form\">\t\n            <div class=\"infosformhours\">Début :</div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[8]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(8)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n      <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[8]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(8)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\t\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[8]\" (ngModelChange)=\"onEdit(8)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>   \t\t\t\t\t\n      \n    </ion-row>\n    <ion-row class=\"rowDisplay\" height=\"100%\">\n      \n        <ion-col size=\"12\" size-sm=\"1\">\t\t\t\t\t\n          <p>P10</p>\t\t\t\t\n        </ion-col>\t\n        <ion-col size=\"12\" size-sm=\"3.15\">\t\t\n          <div class=\"form\">\t\n            <div class=\"infosform\">Fréquence :</div>\t\t\n            <ion-select *ngIf='frequency2[9]' [(ngModel)]=\"frequency2[9]\" (ngModelChange)=\"onEdit(9)\">\n              <ion-select-option *ngFor=\"let frequencyOption of frequencyOptions\" [value]=\"frequencyOption\">{{frequencyOption}}</ion-select-option>\n            </ion-select>\t\n          </div>\n        </ion-col>\n        <ion-col size=\"12\" size-sm=\"2.5\">\t\n          <div class=\"form\">\t\n            <div class=\"infosformhours\"><p>Début :</p></div>\t\t\t\t\n            <ion-item>\t\t\t\t\t\t\t\n              <ion-datetime displayFormat=\"HH:mm\" [(ngModel)]=\"pStart[9]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(9)\"></ion-datetime>\t\t\t\t\t\t\n            </ion-item>\t\n          </div>\n        </ion-col>\n      <ion-col size=\"12\" size-sm=\"0.5\">\n        <p class=\"hoursrange\">-</p>\t\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2.5\">\t\n        <div class=\"form\"\t>\n          <div class=\"infosformhours\">Fin :</div>\t\n          <ion-item>\t\t\t\t\t\t\t\n            <ion-datetime value=\"00:00\" displayFormat=\"HH:mm\" [(ngModel)]=\"pEnd[9]\" [ngModelOptions]=\"{standalone: true}\" (ngModelChange)=\"onEdit(9)\"></ion-datetime>\t\t\t\t\t\t\t\n          </ion-item>\t\n        </div>\n      </ion-col>\n      <ion-col size=\"12\" size-sm=\"2\">\t\n        <div class=\"form\">\n          <div class=\"infosform\">Intensité :</div>\n          <ion-select [(ngModel)]=\"intensity[9]\" (ngModelChange)=\"onEdit(9)\">\n             <ion-select-option *ngFor=\"let intensityOption of intensityOptions\" [value]=\"intensityOption\">{{intensityOption}}</ion-select-option>\n          </ion-select> \n        </div>\n      </ion-col>\n      <ion-col size=\"12\" class=\"portraitrow\"><br></ion-col>   \t\t\t\t\t\n      \n    </ion-row>     \t\t\t\t\t\t\t\n  \n</ion-grid>\t\t\t\t\t\t\t\n</ion-card>\t\t\n\n<ion-card class=\"ion-padding\">\n  <ion-card-header>\n    <ion-card-title>Graphique</ion-card-title>\n  </ion-card-header>\n\n  <canvas id=\"myChart\"></canvas>\n</ion-card>\n\n<!--<ion-card class=\"ion-padding\">\n  <ion-card-header>\n    <ion-card-title>Consommations théoriques</ion-card-title>\n  </ion-card-header>\n  <ion-row class=\"colDisplay\">\n    <ion-col size=\"12\"><br></ion-col>  \n    <ion-col>\n      <p style=\"float: left;\">Par jour</p>\n      <p style=\"font-weight: bold; float: right;\">val1</p>\n    </ion-col>\n    <ion-col size=\"12\"><br></ion-col>  \n    <ion-col>\n      <p style=\"float: left;\">Par semaine</p>\n      <p style=\"font-weight: bold; float: right;\">val2</p>\n    </ion-col>\n    <ion-col size=\"12\"><br></ion-col>  \n    <ion-col>\n      <p style=\"float: left;\">Par mois</p>\n      <p style=\"font-weight: bold; float: right;\">val3</p>\n    </ion-col> \n    <ion-col size=\"12\"><br></ion-col>      \n  </ion-row>\n</ion-card>-->\n</ion-content>\n"
 
 /***/ }),
 
@@ -37889,7 +37889,7 @@ var SynchroPageModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "@media (orientation: landscape) {\n  div {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n  }\n\n  .infosform {\n    display: none !important;\n  }\n\n  .infosformhours {\n    display: none !important;\n  }\n}\n@media (orientation: portrait) {\n  .form {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n  }\n\n  .infosform {\n    margin-top: 4.5%;\n  }\n\n  .infosformhours {\n    margin-top: 6%;\n  }\n\n  .hoursrange {\n    display: none;\n  }\n\n  .landscaperow {\n    display: none;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9oYXJtYW5kL0Rlc2t0b3AvYmlvYmVsdG1vYmlsZS9zcmMvYXBwL3N5bmNocm8vc3luY2hyby5wYWdlLnNjc3MiLCJzcmMvYXBwL3N5bmNocm8vc3luY2hyby5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSTtJQUNJLG9CQUFBO0lBQUEsYUFBQTtJQUNBLDhCQUFBO0lBQUEsNkJBQUE7WUFBQSxtQkFBQTtFQ0NOOztFRENFO0lBQ0ksd0JBQUE7RUNFTjs7RURBRTtJQUNJLHdCQUFBO0VDR047QUFDRjtBRERBO0VBQ0M7SUFDRyxvQkFBQTtJQUFBLGFBQUE7SUFDQSw4QkFBQTtJQUFBLDZCQUFBO1lBQUEsbUJBQUE7RUNHRjs7RURBRDtJQUNJLGdCQUFBO0VDR0g7O0VEQUQ7SUFDSSxjQUFBO0VDR0g7O0VEQUQ7SUFDSSxhQUFBO0VDR0g7O0VEREY7SUFDSSxhQUFBO0VDSUY7QUFDRiIsImZpbGUiOiJzcmMvYXBwL3N5bmNocm8vc3luY2hyby5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAbWVkaWEgKG9yaWVudGF0aW9uOiBsYW5kc2NhcGUpIHtcbiAgICBkaXYge1xuICAgICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgICBmbGV4LWRpcmVjdGlvbjogcm93O1xuICAgIH1cbiAgICAuaW5mb3Nmb3Jte1xuICAgICAgICBkaXNwbGF5OiBub25lICFpbXBvcnRhbnQ7XG4gICAgfVxuICAgIC5pbmZvc2Zvcm1ob3Vyc3tcbiAgICAgICAgZGlzcGxheTogbm9uZSAhaW1wb3J0YW50O1xuICAgIH0gICBcbiAgfSBcbkBtZWRpYSAob3JpZW50YXRpb246IHBvcnRyYWl0KXtcbiAuZm9ybXtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIGZsZXgtZGlyZWN0aW9uOiByb3c7ICBcbiB9XG5cbiAuaW5mb3Nmb3Jte1xuICAgICBtYXJnaW4tdG9wOjQuNSU7XG4gfVxuXG4gLmluZm9zZm9ybWhvdXJze1xuICAgICBtYXJnaW4tdG9wOiA2JTtcbiB9XG5cbiAuaG91cnNyYW5nZXtcbiAgICAgZGlzcGxheTogbm9uZTtcbiB9XG4ubGFuZHNjYXBlcm93IHtcbiAgICBkaXNwbGF5OiBub25lO1xuIH1cblxufSAiLCJAbWVkaWEgKG9yaWVudGF0aW9uOiBsYW5kc2NhcGUpIHtcbiAgZGl2IHtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIH1cblxuICAuaW5mb3Nmb3JtIHtcbiAgICBkaXNwbGF5OiBub25lICFpbXBvcnRhbnQ7XG4gIH1cblxuICAuaW5mb3Nmb3JtaG91cnMge1xuICAgIGRpc3BsYXk6IG5vbmUgIWltcG9ydGFudDtcbiAgfVxufVxuQG1lZGlhIChvcmllbnRhdGlvbjogcG9ydHJhaXQpIHtcbiAgLmZvcm0ge1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgZmxleC1kaXJlY3Rpb246IHJvdztcbiAgfVxuXG4gIC5pbmZvc2Zvcm0ge1xuICAgIG1hcmdpbi10b3A6IDQuNSU7XG4gIH1cblxuICAuaW5mb3Nmb3JtaG91cnMge1xuICAgIG1hcmdpbi10b3A6IDYlO1xuICB9XG5cbiAgLmhvdXJzcmFuZ2Uge1xuICAgIGRpc3BsYXk6IG5vbmU7XG4gIH1cblxuICAubGFuZHNjYXBlcm93IHtcbiAgICBkaXNwbGF5OiBub25lO1xuICB9XG59Il19 */"
+module.exports = "@media (orientation: landscape) {\n  .rowDisplay {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n  }\n\n  .rowDisplay p {\n    margin-top: 10%;\n  }\n\n  .infosform {\n    display: none !important;\n  }\n\n  .infosformhours {\n    display: none !important;\n  }\n\n  .form {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n  }\n\n  .portraitrow {\n    display: none;\n  }\n\n  .colDisplay {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-direction: column;\n  }\n}\n@media (orientation: portrait) {\n  .form {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: horizontal;\n    -webkit-box-direction: normal;\n            flex-direction: row;\n  }\n\n  .infosform {\n    margin-top: 3%;\n  }\n\n  .infosformhours {\n    margin-top: 3.7%;\n  }\n\n  .hoursrange {\n    display: none;\n  }\n\n  .landscaperow {\n    display: none;\n  }\n\n  .colDisplay {\n    display: -webkit-box;\n    display: flex;\n    -webkit-box-orient: vertical;\n    -webkit-box-direction: normal;\n            flex-direction: column;\n  }\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9oYXJtYW5kL0Rlc2t0b3AvYmlvYmVsdG1vYmlsZS9zcmMvYXBwL3N5bmNocm8vc3luY2hyby5wYWdlLnNjc3MiLCJzcmMvYXBwL3N5bmNocm8vc3luY2hyby5wYWdlLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDSTtJQUNJLG9CQUFBO0lBQUEsYUFBQTtJQUNBLDhCQUFBO0lBQUEsNkJBQUE7WUFBQSxtQkFBQTtFQ0NOOztFREVFO0lBQ0ksZUFBQTtFQ0NOOztFREVFO0lBQ0ksd0JBQUE7RUNDTjs7RURDRTtJQUNJLHdCQUFBO0VDRU47O0VEQ0U7SUFDSSxvQkFBQTtJQUFBLGFBQUE7SUFDQSw4QkFBQTtJQUFBLDZCQUFBO1lBQUEsbUJBQUE7RUNFTjs7RURBRTtJQUNJLGFBQUE7RUNHTjs7RURBRztJQUNHLG9CQUFBO0lBQUEsYUFBQTtJQUNBLDRCQUFBO0lBQUEsNkJBQUE7WUFBQSxzQkFBQTtFQ0dOO0FBQ0Y7QUREQTtFQUNDO0lBQ0csb0JBQUE7SUFBQSxhQUFBO0lBQ0EsOEJBQUE7SUFBQSw2QkFBQTtZQUFBLG1CQUFBO0VDR0Y7O0VEQUQ7SUFDSSxjQUFBO0VDR0g7O0VEQUQ7SUFDSSxnQkFBQTtFQ0dIOztFREFEO0lBQ0ksYUFBQTtFQ0dIOztFRERGO0lBQ0ksYUFBQTtFQ0lGOztFREREO0lBQ0csb0JBQUE7SUFBQSxhQUFBO0lBQ0EsNEJBQUE7SUFBQSw2QkFBQTtZQUFBLHNCQUFBO0VDSUY7QUFDRiIsImZpbGUiOiJzcmMvYXBwL3N5bmNocm8vc3luY2hyby5wYWdlLnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAbWVkaWEgKG9yaWVudGF0aW9uOiBsYW5kc2NhcGUpIHtcbiAgICAucm93RGlzcGxheSB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gICAgfVxuXG4gICAgLnJvd0Rpc3BsYXkgcHtcbiAgICAgICAgbWFyZ2luLXRvcDogMTAlO1xuICAgIH1cbiAgIFxuICAgIC5pbmZvc2Zvcm17XG4gICAgICAgIGRpc3BsYXk6IG5vbmUgIWltcG9ydGFudDtcbiAgICB9XG4gICAgLmluZm9zZm9ybWhvdXJze1xuICAgICAgICBkaXNwbGF5OiBub25lICFpbXBvcnRhbnQ7XG4gICAgfSAgICBcbiAgICBcbiAgICAuZm9ybSB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gICAgfVxuICAgIC5wb3J0cmFpdHJvdyB7XG4gICAgICAgIGRpc3BsYXk6IG5vbmU7XG4gICAgIH1cblxuICAgICAuY29sRGlzcGxheSB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47XG4gICAgfVxuICB9IFxuQG1lZGlhIChvcmllbnRhdGlvbjogcG9ydHJhaXQpe1xuIC5mb3Jte1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgZmxleC1kaXJlY3Rpb246IHJvdzsgICBcbiB9XG5cbiAuaW5mb3Nmb3Jte1xuICAgICBtYXJnaW4tdG9wOjMlO1xuIH1cblxuIC5pbmZvc2Zvcm1ob3Vyc3tcbiAgICAgbWFyZ2luLXRvcDogMy43JTsgICAgICAgXG4gfSBcblxuIC5ob3Vyc3Jhbmdle1xuICAgICBkaXNwbGF5OiBub25lO1xuIH1cbi5sYW5kc2NhcGVyb3cge1xuICAgIGRpc3BsYXk6IG5vbmU7XG4gfVxuXG4gLmNvbERpc3BsYXkge1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcbn1cblxuXG59IFxuIiwiQG1lZGlhIChvcmllbnRhdGlvbjogbGFuZHNjYXBlKSB7XG4gIC5yb3dEaXNwbGF5IHtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIH1cblxuICAucm93RGlzcGxheSBwIHtcbiAgICBtYXJnaW4tdG9wOiAxMCU7XG4gIH1cblxuICAuaW5mb3Nmb3JtIHtcbiAgICBkaXNwbGF5OiBub25lICFpbXBvcnRhbnQ7XG4gIH1cblxuICAuaW5mb3Nmb3JtaG91cnMge1xuICAgIGRpc3BsYXk6IG5vbmUgIWltcG9ydGFudDtcbiAgfVxuXG4gIC5mb3JtIHtcbiAgICBkaXNwbGF5OiBmbGV4O1xuICAgIGZsZXgtZGlyZWN0aW9uOiByb3c7XG4gIH1cblxuICAucG9ydHJhaXRyb3cge1xuICAgIGRpc3BsYXk6IG5vbmU7XG4gIH1cblxuICAuY29sRGlzcGxheSB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICB9XG59XG5AbWVkaWEgKG9yaWVudGF0aW9uOiBwb3J0cmFpdCkge1xuICAuZm9ybSB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBmbGV4LWRpcmVjdGlvbjogcm93O1xuICB9XG5cbiAgLmluZm9zZm9ybSB7XG4gICAgbWFyZ2luLXRvcDogMyU7XG4gIH1cblxuICAuaW5mb3Nmb3JtaG91cnMge1xuICAgIG1hcmdpbi10b3A6IDMuNyU7XG4gIH1cblxuICAuaG91cnNyYW5nZSB7XG4gICAgZGlzcGxheTogbm9uZTtcbiAgfVxuXG4gIC5sYW5kc2NhcGVyb3cge1xuICAgIGRpc3BsYXk6IG5vbmU7XG4gIH1cblxuICAuY29sRGlzcGxheSB7XG4gICAgZGlzcGxheTogZmxleDtcbiAgICBmbGV4LWRpcmVjdGlvbjogY29sdW1uO1xuICB9XG59Il19 */"
 
 /***/ }),
 
@@ -37914,6 +37914,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic-native/hotspot/ngx */ "./node_modules/@ionic-native/hotspot/ngx/index.js");
 /* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/Chart.js");
 /* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(chart_js__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _api_global_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../api/global.service */ "./src/app/api/global.service.ts");
+
 
 
 
@@ -37925,7 +37927,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var SynchroPage = /** @class */ (function () {
-    function SynchroPage(loadingCTRL, upcv3Service, platform, router, ngZone, network, hotspot, cg) {
+    function SynchroPage(loadingCTRL, upcv3Service, platform, router, ngZone, network, hotspot, cg, global) {
         this.loadingCTRL = loadingCTRL;
         this.upcv3Service = upcv3Service;
         this.platform = platform;
@@ -37934,494 +37936,225 @@ var SynchroPage = /** @class */ (function () {
         this.network = network;
         this.hotspot = hotspot;
         this.cg = cg;
+        this.global = global;
         this.programmes = [];
         this.pStart = [];
         this.pEnd = [];
         this.intensity = [];
         this.finishRead = false;
-        //intensity2;
         this.frequency = [];
         this.frequency2 = [];
+        this.sign = [];
+        this.signOptions = ["+", "-"];
         this.intensityOptions = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         this.frequencyOptions = ["Tous les jours", "Semaine", "Weekend", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-        this.frequencyValue = [7, 9, 8, 0, 1, 2, 3, 4, 5, 6];
+        this.frequencyValue = ["7", "9", "8", "0", "1", "2", "3", "4", "5", "6"];
         this.colors = [];
-        this.pastart = "00:00";
-        this.pcstart = "00:00";
-        this.paend = "00:00";
-        this.pcend = "00:00";
-        this.paselect = "+";
-        this.pcselect = "+";
-        this.paintensity = "Désactivée";
-        this.pcintensity = "Désactivée";
+        this.paDelay = [];
+        this.paDuration = [];
+        this.pcDelay = [];
+        this.pcDuration = [];
+        this.pAube = [];
+        this.pCrepuscule = [];
+        this.pAubeStart = [];
+        this.pAubeEnd = [];
+        this.pCrepusculeStart = [];
+        this.pCrepusculeEnd = [];
         this.time = "08:10";
     }
     SynchroPage.prototype.ngOnInit = function () {
-        var _this = this;
-        if (this.platform.is("ios")) {
-            this.platform.ready().then(function () {
-                WifiWizard2.iOSConnectNetwork("BBAM", "BioBeltService").then(function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                    var loading;
+        /*if(this.platform.is("ios")){
+          this.platform.ready().then(()=>{
+            WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(async ()=>{
+              this.pageInit();
+            }).catch(error => {alert(JSON.stringify(error))})
+          })
+        }
+        
+        else if(this.platform.is("android")) {
+          this.hotspot.connectToWifi("BBAM","BioBeltService").then(async res=>{
+            this.pageInit();
+          }).catch(error => {alert(JSON.stringify(error))})
+        }*/
+        this.pageInit();
+    };
+    SynchroPage.prototype.pageInit = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var user;
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                this.platform.ready().then(function (readySource) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
                     var _this = this;
                     return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.loadingCTRL.create({
-                                    message: "Connection à l'UPC en cours...",
-                                    duration: 10000
-                                })];
+                            case 0:
+                                if (!(readySource == 'cordova')) return [3 /*break*/, 2];
+                                this.upc = new src_app_model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_6__["UPCModbus"](function (state) {
+                                    _this.ngZone.run(function () {
+                                        // Force refresh UI
+                                        //this.readDiffusionParameters();
+                                    });
+                                });
+                                return [4 /*yield*/, this.upc.client.connect()];
                             case 1:
-                                loading = _a.sent();
-                                loading.present();
-                                this.platform.ready().then(function (readySource) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                                _a.sent();
+                                this.global.ssid = "BBAM";
+                                this.global.isBBAM = true;
+                                setTimeout(function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
                                     var _this = this;
                                     return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                                         switch (_a.label) {
-                                            case 0:
-                                                if (!(readySource == 'cordova')) return [3 /*break*/, 2];
-                                                this.upc = new src_app_model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_6__["UPCModbus"](function (state) {
-                                                    _this.ngZone.run(function () {
-                                                        // Force refresh UI
-                                                        //this.readDiffusionParameters();
-                                                    });
-                                                });
-                                                return [4 /*yield*/, this.upc.client.connect()];
+                                            case 0: return [4 /*yield*/, this.upc.client.readHoldingRegisters(40068, 100).then(function (res) {
+                                                    //programme 1 
+                                                    var tab = [res[4], res[5]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    var tab = [res[6], res[7]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[8])]);
+                                                    var tab = [res[9]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme 2
+                                                    tab = [res[10], res[11]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[12], res[13]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[14])]);
+                                                    tab = [res[15]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme 3
+                                                    tab = [res[16], res[17]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[18], res[19]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[20])]);
+                                                    tab = [res[21]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme 4
+                                                    tab = [res[22], res[23]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[24], res[25]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[26])]);
+                                                    tab = [res[27]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme 5
+                                                    tab = [res[28], res[29]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[30], res[31]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[32])]);
+                                                    tab = [res[33]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme 6
+                                                    tab = [res[34], res[35]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[36], res[37]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[38])]);
+                                                    tab = [res[39]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme 7
+                                                    tab = [res[40], res[41]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[42], res[43]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[44])]);
+                                                    tab = [res[45]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme 8
+                                                    tab = [res[46], res[47]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[48], res[49]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[50])]);
+                                                    tab = [res[51]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme 9
+                                                    tab = [res[52], res[53]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[54], res[55]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[56])]);
+                                                    tab = [res[57]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme 10
+                                                    tab = [res[58], res[59]];
+                                                    _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[60], res[61]];
+                                                    _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[62])]);
+                                                    tab = [res[63]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme aube
+                                                    tab = [res[64], res[65]];
+                                                    _this.paDelay.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[66], res[67]];
+                                                    _this.paDuration.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[69]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme aube sign                      
+                                                    if (_this.upc.client.registerToUint32([res[64], res[65]]) >= 0) {
+                                                        _this.sign.push("+");
+                                                        _this.currentDawnTime = _this.upc.client.registerToUint32([res[0], res[1]]);
+                                                        _this.pAubeStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[0], res[1]]) + _this.upc.client.registerToUint32([res[64], res[65]])));
+                                                        _this.pAubeEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[0], res[1]]) + _this.upc.client.registerToUint32([res[64], res[65]]) + _this.upc.client.registerToUint32([res[66], res[67]])));
+                                                    }
+                                                    else {
+                                                        _this.sign.push("-");
+                                                        _this.currentDawnTime = _this.upc.client.registerToUint32([res[0], res[1]]);
+                                                        _this.pAubeStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[0], res[1]]) + _this.upc.client.registerToUint32([res[64], res[65]])));
+                                                        _this.pAubeEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[0], res[1]]) + _this.upc.client.registerToUint32([res[64], res[65]]) + _this.upc.client.registerToUint32([res[66], res[67]])));
+                                                    }
+                                                    //programme crepuscule
+                                                    tab = [res[70], res[71]];
+                                                    _this.pcDelay.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[72], res[73]];
+                                                    _this.pcDuration.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                                                    tab = [res[75]];
+                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                                                    //programme crepuscule sign
+                                                    if (_this.upc.client.registerToUint32([res[70], res[71]]) >= 0) {
+                                                        _this.sign.push("+");
+                                                        _this.currentDuskTime = _this.upc.client.registerToUint32([res[2], res[3]]);
+                                                        _this.pCrepusculeStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[2], res[3]]) + _this.upc.client.registerToUint32([res[70], res[71]])));
+                                                        _this.pCrepusculeEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[2], res[3]]) + _this.upc.client.registerToUint32([res[70], res[71]]) + _this.upc.client.registerToUint32([res[72], res[73]])));
+                                                    }
+                                                    else {
+                                                        _this.sign.push("-");
+                                                        _this.currentDuskTime = _this.upc.client.registerToUint32([res[2], res[3]]);
+                                                        _this.pCrepusculeStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[2], res[3]]) + _this.upc.client.registerToUint32([res[70], res[71]])));
+                                                        _this.pCrepusculeEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[2], res[3]]) + _this.upc.client.registerToUint32([res[70], res[71]]) + _this.upc.client.registerToUint32([res[72], res[73]])));
+                                                    }
+                                                    _this.drawChartjs();
+                                                    setTimeout(function () {
+                                                        _this.finishRead = true;
+                                                    }, 1000);
+                                                }).catch(function (err) {
+                                                    alert("Veuillez vous connecter à BBAM !");
+                                                    _this.global.ssid = "ADMIN";
+                                                    _this.global.isBBAM = false;
+                                                })];
                                             case 1:
                                                 _a.sent();
-                                                setTimeout(function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                                    var _this = this;
-                                                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                                        switch (_a.label) {
-                                                            case 0: 
-                                                            //this.ngZone.run(async ()=>{
-                                                            return [4 /*yield*/, this.upc.client.readHoldingRegisters(40072, 100).then(function (res) {
-                                                                    //programme 1 
-                                                                    var tab = [res[0], res[1]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    var tab2 = [res[2], res[3]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab2));
-                                                                    var tab3 = [res[4]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab3));
-                                                                    var tab5 = [res[5]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab5));
-                                                                    //programme 2
-                                                                    tab = [res[6], res[7]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[8], res[9]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[10]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[11]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                    //programme 3
-                                                                    tab = [res[12], res[13]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[14], res[15]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[16]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[17]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                    //programme 4
-                                                                    tab = [res[18], res[19]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[20], res[21]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[22]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[23]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                    //programme 5
-                                                                    tab = [res[24], res[25]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[26], res[27]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[28]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[29]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                    //programme 6
-                                                                    tab = [res[30], res[31]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[32], res[33]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[34]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[35]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                    //programme 7
-                                                                    tab = [res[36], res[37]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[38], res[39]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[40]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[41]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                    //programme 8
-                                                                    tab = [res[42], res[43]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[44], res[45]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[46]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[47]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                    //programme 9
-                                                                    tab = [res[48], res[49]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[50], res[51]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[52]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[53]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                    //programme 10
-                                                                    tab = [res[54], res[55]];
-                                                                    _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[56], res[57]];
-                                                                    _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[58]];
-                                                                    _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                    tab = [res[59]];
-                                                                    _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                    setTimeout(function () {
-                                                                        _this.finishRead = true;
-                                                                    }, 1000);
-                                                                })];
-                                                            case 1:
-                                                                //this.ngZone.run(async ()=>{
-                                                                _a.sent();
-                                                                this.finishRead = true;
-                                                                return [2 /*return*/];
-                                                        }
-                                                    });
-                                                }); }, 5000);
-                                                _a.label = 2;
-                                            case 2: return [2 /*return*/];
+                                                return [2 /*return*/];
                                         }
                                     });
-                                }); });
-                                return [2 /*return*/];
+                                }); }, 1000);
+                                _a.label = 2;
+                            case 2: return [2 /*return*/];
                         }
                     });
                 }); });
-            });
-        }
-        else if (this.platform.is("android")) {
-            this.hotspot.connectToWifi("BBAM", "BioBeltService").then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                var loading;
-                var _this = this;
-                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, this.loadingCTRL.create({
-                                message: "Connection à l'UPC en cours...",
-                                duration: 10000
-                            })];
-                        case 1:
-                            loading = _a.sent();
-                            loading.present();
-                            this.platform.ready().then(function (readySource) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                var _this = this;
-                                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            if (!(readySource == 'cordova')) return [3 /*break*/, 2];
-                                            this.upc = new src_app_model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_6__["UPCModbus"](function (state) {
-                                                _this.ngZone.run(function () {
-                                                    // Force refresh UI
-                                                    //this.readDiffusionParameters();
-                                                });
-                                            });
-                                            return [4 /*yield*/, this.upc.client.connect()];
-                                        case 1:
-                                            _a.sent();
-                                            setTimeout(function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                                var _this = this;
-                                                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                                    switch (_a.label) {
-                                                        case 0: return [4 /*yield*/, this.upc.client.readHoldingRegisters(40072, 100).then(function (res) {
-                                                                //programme 1 
-                                                                var tab = [res[0], res[1]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                var tab2 = [res[2], res[3]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab2));
-                                                                var tab3 = [res[4]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab3));
-                                                                var tab5 = [res[5]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab5));
-                                                                //programme 2
-                                                                tab = [res[6], res[7]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[8], res[9]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[10]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[11]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                //programme 3
-                                                                tab = [res[12], res[13]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[14], res[15]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[16]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[17]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                //programme 4
-                                                                tab = [res[18], res[19]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[20], res[21]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[22]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[23]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                //programme 5
-                                                                tab = [res[24], res[25]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[26], res[27]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[28]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[29]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                //programme 6
-                                                                tab = [res[30], res[31]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[32], res[33]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[34]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[35]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                //programme 7
-                                                                tab = [res[36], res[37]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[38], res[39]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[40]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[41]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                //programme 8
-                                                                tab = [res[42], res[43]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[44], res[45]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[46]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[47]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                //programme 9
-                                                                tab = [res[48], res[49]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[50], res[51]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[52]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[53]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                //programme 10
-                                                                tab = [res[54], res[55]];
-                                                                _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[56], res[57]];
-                                                                _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[58]];
-                                                                _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                                                                tab = [res[59]];
-                                                                _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                                                                setTimeout(function () {
-                                                                    _this.finishRead = true;
-                                                                }, 1000);
-                                                            })
-                                                            /*
-                                                            //Program 1
-                                                            await this.upc.client.getIntFromHoldingRegister(40072,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40074,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40076,1).then(res=>{
-                                                              alert(this.frequencyOptions[this.convertDaysCode(res)])
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40077,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })
-                                        
-                                                            //Program 2
-                                                            await this.upc.client.getIntFromHoldingRegister(40078,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40080,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40082,1).then(res=>{
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40083,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })
-                                        
-                                                            //Program 3
-                                                            await this.upc.client.getIntFromHoldingRegister(40084,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40086,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40088,1).then(res=>{
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40089,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })
-                                                            
-                                                            //Program 4
-                                                            await this.upc.client.getIntFromHoldingRegister(40090,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40092,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40094,1).then(res=>{
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40095,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })
-                                                            
-                                                            //Program 5
-                                                            await this.upc.client.getIntFromHoldingRegister(40096,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40098,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40100,1).then(res=>{
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                                                   
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40101,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })
-                                        
-                                                            //Program 6
-                                                            await this.upc.client.getIntFromHoldingRegister(40102,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40104,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40106,1).then(res=>{
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40107,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })
-                                        
-                                                            //Program 7
-                                                            await this.upc.client.getIntFromHoldingRegister(40108,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40110,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40112,1).then(res=>{
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40113,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })
-                                        
-                                                            //Program 8
-                                                            await this.upc.client.getIntFromHoldingRegister(40114,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40116,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40118,1).then(res=>{
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40119,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })
-                                        
-                                                            //Program 9
-                                                            await this.upc.client.getIntFromHoldingRegister(40120,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40122,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40124,1).then(res=>{
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40125,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })
-                                        
-                                                            //Program 10
-                                                            await this.upc.client.getIntFromHoldingRegister(40126,2).then(res=>{
-                                                              this.pStart.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40128,2).then(res=>{
-                                                              this.pEnd.push(this.secondsToHoursMinutes(res));
-                                                              this.cg.detectChanges();
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40130,1).then(res=>{
-                                                              this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res)]);
-                                                            })
-                                                            await this.upc.client.getIntFromHoldingRegister(40131,1).then(res=>{
-                                                              this.intensity.push(res);
-                                                            })*/
-                                                        ];
-                                                        case 1:
-                                                            _a.sent();
-                                                            return [2 /*return*/];
-                                                    }
-                                                });
-                                            }); }, 5000);
-                                            this.drawChartjs();
-                                            _a.label = 2;
-                                        case 2: return [2 /*return*/];
-                                    }
-                                });
-                            }); });
-                            return [2 /*return*/];
-                    }
+                user = new _model_user__WEBPACK_IMPORTED_MODULE_3__["User"]();
+                user.username = "guillaume.barault@dipteratech.com";
+                user.password = "DIPTERA_AdminBioBelt_2020";
+                this.upcv3Service.login(user).subscribe(function (res) {
+                    _this.token = res.result;
                 });
-            }); }).catch(function (error) { alert(JSON.stringify(error)); });
-        }
-        var user = new _model_user__WEBPACK_IMPORTED_MODULE_3__["User"]();
-        user.username = "guillaume.barault@dipteratech.com";
-        user.password = "DIPTERA_AdminBioBelt_2020";
-        this.upcv3Service.login(user).subscribe(function (res) {
-            _this.token = res.result;
+                this.fillTab();
+                return [2 /*return*/];
+            });
         });
-        this.fillTab();
-        this.drawChartjs();
     };
     SynchroPage.prototype.fillTab = function () {
         for (var i = 0; i < 10; i++) {
@@ -38438,6 +38171,9 @@ var SynchroPage = /** @class */ (function () {
         }
     };
     SynchroPage.prototype.secondsToHoursMinutes = function (secs) {
+        if (secs < 0) {
+            secs = Math.abs(secs);
+        }
         var hours = Math.trunc(secs / 3600);
         var minutes = Math.trunc((secs % 3600) / 60);
         if (hours < 10) {
@@ -38457,9 +38193,13 @@ var SynchroPage = /** @class */ (function () {
     };
     SynchroPage.prototype.hoursMinutesToSeconds = function (hm) {
         var splitted = hm.split(":");
-        var hours = splitted[0] * 3600;
-        var minutes = splitted[1] * 60;
+        var hours = parseInt(splitted[0]) * 3600;
+        var minutes = parseInt(splitted[1]) * 60;
         var res = hours + minutes;
+        return (res);
+    };
+    SynchroPage.prototype.positiveToNegative = function (pos) {
+        var res = -Math.abs(pos);
         return (res);
     };
     SynchroPage.prototype.convertDaysCode = function (dc) {
@@ -38540,259 +38280,136 @@ var SynchroPage = /** @class */ (function () {
             var _this = this;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.upc.client.readHoldingRegisters(40072, 100).then(function (res) {
+                    case 0: return [4 /*yield*/, this.upc.client.readHoldingRegisters(40068, 100).then(function (res) {
                             //programme 1 
-                            var tab = [res[0], res[1]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[2], res[3]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[4]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[5]];
+                            var tab = [res[4], res[5]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            var tab = [res[6], res[7]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[8])]);
+                            var tab = [res[9]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
                             //programme 2
-                            tab = [res[6], res[7]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[8], res[9]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[10]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[11]];
+                            tab = [res[10], res[11]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[12], res[13]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[14])]);
+                            tab = [res[15]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
                             //programme 3
-                            tab = [res[12], res[13]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[14], res[15]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[16]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[17]];
+                            tab = [res[16], res[17]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[18], res[19]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[20])]);
+                            tab = [res[21]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
                             //programme 4
-                            tab = [res[18], res[19]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[20], res[21]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[22]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[23]];
+                            tab = [res[22], res[23]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[24], res[25]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[26])]);
+                            tab = [res[27]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
                             //programme 5
-                            tab = [res[24], res[25]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[26], res[27]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[28]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[29]];
+                            tab = [res[28], res[29]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[30], res[31]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[32])]);
+                            tab = [res[33]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
                             //programme 6
-                            tab = [res[30], res[31]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[32], res[33]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[34]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[35]];
+                            tab = [res[34], res[35]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[36], res[37]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[38])]);
+                            tab = [res[39]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
                             //programme 7
-                            tab = [res[36], res[37]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[38], res[39]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[40]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[41]];
+                            tab = [res[40], res[41]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[42], res[43]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[44])]);
+                            tab = [res[45]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
                             //programme 8
-                            tab = [res[42], res[43]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[44], res[45]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[46]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[47]];
+                            tab = [res[46], res[47]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[48], res[49]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[50])]);
+                            tab = [res[51]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
                             //programme 9
-                            tab = [res[48], res[49]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[50], res[51]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[52]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[53]];
+                            tab = [res[52], res[53]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[54], res[55]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[56])]);
+                            tab = [res[57]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
                             //programme 10
-                            tab = [res[54], res[55]];
-                            _this.pStart.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[56], res[57]];
-                            _this.pEnd.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[58]];
-                            _this.frequency2.push(_this.upc.client.registerToUint32(tab));
-                            tab = [res[59]];
+                            tab = [res[58], res[59]];
+                            _this.pStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[60], res[61]];
+                            _this.pEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            _this.frequency2.push(_this.frequencyOptions[_this.convertDaysCode(res[62])]);
+                            tab = [res[63]];
                             _this.intensity.push(_this.upc.client.registerToUint32(tab));
-                        })
-                        /*
-                       //Program 1
-                       await this.upc.client.getIntFromHoldingRegister(40072,2).then(res=>{
-                         this.pStart[0]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40074,2).then(res=>{
-                         this.pEnd[0]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40076,1).then(res=>{
-                         this.frequency2[0]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40077,1).then(res=>{
-                         this.intensity[0]=res;
-                       })
-                 
-                       //Program 2
-                       await this.upc.client.getIntFromHoldingRegister(40078,2).then(res=>{
-                         this.pStart[1]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40080,2).then(res=>{
-                         this.pEnd[1]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40082,1).then(res=>{
-                         this.frequency2[1]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40083,1).then(res=>{
-                         this.intensity[1]=res;
-                       })
-                 
-                       //Program 3
-                       await this.upc.client.getIntFromHoldingRegister(40084,2).then(res=>{
-                         this.pStart[2]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40086,2).then(res=>{
-                         this.pEnd[2]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40088,1).then(res=>{
-                         this.frequency2[2]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40089,1).then(res=>{
-                         this.intensity[2]=res;
-                       })
-                       
-                       //Program 4
-                       await this.upc.client.getIntFromHoldingRegister(40090,2).then(res=>{
-                         this.pStart[3]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40092,2).then(res=>{
-                         this.pEnd[3]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40094,1).then(res=>{
-                         this.frequency2[3]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40095,1).then(res=>{
-                         this.intensity[3]=res;
-                       })
-                       
-                       //Program 5
-                       await this.upc.client.getIntFromHoldingRegister(40096,2).then(res=>{
-                         this.pStart[4]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40098,2).then(res=>{
-                         this.pEnd[4]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40100,1).then(res=>{
-                         this.frequency2[4]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40101,1).then(res=>{
-                         this.intensity[4]=res;
-                       })
-                 
-                       //Program 6
-                       await this.upc.client.getIntFromHoldingRegister(40102,2).then(res=>{
-                         this.pStart[5]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40104,2).then(res=>{
-                         this.pEnd[5]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40106,1).then(res=>{
-                         this.frequency2[5]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40107,1).then(res=>{
-                         this.intensity[5]=res;
-                       })
-                 
-                       //Program 7
-                       await this.upc.client.getIntFromHoldingRegister(40108,2).then(res=>{
-                         this.pStart[6]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40110,2).then(res=>{
-                         this.pEnd[6]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40112,1).then(res=>{
-                         this.frequency2[6]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40113,1).then(res=>{
-                         this.intensity[6]=res;
-                       })
-                 
-                       //Program 8
-                       await this.upc.client.getIntFromHoldingRegister(40114,2).then(res=>{
-                         this.pStart[7]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40116,2).then(res=>{
-                         this.pEnd[7]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40118,1).then(res=>{
-                         this.frequency2[7]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40119,1).then(res=>{
-                         this.intensity[7]=res;
-                       })
-                 
-                       //Program 9
-                       await this.upc.client.getIntFromHoldingRegister(40120,2).then(res=>{
-                         this.pStart[8]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40122,2).then(res=>{
-                         this.pEnd[8]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40124,1).then(res=>{
-                         this.frequency2[8]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40125,1).then(res=>{
-                         this.intensity[8]=res;
-                       })
-                 
-                       //Program 10
-                       await this.upc.client.getIntFromHoldingRegister(40126,2).then(res=>{
-                         this.pStart[9]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40128,2).then(res=>{
-                         this.pEnd[9]=this.secondsToHoursMinutes(res);
-                         this.cg.detectChanges();
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40130,1).then(res=>{
-                         this.frequency2[9]=this.frequencyOptions[this.convertDaysCode(res)];
-                       })
-                       await this.upc.client.getIntFromHoldingRegister(40131,1).then(res=>{
-                         this.intensity[9]=res;
-                       })*/
-                    ];
+                            //programme aube
+                            tab = [res[64], res[65]];
+                            _this.paDelay.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[66], res[67]];
+                            _this.paDuration.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[69]];
+                            _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                            //programme aube sign                      
+                            if (_this.upc.client.registerToUint32([res[64], res[65]]) >= 0) {
+                                _this.sign.push("+");
+                                _this.currentDawnTime = _this.upc.client.registerToUint32([res[0], res[1]]);
+                                _this.pAubeStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[0], res[1]]) + _this.upc.client.registerToUint32([res[64], res[65]])));
+                                _this.pAubeEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[0], res[1]]) + _this.upc.client.registerToUint32([res[64], res[65]]) + _this.upc.client.registerToUint32([res[66], res[67]])));
+                            }
+                            else {
+                                _this.sign.push("-");
+                                _this.currentDawnTime = _this.upc.client.registerToUint32([res[0], res[1]]);
+                                _this.pAubeStart[0] = _this.secondsToHoursMinutes(_this.currentDawnTime + _this.hoursMinutesToSeconds(_this.paDelay[0]));
+                                _this.pAubeEnd[0] = _this.secondsToHoursMinutes(_this.currentDawnTime + _this.hoursMinutesToSeconds(_this.paDelay[0]) + _this.hoursMinutesToSeconds(_this.paDuration[0]));
+                            }
+                            //programme crepuscule
+                            tab = [res[70], res[71]];
+                            _this.pcDelay.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[72], res[73]];
+                            _this.pcDuration.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32(tab)));
+                            tab = [res[75]];
+                            _this.intensity.push(_this.upc.client.registerToUint32(tab));
+                            //programme crepuscule sign
+                            if (_this.upc.client.registerToUint32([res[70], res[71]]) >= 0) {
+                                _this.sign.push("+");
+                                _this.currentDuskTime = _this.upc.client.registerToUint32([res[2], res[3]]);
+                                _this.pCrepusculeStart.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[2], res[3]]) + _this.upc.client.registerToUint32([res[70], res[71]])));
+                                _this.pCrepusculeEnd.push(_this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[2], res[3]]) + _this.upc.client.registerToUint32([res[70], res[71]]) + _this.upc.client.registerToUint32([res[72], res[73]])));
+                            }
+                            else {
+                                _this.sign.push("-");
+                                _this.currentDuskTime = _this.upc.client.registerToUint32([res[2], res[3]]);
+                                _this.pCrepusculeStart[0] = _this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[2], res[3]]) + _this.upc.client.registerToUint32([res[70], res[71]]));
+                                _this.pCrepusculeEnd[0] = _this.secondsToHoursMinutes(_this.upc.client.registerToUint32([res[2], res[3]]) + _this.upc.client.registerToUint32([res[70], res[71]]) + _this.upc.client.registerToUint32([res[72], res[73]]));
+                            }
+                            _this.drawChartjs();
+                            setTimeout(function () {
+                                _this.finishRead = true;
+                            }, 1000);
+                        }).catch(function (err) {
+                            alert("Veuillez vous connecter à BBAM !");
+                            _this.global.ssid = "ADMIN";
+                            _this.global.isBBAM = false;
+                        })];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];
@@ -38806,7 +38423,7 @@ var SynchroPage = /** @class */ (function () {
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        if (!this.finishRead) return [3 /*break*/, 52];
+                        if (!this.finishRead) return [3 /*break*/, 66];
                         _a = i;
                         switch (_a) {
                             case 0: return [3 /*break*/, 1];
@@ -38819,16 +38436,18 @@ var SynchroPage = /** @class */ (function () {
                             case 7: return [3 /*break*/, 36];
                             case 8: return [3 /*break*/, 41];
                             case 9: return [3 /*break*/, 46];
+                            case 10: return [3 /*break*/, 51];
+                            case 11: return [3 /*break*/, 58];
                         }
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 1: 
-                    //Program 1
+                    //Program 1            
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40072, 2, this.hoursMinutesToSeconds(this.pStart[0])).then(function (data) {
                         }).catch(function (err) {
                             alert(JSON.stringify(err));
                         })];
                     case 2:
-                        //Program 1
+                        //Program 1            
                         _b.sent();
                         return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40074, 2, this.hoursMinutesToSeconds(this.pEnd[0])).then(function (data) {
                             }).catch(function (err) {
@@ -38848,7 +38467,7 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 5:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 6: 
                     //Program 2
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40078, 2, this.hoursMinutesToSeconds(this.pStart[1])).then(function (data) {
@@ -38877,7 +38496,7 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 10:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 11: 
                     //Program 3
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40084, 2, this.hoursMinutesToSeconds(this.pStart[2])).then(function (data) {
@@ -38905,7 +38524,7 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 15:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 16: 
                     //Program 4
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40090, 2, this.hoursMinutesToSeconds(this.pStart[3])).then(function (data) {
@@ -38933,7 +38552,7 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 20:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 21: 
                     //Program 5
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40096, 2, this.hoursMinutesToSeconds(this.pStart[4])).then(function (data) {
@@ -38961,7 +38580,7 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 25:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 26: 
                     //Program 6
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40102, 2, this.hoursMinutesToSeconds(this.pStart[5])).then(function (data) {
@@ -38989,7 +38608,7 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 30:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 31: 
                     //Program 7
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40108, 2, this.hoursMinutesToSeconds(this.pStart[6])).then(function (data) {
@@ -39017,7 +38636,7 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 35:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 36: 
                     //Program 8
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40114, 2, this.hoursMinutesToSeconds(this.pStart[7])).then(function (data) {
@@ -39045,7 +38664,7 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 40:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 41: 
                     //Program 9
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40120, 2, this.hoursMinutesToSeconds(this.pStart[8])).then(function (data) {
@@ -39073,7 +38692,7 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 45:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 46: 
                     //Program 10
                     return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40126, 2, this.hoursMinutesToSeconds(this.pStart[9])).then(function (data) {
@@ -39101,30 +38720,117 @@ var SynchroPage = /** @class */ (function () {
                             })];
                     case 50:
                         _b.sent();
-                        return [3 /*break*/, 51];
+                        return [3 /*break*/, 65];
                     case 51:
+                        if (!(this.sign[0] == "+")) return [3 /*break*/, 53];
+                        return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40132, 2, this.hoursMinutesToSeconds(this.paDelay[0])).then(function (data) {
+                            }).catch(function (err) {
+                                alert(JSON.stringify(err));
+                            })];
+                    case 52:
+                        _b.sent();
+                        this.pAubeStart[0] = this.secondsToHoursMinutes(this.currentDawnTime + this.hoursMinutesToSeconds(this.paDelay[0]));
+                        this.pAubeEnd[0] = this.secondsToHoursMinutes(this.currentDawnTime + this.hoursMinutesToSeconds(this.paDelay[0]) + this.hoursMinutesToSeconds(this.paDuration[0]));
+                        return [3 /*break*/, 55];
+                    case 53: return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40132, 2, this.positiveToNegative(this.hoursMinutesToSeconds(this.paDelay[0]))).then(function (data) {
+                        }).catch(function (err) {
+                            alert(JSON.stringify(err));
+                        })];
+                    case 54:
+                        _b.sent();
+                        this.pAubeStart[0] = this.secondsToHoursMinutes(this.currentDawnTime - this.hoursMinutesToSeconds(this.paDelay[0]));
+                        this.pAubeEnd[0] = this.secondsToHoursMinutes(this.currentDawnTime - this.hoursMinutesToSeconds(this.paDelay[0]) + this.hoursMinutesToSeconds(this.paDuration[0]));
+                        _b.label = 55;
+                    case 55: return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40134, 2, this.hoursMinutesToSeconds(this.paDuration[0])).then(function (data) {
+                        }).catch(function (err) {
+                            alert(JSON.stringify(err));
+                        })];
+                    case 56:
+                        _b.sent();
+                        return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40137, 1, this.intensity[10]).then(function (data) {
+                            }).catch(function (err) {
+                                alert(JSON.stringify(err));
+                            })];
+                    case 57:
+                        _b.sent();
+                        return [3 /*break*/, 65];
+                    case 58:
+                        if (!(this.sign[1] == "+")) return [3 /*break*/, 60];
+                        return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40138, 2, this.hoursMinutesToSeconds(this.pcDelay[0])).then(function (data) {
+                            }).catch(function (err) {
+                                alert(JSON.stringify(err));
+                            })];
+                    case 59:
+                        _b.sent();
+                        this.pCrepusculeStart[0] = this.secondsToHoursMinutes(this.currentDuskTime + this.hoursMinutesToSeconds(this.pcDelay[0]));
+                        this.pCrepusculeEnd[0] = this.secondsToHoursMinutes(this.currentDuskTime + this.hoursMinutesToSeconds(this.pcDelay[0]) + this.hoursMinutesToSeconds(this.pcDuration[0]));
+                        return [3 /*break*/, 62];
+                    case 60: return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40138, 2, this.positiveToNegative(this.hoursMinutesToSeconds(this.pcDelay[0]))).then(function (data) {
+                        }).catch(function (err) {
+                            alert(JSON.stringify(err));
+                        })];
+                    case 61:
+                        _b.sent();
+                        this.pCrepusculeStart[0] = this.secondsToHoursMinutes(this.currentDuskTime - this.hoursMinutesToSeconds(this.pcDelay[0]));
+                        this.pCrepusculeEnd[0] = this.secondsToHoursMinutes(this.currentDuskTime - this.hoursMinutesToSeconds(this.pcDelay[0]) + this.hoursMinutesToSeconds(this.pcDuration[0]));
+                        _b.label = 62;
+                    case 62: return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40140, 2, this.hoursMinutesToSeconds(this.pcDuration[0])).then(function (data) {
+                        }).catch(function (err) {
+                            alert(JSON.stringify(err));
+                        })];
+                    case 63:
+                        _b.sent();
+                        return [4 /*yield*/, this.upc.client.setIntInHoldingRegister(40143, 1, this.intensity[11]).then(function (data) {
+                            }).catch(function (err) {
+                                alert(JSON.stringify(err));
+                            })];
+                    case 64:
+                        _b.sent();
+                        return [3 /*break*/, 65];
+                    case 65:
                         this.getUPCparams();
-                        this.drawChartjs();
-                        _b.label = 52;
-                    case 52: return [2 /*return*/];
+                        _b.label = 66;
+                    case 66: return [2 /*return*/];
                 }
             });
         });
     };
     SynchroPage.prototype.drawChartjs = function () {
-        var stringToIntProgrammes = [];
+        var stringToIntStartProgrammes = [];
+        var stringToIntEndProgrammes = [];
+        var stringToIntpAS;
+        var stringToIntpAE;
+        var stringToIntpCS;
+        var stringToIntpCE;
         var barColors = [];
-        //console.log(this.programmes)
-        this.programmes.forEach(function (prog) {
-            prog.forEach(function (element) {
-                var parsed = element.split(":");
-                var p = parseInt(parsed[1], 10) / 60;
-                var p2 = parseInt(parsed[0]) + p;
-                stringToIntProgrammes.push(p2);
-            });
+        this.pStart.forEach(function (element) {
+            var parsed = element.split(":");
+            var p = parseInt(parsed[1], 10) / 60;
+            var p2 = parseInt(parsed[0]) + p;
+            stringToIntStartProgrammes.push(p2);
         });
-        //console.log("intensity :",this.intensity);
-        //console.log("frequency :",this.frequency);
+        this.pEnd.forEach(function (element) {
+            var parsed = element.split(":");
+            var p = parseInt(parsed[1], 10) / 60;
+            var p2 = parseInt(parsed[0]) + p;
+            stringToIntEndProgrammes.push(p2);
+        });
+        var parsedpAS = this.pAubeStart[0].split(":");
+        var p = parseInt(parsedpAS[1], 10) / 60;
+        var p2 = parseInt(parsedpAS[0]) + p;
+        stringToIntpAS = p2;
+        var parsedpAE = this.pAubeEnd[0].split(":");
+        var p3 = parseInt(parsedpAE[1], 10) / 60;
+        var p4 = parseInt(parsedpAE[0]) + p3;
+        stringToIntpAE = p4;
+        var parsedpCS = this.pCrepusculeStart[0].split(":");
+        var p5 = parseInt(parsedpCS[1], 10) / 60;
+        var p6 = parseInt(parsedpCS[0]) + p5;
+        stringToIntpCS = p6;
+        var parsedpCE = this.pCrepusculeEnd[0].split(":");
+        var p7 = parseInt(parsedpCE[1], 10) / 60;
+        var p8 = parseInt(parsedpCE[0]) + p7;
+        stringToIntpCE = p8;
         this.intensity.forEach(function (intensityElement) {
             switch (intensityElement) {
                 case 0:
@@ -39162,24 +38868,25 @@ var SynchroPage = /** @class */ (function () {
                     break;
             }
         });
-        //console.log(barColors);
         var data = [
-            [stringToIntProgrammes[0], stringToIntProgrammes[1]],
-            [stringToIntProgrammes[2], stringToIntProgrammes[3]],
-            [stringToIntProgrammes[4], stringToIntProgrammes[5]],
-            [stringToIntProgrammes[6], stringToIntProgrammes[7]],
-            [stringToIntProgrammes[8], stringToIntProgrammes[9]],
-            [stringToIntProgrammes[10], stringToIntProgrammes[11]],
-            [stringToIntProgrammes[12], stringToIntProgrammes[13]],
-            [stringToIntProgrammes[14], stringToIntProgrammes[15]],
-            [stringToIntProgrammes[16], stringToIntProgrammes[17]],
-            [stringToIntProgrammes[18], stringToIntProgrammes[19]]
+            [stringToIntStartProgrammes[0], stringToIntEndProgrammes[0]],
+            [stringToIntStartProgrammes[1], stringToIntEndProgrammes[1]],
+            [stringToIntStartProgrammes[2], stringToIntEndProgrammes[2]],
+            [stringToIntStartProgrammes[3], stringToIntEndProgrammes[3]],
+            [stringToIntStartProgrammes[4], stringToIntEndProgrammes[4]],
+            [stringToIntStartProgrammes[5], stringToIntEndProgrammes[5]],
+            [stringToIntStartProgrammes[6], stringToIntEndProgrammes[6]],
+            [stringToIntStartProgrammes[7], stringToIntEndProgrammes[7]],
+            [stringToIntStartProgrammes[8], stringToIntEndProgrammes[8]],
+            [stringToIntStartProgrammes[9], stringToIntEndProgrammes[9]],
+            [stringToIntpAS, stringToIntpAE],
+            [stringToIntpCS, stringToIntpCE]
         ];
         var ctx = 'myChart';
         var myChart = new chart_js__WEBPACK_IMPORTED_MODULE_9__["Chart"](ctx, {
             type: 'horizontalBar',
             data: {
-                labels: ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"],
+                labels: ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10", "Aube", "Crepuscule"],
                 datasets: [
                     {
                         backgroundColor: barColors,
@@ -39191,10 +38898,10 @@ var SynchroPage = /** @class */ (function () {
                 legend: {
                     display: false,
                 },
-                title: {
-                    display: true,
-                    text: 'Aube Crépuscule'
-                },
+                /*title: {
+                  display: true,
+                  text: 'Aube Crépuscule'
+                },*/
                 scales: {
                     xAxes: [{
                             ticks: {
@@ -39216,7 +38923,8 @@ var SynchroPage = /** @class */ (function () {
         { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"] },
         { type: _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_5__["Network"] },
         { type: _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_8__["Hotspot"] },
-        { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"] }
+        { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"] },
+        { type: _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"] }
     ]; };
     SynchroPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -39229,7 +38937,8 @@ var SynchroPage = /** @class */ (function () {
             _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["Platform"],
             _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"],
             _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_5__["Network"],
-            _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_8__["Hotspot"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"]])
+            _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_8__["Hotspot"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"],
+            _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"]])
     ], SynchroPage);
     return SynchroPage;
 }());

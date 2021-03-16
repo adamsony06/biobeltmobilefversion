@@ -9,6 +9,7 @@ import { AddbottlemodalPage } from '../addbottlemodal/addbottlemodal.page';
 import { GlobalService } from '../api/global.service';
 import { RackcontentPage } from '../rackcontent/rackcontent.page';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { RetfournmodalPage } from '../retfournmodal/retfournmodal.page';
 declare var WifiWizard2: any;
 
 @Component({
@@ -87,12 +88,12 @@ export class OptionbottlePage implements OnInit {
     localStorage.setItem("adds",i);
     this.router.navigate(['choosestock']);
   }
-  remRack() {
-    this.scan.scan().then(async res=>{
+  async remRack() {
+    /*this.scan.scan().then(async res=>{
       if(res.text != ''){
         var text = res.text;
         this.upc3Service.getBottleFromRack(this.token,res.text).subscribe(async res=>{
-          alert(JSON.stringify(res));
+          
           if(res.result.length> 0){
             var modal = await this.modal.create({
               component : RackcontentPage,
@@ -111,9 +112,14 @@ export class OptionbottlePage implements OnInit {
         /*this.upcv3Service.removeRack(res.text,this.token).subscribe(res=>{
 
         })*/
-      }
+      /*}
+      
+    })*/
+    var modal = await this.modal.create({
+      component : RetfournmodalPage,
       
     })
+    modal.present();
   }
   goStock() {
     if(!this.isStock){

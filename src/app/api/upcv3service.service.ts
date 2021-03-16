@@ -21,7 +21,7 @@ import { Stock } from '../model/stock';
   providedIn: 'root'
 })
 export class Upcv3serviceService {
-  private apiUrl = 'http://dev-api.biobelt.com/';
+  private apiUrl = 'http://api.biobelt.com/';
   
   constructor(private http:HttpClient,
               private storage:Storage) { }

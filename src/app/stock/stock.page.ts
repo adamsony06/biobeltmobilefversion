@@ -7,6 +7,7 @@ import { ModalController } from '@ionic/angular';
 import { AddbottlemodalPage } from '../addbottlemodal/addbottlemodal.page';
 import { RackcontentPage } from '../rackcontent/rackcontent.page';
 import { GlobalService } from '../api/global.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-stock',
@@ -22,7 +23,7 @@ export class StockPage implements OnInit {
   name = {name : "",id : 0};
   header = [];
   
-  constructor(private storage : Storage,private barcode : BarcodeScanner,private upcv3Service : Upcv3serviceService,private modalService : ModalController,private global : GlobalService) { }
+  constructor(private storage : Storage,private barcode : BarcodeScanner,private upcv3Service : Upcv3serviceService,private modalService : ModalController,private global : GlobalService, private alertController : AlertController) { }
 
   ngOnInit() {
     if(localStorage.getItem("adds") == "0"){
@@ -82,19 +83,53 @@ export class StockPage implements OnInit {
   addRack() {
     this.barcode.scan().then(async res=>{
       if(res.text != ""){
-        localStorage.setItem("rack",res.text);
-        const modal = await this.modalService.create({
-          component : AddbottlemodalPage,
-          componentProps : {
-            barcode : "",
-            stockRet : this.name,
-            mode : 1
-          }
+        var text = res.text;
+        this.upcv3Service.getBottleFromRack(this.token,res.text).subscribe(async res=>{
+            if(res.result.length == 0){
+              this.presentAlertRack(text);
+            }else {
+              localStorage.setItem("rack",text);
+              const modal = await this.modalService.create({
+                component : AddbottlemodalPage,
+                componentProps : {
+                  barcode : "",
+                  stockRet : this.name,
+                  mode : 1
+                }
+              })
+              modal.present();
+            }
         })
-        modal.present();
+        
       }
     })
   }
+  async presentAlertRack(text) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Nouveau Rack',
+      subHeader: '',
+      message: 'Vous avez ajouter un nouveau rack ?',
+      buttons: [{text : 'Annuler', handler : ()=>{}},{text:'Confirmer',
+                  handler : async ()=>{
+                    localStorage.setItem("rack",text);
+              const modal = await this.modalService.create({
+                component : AddbottlemodalPage,
+                componentProps : {
+                  barcode : "",
+                  stockRet : this.name,
+                  mode : 1
+                }
+              })
+              modal.present();
+                  }
+    }],
+      
+    });
+
+    await alert.present();
+  }
+
   retRack() {
     this.barcode.scan().then(async res=>{
       if(res.text != ""){

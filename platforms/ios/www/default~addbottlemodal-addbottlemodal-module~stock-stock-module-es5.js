@@ -55,7 +55,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var AddbottlemodalPage = /** @class */ (function () {
-    function AddbottlemodalPage(scan, modal, upcv3Service, storage, router, platform, network, ngZone, loadingCTRL, global) {
+    function AddbottlemodalPage(scan, modal, upcv3Service, storage, router, platform, network, ngZone, loadingCTRL, global, cd) {
         this.scan = scan;
         this.modal = modal;
         this.upcv3Service = upcv3Service;
@@ -66,6 +66,7 @@ var AddbottlemodalPage = /** @class */ (function () {
         this.ngZone = ngZone;
         this.loadingCTRL = loadingCTRL;
         this.global = global;
+        this.cd = cd;
         this.barcode = "";
         this.barcodes = [];
         this.bottleadded = [];
@@ -97,26 +98,42 @@ var AddbottlemodalPage = /** @class */ (function () {
                 if (_this.platform.is('ios')) {
                     WifiWizard2.iOSConnectNetwork("BBAM", "BioBeltService").then(function (res) {
                         _this.isBBAM = true;
-                        _this.platform.ready().then(function (readySource) {
-                            if (readySource == 'cordova') {
-                                _this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_8__["UPCModbus"](function (state) {
-                                    _this.ngZone.run(function () {
-                                        // Force refresh UI
-                                        //this.readDiffusionParameters();
-                                    });
-                                });
-                                _this.network.onConnect().subscribe(function () {
-                                    if (_this.network.type === _this.network.Connection.WIFI) {
-                                        _this.upc.reconnect();
-                                        _this.upc.client.getStringFromHoldingRegister(40001, 10).then(function (res) {
-                                            _this.stockRet = {
-                                                name: res
-                                            };
+                        _this.platform.ready().then(function (readySource) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                            var _this = this;
+                            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        if (!(readySource == 'cordova')) return [3 /*break*/, 2];
+                                        this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_8__["UPCModbus"](function (state) {
+                                            _this.ngZone.run(function () {
+                                                // Force refresh UI
+                                                //this.readDiffusionParameters();
+                                            });
                                         });
-                                    }
-                                });
-                            }
-                        });
+                                        return [4 /*yield*/, this.upc.client.connect()];
+                                    case 1:
+                                        _a.sent();
+                                        setTimeout(function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                                            var _this = this;
+                                            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                                                switch (_a.label) {
+                                                    case 0: return [4 /*yield*/, this.upc.client.getStringFromHoldingRegister(40001, 10).then(function (res) {
+                                                            _this.stockRet = {
+                                                                name: res
+                                                            };
+                                                            _this.cd.detectChanges();
+                                                        })];
+                                                    case 1:
+                                                        _a.sent();
+                                                        return [2 /*return*/];
+                                                }
+                                            });
+                                        }); }, 2000);
+                                        _a.label = 2;
+                                    case 2: return [2 /*return*/];
+                                }
+                            });
+                        }); });
                     }).catch(function (err) {
                         _this.stockRet = { name: "Erreur lors de la connexion UPC" };
                         alert("La connexion a echoué veuillez vous approcher de l'UPC et réessayer !");
@@ -363,7 +380,8 @@ var AddbottlemodalPage = /** @class */ (function () {
         { type: _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_9__["Network"] },
         { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"] },
         { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"] },
-        { type: _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"] }
+        { type: _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"] },
+        { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"] }
     ]; };
     AddbottlemodalPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -371,7 +389,7 @@ var AddbottlemodalPage = /** @class */ (function () {
             template: __webpack_require__(/*! raw-loader!./addbottlemodal.page.html */ "./node_modules/raw-loader/index.js!./src/app/addbottlemodal/addbottlemodal.page.html"),
             styles: [__webpack_require__(/*! ./addbottlemodal.page.scss */ "./src/app/addbottlemodal/addbottlemodal.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_2__["BarcodeScanner"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"], _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_4__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"], _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_9__["Network"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"], _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_2__["BarcodeScanner"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"], _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_4__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"], _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_9__["Network"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"], _api_global_service__WEBPACK_IMPORTED_MODULE_10__["GlobalService"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"]])
     ], AddbottlemodalPage);
     return AddbottlemodalPage;
 }());

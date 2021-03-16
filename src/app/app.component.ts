@@ -9,6 +9,8 @@ import { Code } from './api/ApiResponse';
 import { GlobalService } from './api/global.service';
 import { Hotspot, HotspotNetwork } from '@ionic-native/hotspot/ngx';
 
+declare var WifiWizard2: any;
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -17,38 +19,35 @@ import { Hotspot, HotspotNetwork } from '@ionic-native/hotspot/ngx';
 export class AppComponent {
   public appPages = [
     {
-      title: 'Installation',
-      url: '/home',
-      icon: 'home'
+      title: 'Changement de bouteilles sur ceinture',
+      url: '/addbottleceint',
+      icon: 'barcode'
     },
     {
-      title: 'Visite Technique',
-      url: '/list',
-      icon: 'list'
-    },
-    
-    {
-      title: 'Bouteilles',
-      icon:'barcode',
-      url : "/optionbottle",
+      title: 'Réglage des détendeurs',
+      url: '/adjustment',
+      icon: 'return-right'
     },
     {
-      title:'Programmation',
-      icon : 'snow',
-      url : "/synchro"
+      title : "Contrôle débits Mini/Maxi",
+      url : "/controldiff",
+      icon : "infinite",
     },
     {
-      title : 'Réglages Pression',
-      url : '/adjustment'
+      title: 'Programmation',
+      icon:'sunny',
+      url : "/synchro",
     },
     {
-      title : "Max/Min",
-      url : "/controldiff"
+      title : "Connexion",
+      icon : "globe",
+      url : "/connection"
     },
     {
-      title : "Contrôle Diff",
+      title : "Contrôle Diffusion",
       url : "/cdiff"
     }
+    
   ];
 
   constructor(
@@ -60,6 +59,7 @@ export class AppComponent {
     private global : GlobalService,
     private hotspot: Hotspot
   ) {
+    localStorage.setItem("BBAM","false");
     this.initializeApp();
     
   }
@@ -70,6 +70,7 @@ export class AppComponent {
       this.splashScreen.hide();
       var token = localStorage.getItem("token");
       this.upcv3Service.getUPC3(token).subscribe(res=>{
+        
         if(res.code == Code.UPCV3_RECOVERED){
           
           localStorage.setItem("upc3",JSON.stringify(res.result));
@@ -77,11 +78,41 @@ export class AppComponent {
       })
 
     });
+    /*setInterval(()=>{
+      if(this.platform.is("android")) {
+        this.hotspot.isConnectedToInternet().then(res=>{
+          if(res && localStorage.getItem("BBAM") == "true") {
+            
+            this.hotspot.connectToWifi("BBAM","BioBeltService").then(()=>{
+              localStorage.setItem("BBAM","true");
+              this.global.ssid = "BBAM";
+              this.global.isBBAM = true;
+            })
+          } else if (res == false) {
+            localStorage.setItem("BBAM","false");
+          }
+        }).catch(err=>{
+          
+        })
+      } else if (this.platform.is("ios")) {
+        if(localStorage.getItem("BBAM") != "true"){
+          WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(res=>{
+            localStorage.setItem("BBAM","true");
+            this.global.ssid = "BBAM";
+            this.global.isBBAM = true;
+          })
+        }
+        
+      }
+      
+    },5000)*/
+    
   }
   onClearInterval() {
     
     clearInterval(this.global.interval);
   }
+  
   /*onClick(url) {
     
     //this.navCtrl.navigateForward("listecommande/encours",{replaceUrl : true});

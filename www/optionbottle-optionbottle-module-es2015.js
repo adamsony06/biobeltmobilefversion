@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button></ion-menu-button>\n    </ion-buttons>\n    <ion-title>Bouteilles</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n<ion-list>\n  <ion-item (click)=\"onChooseStock(0);\">\n    <ion-icon name=\"albums\" color=\"primary\"></ion-icon>\n    <ion-label>Ajouter Stock</ion-label>\n    <!--<ion-icon [name]=\"name\" color=\"primary\" slot=\"end\"></ion-icon>-->\n  </ion-item>\n  <ion-item (click)=\"onChooseStock(1);\">\n    <ion-icon name=\"remove\" color=\"primary\"></ion-icon>\n    <ion-label>Retirer du Stock</ion-label>\n  </ion-item>\n  <!--<div *ngIf=\"isStock\">\n    <ion-item *ngFor=\"let s of stock;\" (click)=\"gotoBottlesStock(s)\">\n      <ion-label slot=\"end\">{{s.name}}</ion-label>\n    </ion-item>\n  </div>-->\n\n  \n  \n  <ion-item (click)=\"onAddBottleCeint();\">\n    \n      <ion-icon name=\"compass\" color=\"primary\" ></ion-icon>\n    \n    <ion-label>Ajouter/Retirer Ceinture</ion-label>\n  </ion-item>\n  <ion-item (click)=\"onChooseStock(2);\">\n    <ion-icon name=\"exit\" color=\"primary\"></ion-icon>\n    Retour au dépôt\n  </ion-item>\n  <ion-item (click)=\"remRack();\">\n    <ion-icon name=\"train\" color=\"primary\"></ion-icon>\n    Retour au fournisseur\n  </ion-item>\n  \n</ion-list>\n</ion-content>\n"
+module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-menu-button></ion-menu-button>\n      <ion-back-button></ion-back-button>\n    </ion-buttons>\n    <ion-title>Bouteilles</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n<ion-list>\n  <ion-item (click)=\"onChooseStock(0);\">\n    <ion-icon name=\"albums\" color=\"primary\"></ion-icon>\n    <ion-label>Réception de Bouteilles</ion-label>\n    <!--<ion-icon [name]=\"name\" color=\"primary\" slot=\"end\"></ion-icon>-->\n  </ion-item>\n  <ion-item (click)=\"onChooseStock(1);\">\n    <ion-icon name=\"remove\" color=\"primary\"></ion-icon>\n    <ion-label>Retrait de Bouteilles</ion-label>\n  </ion-item>\n  <!--<div *ngIf=\"isStock\">\n    <ion-item *ngFor=\"let s of stock;\" (click)=\"gotoBottlesStock(s)\">\n      <ion-label slot=\"end\">{{s.name}}</ion-label>\n    </ion-item>\n  </div>-->\n\n  \n  \n  <!--<ion-item (click)=\"onAddBottleCeint();\">\n    \n      <ion-icon name=\"compass\" color=\"primary\" ></ion-icon>\n    \n    <ion-label>Ajouter/Retirer Ceinture</ion-label>\n  </ion-item>-->\n  <ion-item (click)=\"onChooseStock(2);\">\n    <ion-icon name=\"exit\" color=\"primary\"></ion-icon>\n    Retour au dépôt\n  </ion-item>\n  <ion-item (click)=\"remRack();\">\n    <ion-icon name=\"train\" color=\"primary\"></ion-icon>\n    Retour au fournisseur\n  </ion-item>\n  \n</ion-list>\n</ion-content>\n"
 
 /***/ }),
 
@@ -65,7 +65,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _optionbottle_routing_module__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./optionbottle-routing.module */ "./src/app/optionbottle/optionbottle-routing.module.ts");
 /* harmony import */ var _optionbottle_page__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./optionbottle.page */ "./src/app/optionbottle/optionbottle.page.ts");
-/* harmony import */ var _rackcontent_rackcontent_page__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../rackcontent/rackcontent.page */ "./src/app/rackcontent/rackcontent.page.ts");
+/* harmony import */ var _retfournmodal_retfournmodal_page__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../retfournmodal/retfournmodal.page */ "./src/app/retfournmodal/retfournmodal.page.ts");
 
 
 
@@ -84,8 +84,8 @@ OptionbottlePageModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["IonicModule"],
             _optionbottle_routing_module__WEBPACK_IMPORTED_MODULE_5__["OptionbottlePageRoutingModule"],
         ],
-        declarations: [_optionbottle_page__WEBPACK_IMPORTED_MODULE_6__["OptionbottlePage"], _rackcontent_rackcontent_page__WEBPACK_IMPORTED_MODULE_7__["RackcontentPage"]],
-        entryComponents: [_rackcontent_rackcontent_page__WEBPACK_IMPORTED_MODULE_7__["RackcontentPage"]]
+        declarations: [_optionbottle_page__WEBPACK_IMPORTED_MODULE_6__["OptionbottlePage"], _retfournmodal_retfournmodal_page__WEBPACK_IMPORTED_MODULE_7__["RetfournmodalPage"]],
+        entryComponents: [_retfournmodal_retfournmodal_page__WEBPACK_IMPORTED_MODULE_7__["RetfournmodalPage"]]
     })
 ], OptionbottlePageModule);
 
@@ -121,8 +121,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _api_global_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/global.service */ "./src/app/api/global.service.ts");
-/* harmony import */ var _rackcontent_rackcontent_page__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../rackcontent/rackcontent.page */ "./src/app/rackcontent/rackcontent.page.ts");
-/* harmony import */ var _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic-native/barcode-scanner/ngx */ "./node_modules/@ionic-native/barcode-scanner/ngx/index.js");
+/* harmony import */ var _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/barcode-scanner/ngx */ "./node_modules/@ionic-native/barcode-scanner/ngx/index.js");
+/* harmony import */ var _retfournmodal_retfournmodal_page__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../retfournmodal/retfournmodal.page */ "./src/app/retfournmodal/retfournmodal.page.ts");
 
 
 
@@ -209,31 +209,38 @@ let OptionbottlePage = class OptionbottlePage {
         });
     }
     remRack() {
-        this.scan.scan().then((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-            if (res.text != '') {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
+            /*this.scan.scan().then(async res=>{
+              if(res.text != ''){
                 var text = res.text;
-                this.upc3Service.getBottleFromRack(this.token, res.text).subscribe((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                    alert(JSON.stringify(res));
-                    if (res.result.length > 0) {
-                        var modal = yield this.modal.create({
-                            component: _rackcontent_rackcontent_page__WEBPACK_IMPORTED_MODULE_7__["RackcontentPage"],
-                            componentProps: {
-                                rack: text
-                            }
-                        });
-                        modal.present();
-                    }
-                    else {
-                        alert("Aucune bouteille est associée à ce Rack !");
-                    }
-                }), err => {
-                    alert(JSON.stringify(err));
-                });
+                this.upc3Service.getBottleFromRack(this.token,res.text).subscribe(async res=>{
+                  
+                  if(res.result.length> 0){
+                    var modal = await this.modal.create({
+                      component : RackcontentPage,
+                      componentProps : {
+                        rack : text
+                      }
+                    })
+                    modal.present();
+                  } else {
+                    alert("Aucune bouteille est associée à ce Rack !");
+                  }
+                },err=>{
+                  alert(JSON.stringify(err));
+                })
+                
                 /*this.upcv3Service.removeRack(res.text,this.token).subscribe(res=>{
         
                 })*/
-            }
-        }));
+            /*}
+            
+          })*/
+            var modal = yield this.modal.create({
+                component: _retfournmodal_retfournmodal_page__WEBPACK_IMPORTED_MODULE_8__["RetfournmodalPage"],
+            });
+            modal.present();
+        });
     }
     goStock() {
         if (!this.isStock) {
@@ -259,7 +266,7 @@ OptionbottlePage.ctorParameters = () => [
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["Platform"] },
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"] },
     { type: _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"] },
-    { type: _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_8__["BarcodeScanner"] }
+    { type: _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_7__["BarcodeScanner"] }
 ];
 OptionbottlePage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -267,7 +274,7 @@ OptionbottlePage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         template: __webpack_require__(/*! raw-loader!./optionbottle.page.html */ "./node_modules/raw-loader/index.js!./src/app/optionbottle/optionbottle.page.html"),
         styles: [__webpack_require__(/*! ./optionbottle.page.scss */ "./src/app/optionbottle/optionbottle.page.scss")]
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"], _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["Platform"], _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"], _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"], _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_8__["BarcodeScanner"]])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"], _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["Platform"], _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"], _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"], _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_7__["BarcodeScanner"]])
 ], OptionbottlePage);
 
 

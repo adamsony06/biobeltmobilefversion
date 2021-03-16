@@ -22,6 +22,9 @@ export class HomePage {
   operators:any;
   op:any;
 
+  operationTypeOptions=["Mouvement de bouteilles dans l'entrepôt","Intervention sur une ceinture"];
+  operationType = "Mouvement de bouteilles dans l'entrepôt";
+
   constructor(private ucp3service:Upcv3serviceService,
               private storage:Storage,
               private router : Router,
@@ -72,6 +75,17 @@ export class HomePage {
     this.router.navigate(['instalpieges']);
   }
 
-  
+  goTo(operationType){
+    switch(this.operationType){
+      case this.operationTypeOptions[0]:
+        this.router.navigate(["optionbottle"]);
+        break;
+      case this.operationTypeOptions[1]:
+        this.router.navigate(['interventionceinture']);
+        break;
+    }
+  }
+
+
 
 }

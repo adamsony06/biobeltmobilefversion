@@ -1,8 +1,11 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button defaultHref="home"></ion-back-button>
+   
     </ion-buttons>
+    
     <ion-title>{{stockRet}}</ion-title>
     <ion-buttons slot="end" *ngIf="!global.isBBAM">
       <ion-button fill="clear"> <ion-icon name="globe" color="light"></ion-icon>ADMIN</ion-button> 
@@ -26,39 +29,68 @@
             {{bottle.brand+" "+bottle.designation.toFixed(2)+" kg"}}
           </ion-select-option>
         </ion-select>-->
-      <h1 style="text-align: center;">
+      <h1 style="text-align: center;" (click)="changeRes(1);" [ngClass]="{'bgreen' : highlightB1}">
         B1
       </h1>
       
       </ion-col>
       
       <ion-col size="6">
-        <h1 style="text-align: center;">
+        <h1 style="text-align: center;" (click)="changeRes(2);" [ngClass]="{'bgreen' : highlightB2}">
           B2
         </h1>  
       </ion-col>
+
+      <ion-col size="12" style="border-top-right-radius: 80px 80px;border-top-left-radius: 80px 80px;">
+          <div style="text-align: center;">Etat du Contenu</div>
+      </ion-col>
+      <ion-col size="6" style="border-bottom-left-radius: 80px 80px;">
+        <div style="font-size :x-large;text-align: center;" *ngIf="statusB1 == 0">VIDE</div>
+        <div style="font-size :x-large;text-align: center;" *ngIf="statusB1 == 1">RESIDUEL</div>
+        <div style="font-size :x-large;text-align: center;" *ngIf="statusB1 == 2">DISPONIBLE</div>
+
+      </ion-col>
+      <ion-col size="6" style="border-bottom-left-radius: 80px 80px;">
+        <div style="font-size :x-large;text-align: center;" *ngIf="statusB2 == 0">VIDE</div>
+        <div style="font-size :x-large;text-align: center;" *ngIf="statusB2 == 1">RESIDUEL</div>
+        <div style="font-size :x-large;text-align: center;" *ngIf="statusB2 == 2">DISPONIBLE</div>
+      </ion-col>
+
+      <ion-col size="12" style="border-top-right-radius: 80px 80px;border-top-left-radius: 80px 80px;background-color:green;">
+        <div style="text-align: center;">Contenu Mesuré</div>
+      </ion-col>
+      <ion-col size="6" style="border-bottom-left-radius: 80px 80px;background-color:green;">
+      <div id="one" style="font-size :x-large;text-align: center;"><div id="two" style="display:inline-block;"><ion-input type="number" [(ngModel)]="contenuB1" (ngModelChange)="changeContB1();"></ion-input></div><span id="three">kg</span></div>
+      </ion-col>
+      <ion-col size="6" style="border-bottom-right-radius: 80px 80px;background-color:green;">
+        <div id="one" class="ion-float-right" style="font-size :x-large;text-align: center;"><ion-input id="two" type="number" [(ngModel)]="contenuB2" (ngModelChange)="changeContB2();"></ion-input><span id="three">kg</span></div>
+      </ion-col>
+      <ion-col size="12"><ion-button (click)="onRemove();" color="danger" size="block">
+        Enlever une bouteille 
+      </ion-button></ion-col>
       <ion-col size="6" style="border-right: solid 3px green;">
         <ion-list>
-          <ion-item (click)="onScanBarCodeB1();">
-            <ion-icon color="primary" name="add-circle"></ion-icon>  Ajouter une Bouteille à B1
-          </ion-item>
+          
           <div *ngFor="let b1 of B1String;let i = index;">
           <ion-item>
-            <ion-label>{{b1}}</ion-label>
+            <ion-label style="font-size: small!important;" class="ion-text-wrap">{{b1}}</ion-label>
             <div *ngIf="B1Desig.length > 0">
-            <ion-select (ionChange)="onChangeDesigB1(i);" [(ngModel)]="B1Desig[i]" placeholder="Designation (en kg)" *ngIf="!B1IsMesser[i]">
+            <ion-select *ngIf="!B1IsMesser[i]" (ionChange)="onChangeDesigB1(i);" [(ngModel)]="B1Desig[i]" placeholder="Designation (en kg)">
               <ion-select-option value="10">10 kg</ion-select-option>
               <ion-select-option value="20">20 kg</ion-select-option>
               <ion-select-option value="22.6796">22,68 kg</ion-select-option>
               <ion-select-option value="34">34 kg</ion-select-option>
+             
             </ion-select>
           </div>
-            
+          
             
             <!--<ion-badge color="primary" slot="end">{{'x'+b1.qty}}</ion-badge>-->
           </ion-item>
         </div>
-        
+        <ion-item (click)="onScanBarCodeB1();">
+          <ion-icon color="primary" name="add-circle"></ion-icon>  Ajouter une Bouteille à B1
+        </ion-item>  
         </ion-list>
         <!--<ion-button color="danger" (click)="deleteB1();" size="block">
           Tout Effacer
@@ -66,27 +98,28 @@
       </ion-col>
       <ion-col size="6" style="border-right: solid 3px green;">
         <ion-list>
-          <ion-item (click)="onScanBarCodeB2();">
-            <ion-icon color="primary" name="add-circle"></ion-icon>  Ajouter une Bouteille à B2
-          </ion-item>
+          
           <div *ngFor="let b2 of B2String;let i = index;">
           <ion-item>
-            <ion-label>{{b2}}</ion-label>
+            <ion-label style="font-size: small!important;" class="ion-text-wrap">{{b2}}</ion-label>
             <div *ngIf="B2Desig.length > 0">
 
             
-            <ion-select (ionChange)="onChangeDesigB2(i);" [(ngModel)]="B2Desig[i]" placeholder="Designation (en kg)" *ngIf="!B2IsMesser[i]">
+            <ion-select *ngIf="!B2IsMesser[i]" (ionChange)="onChangeDesigB2(i);" [(ngModel)]="B2Desig[i]" placeholder="Designation (en kg)">
               <ion-select-option value="10">10 kg</ion-select-option>
               <ion-select-option value="20">20 kg</ion-select-option>
               <ion-select-option value="22.6796">22,68 kg</ion-select-option>
               <ion-select-option value="34">34 kg</ion-select-option>
             </ion-select>
           </div>
+          
             
             <!--<ion-badge color="primary" slot="end">{{'x'+b1.qty}}</ion-badge>-->
           </ion-item>
         </div>
-        
+        <ion-item (click)="onScanBarCodeB2();">
+          <ion-icon color="primary" name="add-circle"></ion-icon>  Ajouter une Bouteille à B2
+        </ion-item>
         </ion-list>
         <!--<ion-button color="danger" (click)="deleteB1();" size="block">
           Tout Effacer
@@ -94,9 +127,7 @@
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-button (click)="onRemove();" color="danger" size="block">
-    Enlever une bouteille 
-  </ion-button>
+  
 </ion-content>
 
 <!--<ion-footer>
