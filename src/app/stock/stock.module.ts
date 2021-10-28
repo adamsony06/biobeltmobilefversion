@@ -14,6 +14,7 @@ import { AddbottlemodalPage } from '../addbottlemodal/addbottlemodal.page';
 
 @NgModule({
   imports: [
+    
     CommonModule,
     FormsModule,
     IonicModule,

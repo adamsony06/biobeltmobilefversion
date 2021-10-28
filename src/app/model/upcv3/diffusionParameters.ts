@@ -22,6 +22,7 @@ export class DiffusionParameters {
 
 	co2PresInpMeas1: number = 0;
 	co2PresInpMeas2: number = 0;
+	
 	co2PresOutMeas: number = 0;
 
 	co2FlowMeas: number = 0;
@@ -35,6 +36,7 @@ export class DiffusionParameters {
 
 	co2FlowAvg: number = 0;
 	co2FlowOffs: number = 0;
+	co2FlowGain : number = 0;
 
 	upcCo2DiffLvl: number = 0;
   upcDiffLvlAdj: number = 0;

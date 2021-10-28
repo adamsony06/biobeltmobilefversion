@@ -1,4 +1,5 @@
-cordova.define("wifiwizard2.WifiWizard2", function(require, exports, module) { /*
+cordova.define("wifiwizard2.WifiWizard2", function(require, exports, module) {
+/*
  * Copyright 2018 Myles McNamara
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

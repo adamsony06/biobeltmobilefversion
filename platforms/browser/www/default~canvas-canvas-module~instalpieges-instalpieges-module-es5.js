@@ -55,7 +55,7 @@ exports.UUID = UUID;
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div style=\"text-align: center;\"><ion-button color=\"danger\" size=\"small\" (click)=\"clear();\">Tout effacer</ion-button></div>\n<canvas #backgroundImageCanvas id=\"background-image-canvas\" (mousedown)=\"startDrawing($event);\" \n (mousemove)=\"moved($event);\" (mouseup)=\"endDrawing();\" (touchstart)=\"startDrawing($event);\" (touchmove)=\"moved($event);\"></canvas>\n\n \n <!--<canvas #protectedAreasCanvas id=\"protected-areas-canvas\"></canvas>\n\n<canvas #beltsCanvas id=\"belts-canvas\"></canvas>\n\n<canvas #electricCanvas id=\"electric-canvas\"></canvas>\n\n<canvas #drawingCanvas id=\"drawing-canvas\"\n        (mousedown)=\"onMouseDown($event)\"\n        (mousemove)=\"onMouseMove($event)\"\n        (contextmenu)=\"onContextMenu($event)\">\n</canvas> -->"
+module.exports = "<div style=\"text-align: center;\"><ion-button color=\"danger\" size=\"small\" (click)=\"clear();\">Tout effacer</ion-button></div>\r\n<canvas #backgroundImageCanvas id=\"background-image-canvas\" (mousedown)=\"startDrawing($event);\" \r\n (mousemove)=\"moved($event);\" (mouseup)=\"endDrawing();\" (touchstart)=\"startDrawing($event);\" (touchmove)=\"moved($event);\"></canvas>\r\n\r\n \r\n <!--<canvas #protectedAreasCanvas id=\"protected-areas-canvas\"></canvas>\r\n\r\n<canvas #beltsCanvas id=\"belts-canvas\"></canvas>\r\n\r\n<canvas #electricCanvas id=\"electric-canvas\"></canvas>\r\n\r\n<canvas #drawingCanvas id=\"drawing-canvas\"\r\n        (mousedown)=\"onMouseDown($event)\"\r\n        (mousemove)=\"onMouseMove($event)\"\r\n        (contextmenu)=\"onContextMenu($event)\">\r\n</canvas> -->"
 
 /***/ }),
 

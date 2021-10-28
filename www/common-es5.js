@@ -410,7 +410,7 @@ var findCheckedOption = function (el, tagName) {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-button fill=\"clear\" (click)=\"onClose();\">\n        <ion-icon name=\"close\"></ion-icon>\n      </ion-button>\n    </ion-buttons>\n    <ion-title>Retour au Fournisseur</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n    <ion-item (click)=\"onRemBot();\"><ion-icon name=\"hourglass\"></ion-icon>Bouteilles</ion-item>\n    <ion-item (click)=\"onRemRack();\"><ion-icon name=\"speedometer\"></ion-icon>Rack</ion-item>\n  </ion-list>\n</ion-content>"
+module.exports = "<ion-header>\r\n  <ion-toolbar color=\"primary\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-button fill=\"clear\" (click)=\"onClose();\">\r\n        <ion-icon name=\"close\"></ion-icon>\r\n      </ion-button>\r\n    </ion-buttons>\r\n    <ion-title>Retour au Fournisseur</ion-title>\r\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\"></ion-icon>ADMIN</ion-button> \r\n     </ion-buttons>\r\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \r\n     </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n  <ion-list>\r\n    <ion-item (click)=\"onRemBot();\"><ion-icon name=\"hourglass\"></ion-icon>Bouteilles</ion-item>\r\n    <ion-item (click)=\"onRemRack();\"><ion-icon name=\"speedometer\"></ion-icon>Rack</ion-item>\r\n  </ion-list>\r\n</ion-content>"
 
 /***/ }),
 
@@ -516,14 +516,13 @@ var RetfournmodalPage = /** @class */ (function () {
         });
     };
     RetfournmodalPage.prototype.onRemBot = function () {
-        var _this = this;
-        this.scan.scan().then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
             var modal;
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.modalravk.create({
                             component: _addbottlemodal_addbottlemodal_page__WEBPACK_IMPORTED_MODULE_9__["AddbottlemodalPage"],
-                            componentProps: { barcode: res.text, mode: 0 }
+                            componentProps: { barcode: "ABC-abc-1234", mode: 0 }
                         })];
                     case 1:
                         modal = _a.sent();
@@ -531,7 +530,7 @@ var RetfournmodalPage = /** @class */ (function () {
                         return [2 /*return*/];
                 }
             });
-        }); });
+        });
     };
     RetfournmodalPage.ctorParameters = function () { return [
         { type: _api_global_service__WEBPACK_IMPORTED_MODULE_2__["GlobalService"] },

@@ -47,7 +47,7 @@ export class AddbottlemodalPage implements OnInit {
 
   ngOnInit() {
     //alert(this.barcode);
-    
+    this.getUpcStateConnexion()
     if (this.mode === 1000){
       this.isMesser = [];
       this.stockRet = {name : "En cours..."};
@@ -324,6 +324,29 @@ export class AddbottlemodalPage implements OnInit {
       
     })
   }
+  getUpcStateConnexion() {
+    this.platform.ready().then(async res=>{
+      this.upc = new UPCModbus(state => {
+        this.ngZone.run(() => {
+          // Force refresh UI
+          
+            
+            //this.readDiffusionParameters();
+          
+        });
+      });
+
+      await this.upc.client.connect();
+
+      setTimeout(()=>{
+        this.upc.client.getStringFromHoldingRegister(40045,10).then(res=>{
+          //this.global.ssid = res;
+          //this.global.isBBAM = true;
+          this.cd.detectChanges();
+        })
+      },2000)
+    })
+  }
   onSynchroCeint() {
     this.upc.client.setStringInHoldingRegister(this.addressage,this.B1[this.i].substr(0,8)).then(
       res=>{
@@ -350,3 +373,4 @@ export class AddbottlemodalPage implements OnInit {
   
 
 }
+

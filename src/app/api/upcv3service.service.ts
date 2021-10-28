@@ -16,12 +16,14 @@ import {Project} from '../model/project/project';
 import { Version } from '../model/project/version';
 import { Bottle } from '../model/bottle';
 import { Stock } from '../model/stock';
+import { InterventionV3 } from '../model/interventionv3';
+import { Commentaires } from '../model/commentaire';
 
 @Injectable({
   providedIn: 'root'
 })
 export class Upcv3serviceService {
-  private apiUrl = 'http://api.biobelt.com/';
+  private apiUrl = 'http://dev-api.biobelt.com/';
   
   constructor(private http:HttpClient,
               private storage:Storage) { }
@@ -39,7 +41,7 @@ export class Upcv3serviceService {
           case Code.UPCV3_RECOVERED:
           var upcv3: UPCV3[] = [];
           var i = 0;
-          res.result.forEach(jsonUPCV3 =>{if(UPCV3.loadFromJSON(jsonUPCV3).upcStatusString === 'DIS'){ upcv3.push(UPCV3.loadFromJSON(jsonUPCV3)); } });
+          res.result.forEach(jsonUPCV3 =>{ upcv3.push(UPCV3.loadFromJSON(jsonUPCV3)); } );
           res.result = upcv3;
           break;
 
@@ -52,6 +54,60 @@ export class Upcv3serviceService {
       return res;
       }
     ))
+  }
+  public createIntervention(json,token) : Observable<ApiResponse<InterventionV3>> {
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+    .set('authorization','Bearer '+token);
+
+    return this.http.post<ApiResponse<InterventionV3>>(this.apiUrl+"upcv3/intervention/createAdmin",json,{headers : headers}).pipe(map(res=>{
+        switch(res.code) {
+          case Code.INTERVENTIONV3_CREATED :
+            alert("L'intervention a bien été enregistrée")
+            break;
+          case Code.UNAUTHORIZED :
+            alert("Non Autorisé");
+            break;
+          case Code.UPCV3_DOESNT_EXSIST :
+            alert("L'UPCV3 n'existe pas");
+            break;
+          case Code.INTERNAL_ERROR :
+            alert("Erreur Interne");
+            break;      
+        }
+        return res;
+    }))
+  }
+  public getConnected (token) : Observable<ApiResponse<Operator>> {
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+    .set('authorization','Bearer '+token);
+
+    return this.http.get<ApiResponse<Operator>>(this.apiUrl+"operator/getConnected",{headers:headers}).pipe(map(res=>{
+      switch(res.code) {
+        case Code.OPERATOR_RECOVERED : 
+            break;
+        case Code.OPERATOR_DOESNT_EXSIST :
+          alert("Opérateur existe pas");
+          break;
+        case Code.UNAUTHORIZED :
+          alert("Pas autoriser !");
+          break;
+
+      }
+      return res;
+    }))
+  }
+  public getActionNotDoneById(token,id) : Observable<ApiResponse<Commentaires[]>> {
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+    .set('authorization','Bearer '+token)
+    
+    return this.http.get<ApiResponse<Commentaires[]>>(this.apiUrl+"upcv3/intervention/isActionDoneById/"+id,{headers : headers}).pipe(map(res=>{
+            if(res.code == Code.INTERVENTIONV3_RECOVERED){
+              
+            } else {
+              alert("Pas autorisé !");
+            }
+            return res;
+    }))
   }
   public getAllStock(token) : Observable<ApiResponse<Stock[]>> {
     let headers = new HttpHeaders().set('Content-Type','application/json')
@@ -77,6 +133,7 @@ export class Upcv3serviceService {
   public login(user:User) : Observable<AuthResponse>{
     return this.http.post<AuthResponse>(this.apiUrl+'user/login',user).pipe(map(
       res =>{
+        //alert(JSON.stringify(res));
         switch (res.code){
           case Code.TOKEN_LOGGED_IN :
             this.storage.set('token',res.result.toString());
@@ -175,6 +232,28 @@ export class Upcv3serviceService {
         return res;
     }))                               
   }
+
+  public getSitesByUpcID(id, token) : Observable<ApiResponse<Site>>{
+    let headers = new HttpHeaders().set('Content-Type','application/json')
+    .set('authorization','Bearer '+token)
+    return this.http.get<ApiResponse<Site>>(this.apiUrl+'upcv3/getSiteByUpcID/'+id,{headers:headers}).pipe(map(
+      res => {        
+        switch(res.code){
+          case Code.SITE_RECOVERED :
+            res.result = Site.loadFromJSON(res.result);
+            break;
+          case Code.UPCV3_DOESNT_EXSIST :
+            break;
+          case Code.UNAUTHORIZED :
+            alert("Vous n'êtes pas autorisé à accèder à ce service");
+            break;
+        }
+        return res;
+      }    
+    ))
+  }
+
+
   public getSites(token) : Observable<ApiResponse<Site[]>>{
     let headers = new HttpHeaders().set('Content-Type','application/json')
     .set('authorization','Bearer '+token)

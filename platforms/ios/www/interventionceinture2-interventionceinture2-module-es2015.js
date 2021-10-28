@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button></ion-back-button>\n    </ion-buttons>  \n    <!--<ion-buttons slot=\"start\">\n      <ion-menu-button></ion-menu-button>\n    </ion-buttons>    \n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>-->\n     <ion-title>Intervention sur une ceinture</ion-title>\n     <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>    \n  <ion-grid>  \n    <ion-row style=\"display: flex; justify-content: center;\">\n      <ion-col size=\"8\" text-center style=\"padding-top: 5%;\">\n        <h4>Intervention sur une ceinture</h4>\n      </ion-col>\n    </ion-row>  \n    <ion-row>        \n        <ion-col size=\"12\">\n          <fieldset>\n            <legend>Objet de l'intervention</legend>\n            <ul id=\"motiveList\"></ul>       \n          </fieldset>\n        </ion-col>        \n        <ion-col size=\"12\">\n          <fieldset>\n            <legend>Intervenants</legend>           \n            <ul id=\"intervenantsList\"></ul>\n          </fieldset>\n        </ion-col>\n      \n      \n       \n      \n    </ion-row>\n    \n  </ion-grid>\n \n</ion-content>\n<ion-footer>  \n  \n    <h5 style=\"font-style: italic; color: #2E7117;\">Continuer</h5>\n \n\n</ion-footer>\n\n"
+module.exports = "<ion-header>\r\n  <ion-toolbar color=\"primary\">\r\n    <!--<ion-buttons slot=\"start\">\r\n      <ion-back-button></ion-back-button>\r\n    </ion-buttons>  -->\r\n    <!--<ion-buttons slot=\"start\">\r\n      <ion-menu-button></ion-menu-button>\r\n    </ion-buttons>    \r\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \r\n     </ion-buttons>\r\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \r\n     </ion-buttons>-->\r\n     <ion-title>Intervention sur une ceinture</ion-title>\r\n     <!--<ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \r\n     </ion-buttons>\r\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \r\n     </ion-buttons>-->\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>    \r\n  <ion-grid>  \r\n    <ion-row style=\"display: flex; justify-content: center;\">\r\n      <ion-col size=\"8\" text-center style=\"padding-top: 5%;\">\r\n        <h4>Intervention sur une ceinture</h4>\r\n      </ion-col>\r\n    </ion-row>  \r\n    \r\n    \r\n  </ion-grid>\r\n \r\n</ion-content>\r\n<ion-footer>  \r\n  \r\n    <h5 style=\"font-style: italic; color: #2E7117;\">Continuer</h5>\r\n \r\n\r\n</ion-footer>\r\n\r\n"
 
 /***/ }),
 
@@ -97,7 +97,7 @@ Interventionceinture2PageModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "fieldset {\n  padding-left: 2%;\n  padding-right: 2%;\n  border: 1px #2E7117 solid;\n  border-radius: 1em;\n}\n\nlegend {\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n  font-size: larger;\n  color: #2E7117;\n  font-style: italic;\n  padding-left: 1%;\n  padding-right: 2%;\n}\n\nion-select {\n  margin-top: -4%;\n}\n\nul {\n  list-style: none;\n  padding-left: 4%;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9oYXJtYW5kL0Rlc2t0b3AvYmlvYmVsdG1vYmlsZS9zcmMvYXBwL2ludGVydmVudGlvbmNlaW50dXJlMi9pbnRlcnZlbnRpb25jZWludHVyZTIucGFnZS5zY3NzIiwic3JjL2FwcC9pbnRlcnZlbnRpb25jZWludHVyZTIvaW50ZXJ2ZW50aW9uY2VpbnR1cmUyLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGdCQUFBO0VBQ0EsaUJBQUE7RUFDQSx5QkFBQTtFQUNBLGtCQUFBO0FDQ0o7O0FEQ0U7RUFDRSwwQkFBQTtFQUFBLHVCQUFBO0VBQUEsa0JBQUE7RUFDQSxpQkFBQTtFQUNBLGNBQUE7RUFDQSxrQkFBQTtFQUNBLGdCQUFBO0VBQ0EsaUJBQUE7QUNFSjs7QURDRTtFQUNFLGVBQUE7QUNFSjs7QURFRTtFQUNFLGdCQUFBO0VBQ0EsZ0JBQUE7QUNDSiIsImZpbGUiOiJzcmMvYXBwL2ludGVydmVudGlvbmNlaW50dXJlMi9pbnRlcnZlbnRpb25jZWludHVyZTIucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiZmllbGRzZXQge1xuICAgIHBhZGRpbmctbGVmdDogMiU7XG4gICAgcGFkZGluZy1yaWdodDogMiU7IFxuICAgIGJvcmRlcjogMXB4ICMyRTcxMTcgc29saWQ7XG4gICAgYm9yZGVyLXJhZGl1czogMWVtO1xuICB9XG4gIGxlZ2VuZCB7ICBcbiAgICB3aWR0aDpmaXQtY29udGVudDsgXG4gICAgZm9udC1zaXplOmxhcmdlcjtcbiAgICBjb2xvcjogIzJFNzExNztcbiAgICBmb250LXN0eWxlOiBpdGFsaWM7XG4gICAgcGFkZGluZy1sZWZ0OiAxJTtcbiAgICBwYWRkaW5nLXJpZ2h0OiAyJTtcbiAgfVxuICBcbiAgaW9uLXNlbGVjdHtcbiAgICBtYXJnaW4tdG9wOiAtNCU7XG4gICAgXG4gIH1cblxuICB1bCB7XG4gICAgbGlzdC1zdHlsZTpub25lO1xuICAgIHBhZGRpbmctbGVmdDogNCU7XG4gIH1cbiIsImZpZWxkc2V0IHtcbiAgcGFkZGluZy1sZWZ0OiAyJTtcbiAgcGFkZGluZy1yaWdodDogMiU7XG4gIGJvcmRlcjogMXB4ICMyRTcxMTcgc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDFlbTtcbn1cblxubGVnZW5kIHtcbiAgd2lkdGg6IGZpdC1jb250ZW50O1xuICBmb250LXNpemU6IGxhcmdlcjtcbiAgY29sb3I6ICMyRTcxMTc7XG4gIGZvbnQtc3R5bGU6IGl0YWxpYztcbiAgcGFkZGluZy1sZWZ0OiAxJTtcbiAgcGFkZGluZy1yaWdodDogMiU7XG59XG5cbmlvbi1zZWxlY3Qge1xuICBtYXJnaW4tdG9wOiAtNCU7XG59XG5cbnVsIHtcbiAgbGlzdC1zdHlsZTogbm9uZTtcbiAgcGFkZGluZy1sZWZ0OiA0JTtcbn0iXX0= */"
+module.exports = "fieldset {\n  padding-left: 2%;\n  padding-right: 2%;\n  border: 1px #2E7117 solid;\n  border-radius: 1em;\n}\n\nlegend {\n  width: -webkit-fit-content;\n  width: -moz-fit-content;\n  width: fit-content;\n  font-size: larger;\n  color: #2E7117;\n  font-style: italic;\n  padding-left: 1%;\n  padding-right: 2%;\n}\n\nion-select {\n  margin-top: -4%;\n}\n\nul {\n  list-style: none;\n  padding-left: 4%;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9oYXJtYW5kL0Rlc2t0b3AvYmlvYmVsdG1vYmlsZS9zcmMvYXBwL2ludGVydmVudGlvbmNlaW50dXJlMi9pbnRlcnZlbnRpb25jZWludHVyZTIucGFnZS5zY3NzIiwic3JjL2FwcC9pbnRlcnZlbnRpb25jZWludHVyZTIvaW50ZXJ2ZW50aW9uY2VpbnR1cmUyLnBhZ2Uuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNJLGdCQUFBO0VBQ0EsaUJBQUE7RUFDQSx5QkFBQTtFQUNBLGtCQUFBO0FDQ0o7O0FEQ0U7RUFDRSwwQkFBQTtFQUFBLHVCQUFBO0VBQUEsa0JBQUE7RUFDQSxpQkFBQTtFQUNBLGNBQUE7RUFDQSxrQkFBQTtFQUNBLGdCQUFBO0VBQ0EsaUJBQUE7QUNFSjs7QURDRTtFQUNFLGVBQUE7QUNFSjs7QURFRTtFQUNFLGdCQUFBO0VBQ0EsZ0JBQUE7QUNDSiIsImZpbGUiOiJzcmMvYXBwL2ludGVydmVudGlvbmNlaW50dXJlMi9pbnRlcnZlbnRpb25jZWludHVyZTIucGFnZS5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiZmllbGRzZXQge1xyXG4gICAgcGFkZGluZy1sZWZ0OiAyJTtcclxuICAgIHBhZGRpbmctcmlnaHQ6IDIlOyBcclxuICAgIGJvcmRlcjogMXB4ICMyRTcxMTcgc29saWQ7XHJcbiAgICBib3JkZXItcmFkaXVzOiAxZW07XHJcbiAgfVxyXG4gIGxlZ2VuZCB7ICBcclxuICAgIHdpZHRoOmZpdC1jb250ZW50OyBcclxuICAgIGZvbnQtc2l6ZTpsYXJnZXI7XHJcbiAgICBjb2xvcjogIzJFNzExNztcclxuICAgIGZvbnQtc3R5bGU6IGl0YWxpYztcclxuICAgIHBhZGRpbmctbGVmdDogMSU7XHJcbiAgICBwYWRkaW5nLXJpZ2h0OiAyJTtcclxuICB9XHJcbiAgXHJcbiAgaW9uLXNlbGVjdHtcclxuICAgIG1hcmdpbi10b3A6IC00JTtcclxuICAgIFxyXG4gIH1cclxuXHJcbiAgdWwge1xyXG4gICAgbGlzdC1zdHlsZTpub25lO1xyXG4gICAgcGFkZGluZy1sZWZ0OiA0JTtcclxuICB9XHJcbiIsImZpZWxkc2V0IHtcbiAgcGFkZGluZy1sZWZ0OiAyJTtcbiAgcGFkZGluZy1yaWdodDogMiU7XG4gIGJvcmRlcjogMXB4ICMyRTcxMTcgc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDFlbTtcbn1cblxubGVnZW5kIHtcbiAgd2lkdGg6IGZpdC1jb250ZW50O1xuICBmb250LXNpemU6IGxhcmdlcjtcbiAgY29sb3I6ICMyRTcxMTc7XG4gIGZvbnQtc3R5bGU6IGl0YWxpYztcbiAgcGFkZGluZy1sZWZ0OiAxJTtcbiAgcGFkZGluZy1yaWdodDogMiU7XG59XG5cbmlvbi1zZWxlY3Qge1xuICBtYXJnaW4tdG9wOiAtNCU7XG59XG5cbnVsIHtcbiAgbGlzdC1zdHlsZTogbm9uZTtcbiAgcGFkZGluZy1sZWZ0OiA0JTtcbn0iXX0= */"
 
 /***/ }),
 
@@ -117,8 +117,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_global_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/global.service */ "./src/app/api/global.service.ts");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm2015/ionic-storage.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _ionic_native_wifi_wizard_2_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/wifi-wizard-2/ngx */ "./node_modules/@ionic-native/wifi-wizard-2/ngx/index.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ionic-native/hotspot/ngx */ "./node_modules/@ionic-native/hotspot/ngx/index.js");
+
+
 
 
 
@@ -127,34 +130,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let Interventionceinture2Page = class Interventionceinture2Page {
-    constructor(upcv3service, storage, router, global) {
+    constructor(upcv3service, storage, router, global, wifiWizard2, platform, hotspot) {
         this.upcv3service = upcv3service;
         this.storage = storage;
         this.router = router;
         this.global = global;
-        this.motiveOptions = ["Installation", "Modification du nombre de pièges", "Remise en route", "Maintenance", "Changements de bouteilles CO2", "Changement d'UPC", "Hivernage", "Autre"];
-        this.motive = this.global.objetIntervention;
-        this.intervenants = [];
-        this.intervenantsChoisis = this.global.intervenants;
+        this.wifiWizard2 = wifiWizard2;
+        this.platform = platform;
+        this.hotspot = hotspot;
     }
-    ;
     ngOnInit() {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-            yield this.storage.get('token').then(val => {
-                this.token = val;
-                this.upcv3service.getOperators(this.token).subscribe(res => {
-                    this.data = res.result;
-                    for (var i = 0; i < this.data.length; i++) {
-                        this.intervenants.push(this.data[i]["lastName"] + " " + this.data[i]["firstName"]);
-                    }
-                });
-            });
-            this.motive.forEach(element => {
-                jquery__WEBPACK_IMPORTED_MODULE_6__("#motiveList").append("<li>" + element + "</li>");
-            });
-            this.intervenantsChoisis.forEach(element => {
-                jquery__WEBPACK_IMPORTED_MODULE_6__("#intervenantsList").append("<li>" + element + "</li>");
-            });
+            /* await this.platform.ready().then(()=>{this.wifiWizard2.connect("BBAM", true, "BioBeltService", "WPA").then((res)=>{alert(JSON.stringify(res))}).catch(error => {alert(JSON.stringify(error))});
+            }).catch(error => {alert(JSON.stringify(error))}) */
         });
     }
 };
@@ -162,7 +150,10 @@ Interventionceinture2Page.ctorParameters = () => [
     { type: _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"] },
     { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_4__["Storage"] },
     { type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"] },
-    { type: _api_global_service__WEBPACK_IMPORTED_MODULE_3__["GlobalService"] }
+    { type: _api_global_service__WEBPACK_IMPORTED_MODULE_3__["GlobalService"] },
+    { type: _ionic_native_wifi_wizard_2_ngx__WEBPACK_IMPORTED_MODULE_6__["WifiWizard2"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"] },
+    { type: _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_8__["Hotspot"] }
 ];
 Interventionceinture2Page = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -173,7 +164,10 @@ Interventionceinture2Page = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"],
         _ionic_storage__WEBPACK_IMPORTED_MODULE_4__["Storage"],
         _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"],
-        _api_global_service__WEBPACK_IMPORTED_MODULE_3__["GlobalService"]])
+        _api_global_service__WEBPACK_IMPORTED_MODULE_3__["GlobalService"],
+        _ionic_native_wifi_wizard_2_ngx__WEBPACK_IMPORTED_MODULE_6__["WifiWizard2"],
+        _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"],
+        _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_8__["Hotspot"]])
 ], Interventionceinture2Page);
 
 

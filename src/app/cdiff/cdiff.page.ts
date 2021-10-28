@@ -1,10 +1,14 @@
 import { Component, OnInit, NgZone, ChangeDetectorRef,OnDestroy } from '@angular/core';
 import { GlobalService } from '../api/global.service';
-import { Platform, LoadingController } from '@ionic/angular';
+import { Platform, LoadingController, Events } from '@ionic/angular';
 import { UPCModbus } from '../model/upcv3/upcmodbus';
 import { Hotspot } from '@ionic-native/hotspot/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import { UPCV3 } from '../model/upcv3/upcv3';
+import { Router } from '@angular/router';
+import {Storage} from '@ionic/storage';
+import { CorrespondancesRegistres } from '../model/upcv3/correspondancesRegistres';
+
 
 declare var WifiWizard2: any;
 
@@ -14,8 +18,18 @@ declare var WifiWizard2: any;
   styleUrls: ['./cdiff.page.scss'],
 })
 export class CdiffPage implements OnInit {
-  textdiff = "Start";
-  colordif = "primary";
+  textdiff = "ADJUST";
+  colordif = "light";
+  textplaydiff = "DIFF";
+  colorplayfiff = "light";
+  colordis = "light";
+  colorcheck = "light";
+  offsetPE = 0;
+  offsetPS = 0;
+  offsetdeb = 0;
+  pidprog = 0;
+  pidint = 0;
+  pider = 0;
   upc : UPCModbus;
   fluxmax : number = 0;
   intensity : number = 0;
@@ -32,6 +46,11 @@ export class CdiffPage implements OnInit {
   upc3s : UPCV3[];
   backgroundeb = false;
   backgrounddangerdeb = false;
+  diffcolor = "light";
+  typediff = "Mode de diffusion";
+  redBackground = false;
+  display = false;
+  correspondancesRegistres: CorrespondancesRegistres;
   
   //diffusion à l'arrêt start reload front detectchange 
 
@@ -41,410 +60,232 @@ export class CdiffPage implements OnInit {
               private ngZone : NgZone,
               private hotspot : Hotspot,
               private network : Network,
-              private cd : ChangeDetectorRef) { }
+              private cd : ChangeDetectorRef,
+              private router : Router,
+              private storage : Storage,
+              private events : Events,
+              ) {
+                this.global.checkMode()
+               }
 
-  ngOnInit() {
+  ngOnInit() {}
+  ionViewWillEnter(){
+    
+    this.global.connexionRequise = "UPC"
+    
+    /*affichage bouton suivant*/    
+    this.global.checkNextPage().then(res=>{
+      if(res == true){
+        this.display = true;
+      }
+    }) 
     this.upc3s = JSON.parse(localStorage.getItem("upc3"));
-    this.platform.ready().then(async ()=>{
-      /*if (this.platform.is('ios')){
-        if (localStorage.getItem("BBAM") != "true"){
-          WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(async(res)=>{
-            var loading = await this.loadingCTRL.create({
-              message : "Connection à l'UPC en cours...",
-              duration : 10000
-            })
-            loading.present();
-            this.global.isBBAM = true;
-            localStorage.setItem("BBAM",""+true);
-            this.upc = new UPCModbus(async state => {
-              this.ngZone.run(() => {
-                // Force refresh UI
-                
-                  
-                  //this.readDiffusionParameters();
-                
-              });
-              
-            });
-            await this.upc.client.connect();
-              setTimeout(async ()=>{
-                //this.ngZone.run(async()=>{
-                  await this.upc.client.readHoldingRegisters(40018,100).then(async res=>{
-                    //40018
-                    var fluxmax = [res[0],res[1]];
-                    this.fluxmax = this.upc.client.registerToFloat(fluxmax);
-                    
-                    //40065
-                    //this.intensity = this.upc.client.registerToUint32(res[47]);
-                    
-                    //40045
-                    var ssid = [];
-                    for(var i = 27;i<37;i++){
-                        ssid.push(res[i]);
-                    }
-                    this.global.ssid = this.upc.client.registerToString(ssid).replace(/[^a-zA-Z0-9]/g,'');
-                    await this.upc.client.getIntFromHoldingRegister(40150,1).then(async res=>{
-                      this.resActive = res;
-                      await this.upc.client.getIntFromHoldingRegister(40065,1).then(async res=>{
-                        this.intensity = res;
-                        this.debiRef = (this.fluxmax*this.intensity)/10;
-                        this.global.interval = setInterval(async ()=>{
-                          await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
+
+    this.correspondancesRegistres = new CorrespondancesRegistres()
     
-                            //40416
-                            //this.intensity = this.upc.client.registerToUint32(res[0]); 
-                           //40435
-                           var iFlux = [res[19],res[20]]
-                           this.peMes = this.upc.client.registerToFloat(iFlux);
-      
-                           //40437
-                           var out = [res[21],res[22]]
-                           this.psMes = this.upc.client.registerToFloat(out); 
-      
-                           //40439
-                           var f = [res[23],res[24]];
-                           this.debiMes = this.upc.client.registerToFloat(f);
-                           if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100) <5){
-                            this.backgroundeb = true;
-                            this.backgrounddangerdeb = false;
-                          } else if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100)<10) {
-                            
-                            this.backgrounddangerdeb = true;
-                          } else {
-                            this.backgroundeb = false;
-                            this.backgrounddangerdeb = false;
-                          }
-      
-                           //40451
-                           var tmp = [res[35],res[36]];
-                           this.temp = this.upc.client.registerToFloat(tmp);
-      
-                           //40463
-                           var outcomp = [res[47],res[48]];
-                           this.psCompMes = this.upc.client.registerToFloat(outcomp);
-                           this.global.ssid = "BBAM";
-      
-                           this.cd.detectChanges();
-                           loading.dismiss();
-                          });
-                        },2000)
-                        
-                      })
-                    })
-                    
-                    
-                    //40150
-                    /*this.resActive = this.upc.client.registerToUint32(res[132]);
-                    alert(this.resActive);*/
-                    
-                  //})
-                  /*await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
-                    this.temp = res;
-                  })
-                  await this.upc.client.getFloatFromHoldingRegister(40018).then(res=>{
-                    this.fluxmax = res;
-                    this.cd.detectChanges();
-                  })
-                  this.upc.client.getIntFromHoldingRegister(40065,1).then(res=>{
-                    this.intensity = res;
-                    this.cd.detectChanges();
-                  })
-                  this.upc.client.getStringFromHoldingRegister(40045,10).then(res=>{
-                    this.global.ssid = res;
-                  })
-                  await this.upc.client.getIntFromHoldingRegister(40150,1).then(res=>{
-                          
-                    this.resActive = res;
-                    
-                    this.cd.detectChanges();
-                  })*/
-                //}) si connecté lecture uniquement 
-                //Mesure instantané mesure intensité 1 10 Activer diffusion fin B1 B2 voyant aucune diffusion 
-                //Mini Maxi Reactualiser les données 
-              /*},5000)
-          })
-        } else {
-          this.upc = new UPCModbus(async state => {
-            this.ngZone.run(() => {
-              // Force refresh UI
-              
-                
-                //this.readDiffusionParameters();
-              
-            });
-            
-          });
-          //await this.upc.client.connect();
-            setTimeout(async ()=>{
-              //this.ngZone.run(async()=>{
-                await this.upc.client.readHoldingRegisters(40018,100).then(async res=>{
-                  //40018
-                  var fluxmax = [res[0],res[1]];
-                  this.fluxmax = this.upc.client.registerToFloat(fluxmax);
-                  
-                  //40065
-                  //this.intensity = this.upc.client.registerToUint32(res[47]);
-                  
-                  //40045
-                  var ssid = [];
-                  for(var i = 27;i<37;i++){
-                      ssid.push(res[i]);
-                  }
-                  this.global.ssid = this.upc.client.registerToString(ssid).replace(/[^a-zA-Z0-9]/g,'');
-                  await this.upc.client.getIntFromHoldingRegister(40150,1).then(async res=>{
-                    this.resActive = res;
-                    await this.upc.client.getIntFromHoldingRegister(40065,1).then(async res=>{
-                      this.intensity = res;
-                      this.debiRef = (this.fluxmax*this.intensity)/10;
-                      this.global.interval = setInterval(async ()=>{
-                        await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
-  
-                          //40416
-                          //this.intensity = this.upc.client.registerToUint32(res[0]); 
-                         //40435
-                         var iFlux = [res[19],res[20]]
-                         this.peMes = this.upc.client.registerToFloat(iFlux);
-    
-                         //40437
-                         var out = [res[21],res[22]]
-                         this.psMes = this.upc.client.registerToFloat(out); 
-    
-                         //40439
-                         var f = [res[23],res[24]];
-                         this.debiMes = this.upc.client.registerToFloat(f);
-                         if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100) <5){
-                          this.backgroundeb = true;
-                          this.backgrounddangerdeb = false;
-                        } else if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100)<10) {
-                          
-                          this.backgrounddangerdeb = true;
-                        } else {
-                          this.backgroundeb = false;
-                          this.backgrounddangerdeb = false;
-                        }
-    
-                         //40451
-                         var tmp = [res[35],res[36]];
-                         this.temp = this.upc.client.registerToFloat(tmp);
-    
-                         //40463
-                         var outcomp = [res[47],res[48]];
-                         this.psCompMes = this.upc.client.registerToFloat(outcomp);
-                         this.global.ssid = "BBAM";
-                         this.global.isBBAM = true;
-    
-                         this.cd.detectChanges();
-                         //loading.dismiss();
-                        });
-                      },2000)
-                      
-                    })
-                  })
-                  
-                  
-                  //40150
-                  /*this.resActive = this.upc.client.registerToUint32(res[132]);
-                  alert(this.resActive);*/
-                  
-                //})
-                /*await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
-                  this.temp = res;
-                })
-                await this.upc.client.getFloatFromHoldingRegister(40018).then(res=>{
-                  this.fluxmax = res;
-                  this.cd.detectChanges();
-                })
-                this.upc.client.getIntFromHoldingRegister(40065,1).then(res=>{
-                  this.intensity = res;
-                  this.cd.detectChanges();
-                })
-                this.upc.client.getStringFromHoldingRegister(40045,10).then(res=>{
-                  this.global.ssid = res;
-                })
-                await this.upc.client.getIntFromHoldingRegister(40150,1).then(res=>{
-                        
-                  this.resActive = res;
-                  
-                  this.cd.detectChanges();
-                })*/
-              //}) si connecté lecture uniquement 
-              //Mesure instantané mesure intensité 1 10 Activer diffusion fin B1 B2 voyant aucune diffusion 
-              //Mini Maxi Reactualiser les données 
-            /*},2000)
-        }
+    this.global.onReadStatiqueEnable().then(()=>{
+      this.subscribeRefresh()
+    })            
         
-      }*/ //else if(this.platform.is('android')) {
-        //this.hotspot.connectToWifi("BBAM","BioBeltService").then(async res=>{
-            /*var loading = await this.loadingCTRL.create({
-              message : "Connection à l'UPC en cours...",
-              duration : 10000
-            })
-            loading.present();*/
-            this.global.isBBAM = true;
-            this.upc = new UPCModbus(async state => {
-              this.ngZone.run(() => {
-                // Force refresh UI
-                
-                  
-                  //this.readDiffusionParameters();
-                
-              });
-              
-            });
-            //await this.upc.client.connect();
-            setTimeout(async ()=>{
-              //this.ngZone.run(async()=>{
-                await this.upc.client.readHoldingRegisters(40018,100).then(async res=>{
-                  //40018
-                  var fluxmax = [res[0],res[1]];
-                  this.fluxmax = this.upc.client.registerToFloat(fluxmax);
-                  
-                  //40065
-                  //this.intensity = this.upc.client.registerToUint32(res[47]);
-                  
-                  //40045
-                  var ssid = [];
-                  for(var i = 27;i<37;i++){
-                      ssid.push(res[i]);
-                  }
-                  this.global.ssid = this.upc.client.registerToString(ssid).replace(/[^a-zA-Z0-9]/g,'');
-                  await this.upc.client.getIntFromHoldingRegister(40150,1).then(async res=>{
-                    this.resActive = res;
-                    await this.upc.client.getIntFromHoldingRegister(40065,1).then(async res=>{
-                      this.intensity = res;
-                      this.debiRef = (this.fluxmax*this.intensity)/10;
-                      this.global.interval = setInterval(async ()=>{
-                        await this.upc.client.readHoldingRegisters(40416,100).then(res=>{
+   
+  }
   
-                          //40416
-                          //this.intensity = this.upc.client.registerToUint32(res[0]); 
-                         //40435
-                         var iFlux = [res[19],res[20]]
-                         this.peMes = this.upc.client.registerToFloat(iFlux);
-    
-                         //40437
-                         var out = [res[21],res[22]]
-                         this.psMes = this.upc.client.registerToFloat(out); 
-    
-                         //40439
-                         var f = [res[23],res[24]];
-                         this.debiMes = this.upc.client.registerToFloat(f);
-                         if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100) <5){
-                          this.backgroundeb = true;
-                          this.backgrounddangerdeb = false;
-                        } else if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100)<10) {
-                          
-                          this.backgrounddangerdeb = true;
-                        } else {
-                          this.backgroundeb = false;
-                          this.backgrounddangerdeb = false;
-                        }
-    
-                         //40451
-                         var tmp = [res[35],res[36]];
-                         this.temp = this.upc.client.registerToFloat(tmp);
-    
-                         //40463
-                         var outcomp = [res[47],res[48]];
-                         this.psCompMes = this.upc.client.registerToFloat(outcomp);
-                         this.global.ssid = "BBAM";
-    
-                         this.cd.detectChanges();
-                         //loading.dismiss();
-                        }).catch(err=>{
-                          alert("Veuillez vous connectez à BBAM");
-                          this.global.ssid = "ADMIN";
-                          this.global.isBBAM = false;
-                          clearInterval(this.global.interval);
-                        });
-                      },2000)
-                      
-                    })
-                  })
-                  
-                  
-                  //40150
-                  /*this.resActive = this.upc.client.registerToUint32(res[132]);
-                  alert(this.resActive);*/
-                  
-                })
-                /*await this.upc.client.getFloatFromHoldingRegister(40451).then(res=>{
-                  this.temp = res;
-                })
-                await this.upc.client.getFloatFromHoldingRegister(40018).then(res=>{
-                  this.fluxmax = res;
-                  this.cd.detectChanges();
-                })
-                this.upc.client.getIntFromHoldingRegister(40065,1).then(res=>{
-                  this.intensity = res;
-                  this.cd.detectChanges();
-                })
-                this.upc.client.getStringFromHoldingRegister(40045,10).then(res=>{
-                  this.global.ssid = res;
-                })
-                await this.upc.client.getIntFromHoldingRegister(40150,1).then(res=>{
-                        
-                  this.resActive = res;
-                  
-                  this.cd.detectChanges();
-                })*/
-              //}) si connecté lecture uniquement 
-              //Mesure instantané mesure intensité 1 10 Activer diffusion fin B1 B2 voyant aucune diffusion 
-              //Mini Maxi Reactualiser les données 
-            },1000)
-        //})
-      //}
-    })
+  startstop() {    
+    this.onChangeDiff();
   }
-  /*ionViewWillLeave() {
-
-    
-    clearInterval(this.interval);
+  doRefresh(event) {
+    this.unsubscribeRefresh()
+    this.global.onReadStatiqueEnable().then(()=>{
+      this.subscribeRefresh()
+    })  
   }
 
-  ngOnDestroy(): void {
-
-    
-    clearInterval(this.interval);
-  }*/
-  startstop() {
-    if(this.colordif == "primary"){
-      this.onChangeDiff();
-    } else {
-      this.onDisableDiff();
-    }
-  }
+  
   onChangeDiff() {
-    this.upc.client.setIntInHoldingRegister(40011,1,2).then(res=>{
-      
-      this.textdiff = "Stop";
-      this.colordif = "danger";
-      
-      this.cd.detectChanges();
-    })
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change diff")
+    this.global.onWriteEnable(this.correspondancesRegistres.upcMode,2)
   }
-  onDisableDiff() {
-    this.upc.client.setIntInHoldingRegister(40011,1,0).then(res=>{
-      this.textdiff = "Start";
-      this.colordif = "primary";
-      
-      this.cd.detectChanges();
-    })
-  }
-  changeInt() {
-      this.upc.client.setIntInHoldingRegister(40065,1,this.intensity).then(res=>{
-        this.debiRef = (this.fluxmax*this.intensity)/10;
-      })
-  }
-  changeFluxMax() {
-    this.upc.client.setFloatInHoldingRegister(40018,this.fluxmax).then(res=>{
-      this.debiRef = (this.fluxmax*this.intensity)/10;
-    })
-  }
-  changeResAct() {
-    this.resActive = this.resActive == 1 ? 2 : 1;
-    this.upc.client.setIntInHoldingRegister(40150,1,this.resActive).then(res=>{
 
+  onDisableDiff() {
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on disable diff")
+    this.global.onWriteEnable(this.correspondancesRegistres.upcMode,0)
+  }
+
+  onEnableDiff() {
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on enable diff")
+    this.global.onWriteEnable(this.correspondancesRegistres.upcMode,1)
+  }
+
+  onCheck() {
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on check")
+    this.global.onWriteEnable(this.correspondancesRegistres.upcMode,3).then(()=>{
+      this.colorcheck = "primary";
+      this.colordis = "light";
+      this.colorplayfiff = "light";
+      this.colordif = "light";
+      this.typediff = "Mode CHECK Pressions";
+      this.diffcolor = "warning";       
     })
   }
+
+  changeIntensity() {
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change intensity")
+    this.global.onWriteEnable(this.correspondancesRegistres.upcDiffLvlAdj,this.intensity)
+  }
+  
+  changeFluxMax() {    
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change flux max")
+    this.global.onWriteEnable(this.correspondancesRegistres.co2FlowRefAdj,this.fluxmax) 
+  }
+
+  changeResAct() {    
+    this.resActive = this.resActive == 1 ? 2 : 1;
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change res act")
+    this.global.onWriteEnable(this.correspondancesRegistres.co2ResActAdj,this.resActive) 
+  }
+
+  changePID() {
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change PID")
+    this.global.onWriteEnable(this.correspondancesRegistres.upcCo2PidProp,this.pidprog) 
+  }
+
+  changeINT() {    
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change INT")
+    this.global.onWriteEnable(this.correspondancesRegistres.upcCo2PidInteg,this.pidint) 
+  }
+
+  changeDIR() {
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change DIR")
+    this.global.onWriteEnable(this.correspondancesRegistres.upcCo2PidDiff,this.pider) 
+  }
+
+  changeoffsetPE() {
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change offsetPE")
+    this.global.onWriteEnable(this.correspondancesRegistres.co2PressInpOffs,this.offsetPE) 
+  }
+
+  changeoffsetPS() {
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change offsetPS")
+    this.global.onWriteEnable(this.correspondancesRegistres.co2PressoutOffs,this.offsetPS) 
+  } 
+
+  changeoffsetdeb() {
+    var d=new Date()
+    this.global.logs.push(this.global.msToTime(d.getTime())+" - appel on change offsetdeb")
+    this.global.onWriteEnable(this.correspondancesRegistres.co2FlowOffs,this. offsetdeb) 
+  }
+
+  goToNextPage(){    
+    this.storage.get("nexturl").then(res=>{  
+      this.router.navigate([res]);
+    })  
+  }
+
+  subscribeRefresh(){
+
+  this.events.subscribe("loadParameters",($event)=>{
+      var status = this.global.upcmodbus.general.upcStatus;
+      if(status == 0){
+        this.colordis = "danger";
+        this.colorcheck = "light";
+        this.colorplayfiff = "light";
+        this.colordif = "light";
+        this.typediff = "Diffusion OFF";
+        this.diffcolor = "danger";
+      }else if (status == 3) {
+        this.colorcheck = "primary";
+        this.colordis = "light";
+        this.colorplayfiff = "light";
+        this.colordif = "light";
+        this.typediff = "Mode CHECK Pressions";
+        this.diffcolor = "warning";
+      }else if(status == 2) {
+        this.colordif = "primary";
+        this.colorplayfiff = "light";
+        this.colordis ="light"
+        this.colorcheck = "light";
+        this.diffcolor = "tertiary";
+        this.typediff = "Mode ADJUST";
+      } else {
+        this.colorplayfiff = "primary";
+        this.colordif = "light";
+        this.colorcheck = "light";
+        this.colordis = "light";
+        this.typediff = "Diff. programmée ACTIF";
+        this.diffcolor = "primary";
+      }
+    this.offsetPE = this.global.upcmodbus.diffusions.co2PressInpOffs
+    this.offsetPS = this.global.upcmodbus.diffusions.co2PressOutOffs  
+    this.offsetdeb =  this.global.upcmodbus.diffusions.co2FlowOffs    
+    this.pidprog = this.global.upcmodbus.general.upcCo2PidProp           
+    this.pidint = this.global.upcmodbus.general.upcCo2PidInteg 
+    this.pider = this.global.upcmodbus.general.upcCo2PidDiff
+  
+  
+    //40018
+
+    this.fluxmax = this.global.upcmodbus.general.co2FlowRefAdj
+    
+    //40065
+    this.intensity = this.global.upcmodbus.diffusions.upcDiffLvlAdj
+    
+    //40150
+      this.resActive = this.global.upcmodbus.reserves.co2ResActAdj                
+       
+        this.debiRef = (this.fluxmax*this.intensity)/10;
+        //this.global.interval = setInterval(async ()=>{
+       
+
+            //40416
+            //this.intensity = this.upc.client.registerToUint32(res[0]); 
+           //40435                    
+           this.peMes = this.global.upcmodbus.diffusions.co2PresInpAvg
+
+           //40437                    
+           this.psMes = this.global.upcmodbus.diffusions.co2PresOutAvg 
+
+           //40439                     
+           this.debiMes = this.global.upcmodbus.diffusions.co2FlowAvg
+           if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100) <5){
+            this.backgroundeb = true;
+            this.backgrounddangerdeb = false;
+          } else if(Math.abs(((this.debiMes-this.debiRef)/this.debiRef)*100)<10) {
+            
+            this.backgrounddangerdeb = true;
+          } else {
+            this.backgroundeb = false;
+            this.backgrounddangerdeb = false;
+          }
+
+           //40451                    
+           this.temp = this.global.upcmodbus.diffusions.co2TempAvg
+
+           //40463                   
+           this.psCompMes = this.global.upcmodbus.diffusions.co2PressOutComp
+         
+        })
+      }
+
+
+      unsubscribeRefresh(){
+        this.events.unsubscribe("loadParameters")
+      }
+         
+
+    
+  
+
+
 }

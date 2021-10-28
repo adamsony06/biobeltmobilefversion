@@ -48,7 +48,7 @@ export class RemovebottlePage implements OnInit {
               this.bottle.name = json.name;
               if (json.stock !== null){
                 this.bottle.stock = json.stock.id;
-                //alert(json.stock.id);
+                
               }
             }
           })
@@ -157,12 +157,10 @@ export class RemovebottlePage implements OnInit {
   setDesignationB1(i,$event){
     
     this.global.designationB1[i] = $event.target.value;
-    //this.global.B1[i].designation = this.global.B1[i].designation;
      
   }
   setDesignationB2(i,$event){
     this.global.designationB2[i] = $event.target.value;
-    //this.global.B2[i].designation = this.global.B2[i].designation;
   }
   deleteB1() {
     this.global.B1 = [];

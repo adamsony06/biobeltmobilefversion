@@ -6,6 +6,28 @@
 .bgreen {
 	background-color: green;
 }
+/*.bgred {
+	background-color: red;
+}*/
+.bgblank {
+	background-color: white;
+}
+.contenuegreen {
+	border-bottom-left-radius: 80px 80px;
+	background-color:green;
+}
+.contenuered {
+	border-bottom-left-radius: 80px 80px;
+	background-color:red;
+}
+.contenuegreen2 {
+	border-bottom-right-radius: 80px 80px;
+	background-color:green;
+}
+.contenuered2 {
+	border-bottom-right-radius: 80px 80px;
+	background-color:red;
+}
 #one {
 	width: 200px;
 	//background: #ccc;
@@ -26,3 +48,13 @@
 	left: 0;
 	width: 100px; height: 100px;
 }
+
+.removed {
+	background-color: yellow !important;
+}
+
+
+.added {
+	background-color: yellowgreen !important;
+}
+

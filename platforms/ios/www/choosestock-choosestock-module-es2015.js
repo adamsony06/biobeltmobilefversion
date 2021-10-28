@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\"><ion-back-button></ion-back-button></ion-buttons>\n    <ion-title>Choisir un stock</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n    <ion-item *ngFor=\"let s of stock\" (click)=\"goToStock(s);\">\n        {{s.name}}\n    </ion-item>\n  </ion-list>\n</ion-content>\n"
+module.exports = "<ion-header>\r\n  <ion-toolbar color=\"primary\">\r\n    <ion-buttons slot=\"start\"><ion-back-button></ion-back-button></ion-buttons>\r\n    <ion-title>Choisir un dépôt</ion-title>\r\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \r\n     </ion-buttons>\r\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \r\n     </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n  <ion-list>\r\n    <ion-item *ngFor=\"let s of stock\" (click)=\"goToStock(s);\">\r\n        {{s.name}}\r\n    </ion-item>\r\n  </ion-list>\r\n</ion-content>\r\n"
 
 /***/ }),
 
@@ -118,6 +118,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_geolocation_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/geolocation/ngx */ "./node_modules/@ionic-native/geolocation/ngx/index.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
 /* harmony import */ var _api_global_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/global.service */ "./src/app/api/global.service.ts");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../model/upcv3/upcmodbus */ "./src/app/model/upcv3/upcmodbus.ts");
+
+
 
 
 
@@ -126,16 +130,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let ChoosestockPage = class ChoosestockPage {
-    constructor(upc3Service, storage, geolocation, router, global) {
+    constructor(upc3Service, storage, geolocation, router, global, platform, ngZone, cd) {
         this.upc3Service = upc3Service;
         this.storage = storage;
         this.geolocation = geolocation;
         this.router = router;
         this.global = global;
+        this.platform = platform;
+        this.ngZone = ngZone;
+        this.cd = cd;
         this.stock = [];
         this.lonlat = [{ lat: 43.6667, lon: 7.15 }, { lat: 42.0396, lon: 9.01289 }, { lat: 43.6107, lon: 3.8767 }];
     }
     ngOnInit() {
+        this.getUpcStateConnexion();
         this.storage.get("token").then(val => {
             this.upc3Service.getAllStock(val).subscribe(res => {
                 var stock = res.result;
@@ -169,13 +177,26 @@ let ChoosestockPage = class ChoosestockPage {
     deg2rad(deg) {
         return deg * (Math.PI / 180);
     }
+    getUpcStateConnexion() {
+        this.platform.ready().then((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
+            this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_8__["UPCModbus"](state => {
+                this.ngZone.run(() => {
+                    // Force refresh UI
+                });
+            });
+            yield this.upc.client.connect();
+        }));
+    }
 };
 ChoosestockPage.ctorParameters = () => [
     { type: _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"] },
     { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"] },
     { type: _ionic_native_geolocation_ngx__WEBPACK_IMPORTED_MODULE_4__["Geolocation"] },
     { type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"] },
-    { type: _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"] }
+    { type: _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"] },
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"] },
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"] }
 ];
 ChoosestockPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -183,7 +204,7 @@ ChoosestockPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         template: __webpack_require__(/*! raw-loader!./choosestock.page.html */ "./node_modules/raw-loader/index.js!./src/app/choosestock/choosestock.page.html"),
         styles: [__webpack_require__(/*! ./choosestock.page.scss */ "./src/app/choosestock/choosestock.page.scss")]
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"], _ionic_native_geolocation_ngx__WEBPACK_IMPORTED_MODULE_4__["Geolocation"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"], _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"]])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"], _ionic_native_geolocation_ngx__WEBPACK_IMPORTED_MODULE_4__["Geolocation"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"], _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"], _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"]])
 ], ChoosestockPage);
 
 

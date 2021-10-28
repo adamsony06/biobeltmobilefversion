@@ -29,13 +29,19 @@
 </ion-header>
 
 <ion-content class ="ion-padding">
+  <ion-refresher slot="fixed" id="refresher" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <h3 style="text-align: center;">Programmation </h3>
+
+<ion-row style="text-align: center;padding-top: 5%;"><ion-col><ion-button [color]="colordif" size="large" shape="round" (click)="onDiff();">Diffusion</ion-button></ion-col></ion-row>
 <ion-card class="ion-padding">   							
   <ion-card-header>							
   <ion-card-title>Programmes Aube / Crépuscule</ion-card-title>							
   </ion-card-header>
   <ion-grid>
-    <ion-row class="landscaperow"><ion-col size="2"></ion-col><ion-col size="2.75"><p style="margin-left: 10%;">Décalage Début</p></ion-col><ion-col size="1.8"><p>Durée</p></ion-col><ion-col size="1.5"><p style="margin-left: 14%;">Intensité</p></ion-col></ion-row>	
-    <ion-row>
+    <ion-row class="landscaperow" [ngClass]="{'bgred' : redBackground}"><ion-col size="2"></ion-col><ion-col size="2.75"><p style="margin-left: 10%;">Décalage Début</p></ion-col><ion-col size="1.8"><p>Durée</p></ion-col><ion-col size="1.5"><p style="margin-left: 14%;">Intensité</p></ion-col></ion-row>	
+    <ion-row [ngClass]="{'bgred' : redBackground}">
       
       <ion-col size="12" size-sm="2">						
         <p>Aube</p>
@@ -43,11 +49,13 @@
       <ion-col size="12" size-sm="2.75">
         <div class="form">
           <div class="infosformhours">Décalage début:</div>	            						
-          <ion-select [(ngModel)]="sign[0]" (ngModelChange)="onEdit(10)">							
+          <ion-select *ngIf="!redBackground" [(ngModel)]="sign[0]" (ngModelChange)="onEdit(10)">							
             <ion-select-option *ngFor="let signOption of signOptions" [value]="signOption">{{signOption}}</ion-select-option>	           							
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
           <ion-item>							
-            <ion-datetime displayFormat="HH:mm" [(ngModel)]="paDelay[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(10)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="paDelay[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(10)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>		
         </div>
       </ion-col>
@@ -55,23 +63,26 @@
         <div class="form">
           <div class="infosformhours">Durée :</div>   							
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="paDuration[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(10)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="paDuration[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(10)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>		
         </div>
-        <p *ngIf="pAubeStart[0] && pAubeEnd[0]">{{pAubeStart[0]}}-{{pAubeEnd[0]}}</p>
+        <p *ngIf="pAubeStart[0] && pAubeEnd[0] && !redBackground">{{pAubeStart[0]}}-{{pAubeEnd[0]}}</p>
+        <ion-label *ngIf="redBackground">-</ion-label>
       </ion-col>
       <ion-col size="12" size-sm="1.25">
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[10]" (ngModelChange)="onEdit(10)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[10]" (ngModelChange)="onEdit(10)">
             <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select>
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>		   				
     
     </ion-row>		
-    <ion-row>		
+    <ion-row [ngClass]="{'bgred' : redBackground}">		
   
     <ion-col size="12" size-sm="2">						
      <p>Crépuscule</p>	
@@ -79,11 +90,13 @@
     <ion-col size="12" size-sm="2.75">
       <div class="form">
         <div class="infosformhours">Décalage début :</div>						
-        <ion-select [(ngModel)]="sign[1]" (ngModelChange)="onEdit(11)">							
+        <ion-select *ngIf="!redBackground" [(ngModel)]="sign[1]" (ngModelChange)="onEdit(11)">							
           <ion-select-option *ngFor="let signOption of signOptions" [value]="signOption">{{signOption}}</ion-select-option>	           							
         </ion-select> 
+        <ion-label *ngIf="redBackground">-</ion-label>
         <ion-item>							
-          <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pcDelay[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(11)"></ion-datetime>							
+          <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pcDelay[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(11)"></ion-datetime>							
+          <ion-label *ngIf="redBackground">-</ion-label>
         </ion-item>	
       </div>
     </ion-col>
@@ -91,17 +104,20 @@
       <div class="form">
         <div class="infosformhours">Durée :</div>	   					
         <ion-item>							
-          <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pcDuration[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(11)"></ion-datetime>							
+          <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pcDuration[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(11)"></ion-datetime>							
+          <ion-label *ngIf="redBackground">-</ion-label>
         </ion-item>		
       </div>
-      <p *ngIf="pCrepusculeStart[0] && pCrepusculeEnd[0]">{{pCrepusculeStart[0]}}-{{pCrepusculeEnd[0]}}</p>
+      <p *ngIf="pCrepusculeStart[0] && pCrepusculeEnd[0] && !redBackground">{{pCrepusculeStart[0]}}-{{pCrepusculeEnd[0]}}</p>
+      <ion-label *ngIf="redBackground">-</ion-label>
     </ion-col>
     <ion-col size="12" size-sm="1.25">
       <div class="form">
         <div class="infosform">Intensité :</div>					
-        <ion-select [(ngModel)]="intensity[11]" (ngModelChange)="onEdit(11)">
+        <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[11]" (ngModelChange)="onEdit(11)">
           <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
         </ion-select>	
+        <ion-label *ngIf="redBackground">-</ion-label>
       </div>
     </ion-col>
     <ion-col size="12" class="portraitrow"><br></ion-col>					
@@ -114,8 +130,8 @@
     <ion-card-title>Programmes de diffusion</ion-card-title>							
   </ion-card-header>	
   <ion-grid [fixed]="true">		
-    <ion-row class="landscaperow"><ion-col size="1"></ion-col><ion-col size="3.15"><p style="margin-left: 10%;">Fréquence</p></ion-col><ion-col size="2.5"><p style="margin-left:24%;">Début</p></ion-col><ion-col size="0.5"></ion-col><ion-col size="2.5"><p style="margin-left:24%;">Fin</p></ion-col><ion-col size="2"><p style="margin-left:14%;">Intensité</p></ion-col></ion-row>
-    <ion-row class="rowDisplay">
+    <ion-row class="landscaperow" [ngClass]="{'bgred' : redBackground}"><ion-col size="1"></ion-col><ion-col size="3.15"><p style="margin-left: 10%;">Fréquence</p></ion-col><ion-col size="2.5"><p style="margin-left:24%;">Début</p></ion-col><ion-col size="0.5"></ion-col><ion-col size="2.5"><p style="margin-left:24%;">Fin</p></ion-col><ion-col size="2"><p style="margin-left:14%;">Intensité</p></ion-col></ion-row>
+    <ion-row class="rowDisplay" [ngClass]="{'bgred' : redBackground}">
         
         <ion-col size="12" size-sm="1">				
           <p>P1</p>				
@@ -123,16 +139,18 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select [(ngModel)]="frequency2[0]" (ngModelChange)="onEdit(0)">
+            <ion-select *ngIf="!redBackground" [(ngModel)]="frequency2[0]" (ngModelChange)="onEdit(0)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
-            </ion-select>	
+            </ion-select>
+            <ion-label *ngIf="redBackground">-</ion-label>	
           </div>
         </ion-col>
         <ion-col size="12" size-sm="2.5">	
           <div class="form">	
             <div class="infosformhours"><p>Début :</p></div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(0)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(0)"></ion-datetime>						
+              <ion-label *ngIf="redBackground">-</ion-label>
             </ion-item>	
           </div>
         </ion-col>
@@ -143,22 +161,24 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(0)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[0]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(0)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>	
         </div>          
       </ion-col>
       <ion-col size="12" size-sm="2">
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[0]" (ngModelChange)="onEdit(0)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[0]" (ngModelChange)="onEdit(0)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>   					
       
     </ion-row>	
-    <ion-row class="rowDisplay">
+    <ion-row class="rowDisplay" [ngClass]="{'bgred' : redBackground}">
       
         <ion-col size="12" size-sm="1">							
           <p>P2</p>				
@@ -166,17 +186,19 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select [(ngModel)]="frequency2[1]" (ngModelChange)="onEdit(1)">
+            <ion-select *ngIf="!redBackground" [(ngModel)]="frequency2[1]" (ngModelChange)="onEdit(1)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
             </ion-select>	
+            <ion-label *ngIf="redBackground">-</ion-label>
           </div>
         </ion-col>
         <ion-col size="12" size-sm="2.5">
           <div class="form">	
             <div class="infosformhours">Début :</div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[1]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(1)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[1]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(1)"></ion-datetime>						
             </ion-item>	
+            <ion-label *ngIf="redBackground">-</ion-label>
           </div>
         </ion-col>
       <ion-col size="12" size-sm="0.5">
@@ -186,22 +208,24 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[1]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(1)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[1]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(1)"></ion-datetime>							
           </ion-item>	
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" size-sm="2">	
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[1]" (ngModelChange)="onEdit(1)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[1]" (ngModelChange)="onEdit(1)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>   					
      
     </ion-row>
-    <ion-row class="rowDisplay">
+    <ion-row class="rowDisplay" [ngClass]="{'bgred' : redBackground}">
       
         <ion-col size="12" size-sm="1">						
           <p>P3</p>				
@@ -209,16 +233,18 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select *ngIf='frequency2[2]' [(ngModel)]="frequency2[2]" (ngModelChange)="onEdit(2)">
+            <ion-select *ngIf='frequency2[2] && !redBackground' [(ngModel)]="frequency2[2]" (ngModelChange)="onEdit(2)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
             </ion-select>	
+            <ion-label *ngIf="redBackground">-</ion-label>
           </div>
         </ion-col>
         <ion-col size="12" size-sm="2.5">	
           <div class="form">	
             <div class="infosformhours">Début :</div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[2]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(2)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[2]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(2)"></ion-datetime>						
+              <ion-label *ngIf="redBackground">-</ion-label>
             </ion-item>	
           </div>
         </ion-col>
@@ -229,22 +255,24 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[2]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(2)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[2]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(2)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>	
         </div>
       </ion-col>
       <ion-col size="12" size-sm="2">	
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[2]" (ngModelChange)="onEdit(2)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[2]" (ngModelChange)="onEdit(2)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col> 
       <ion-col size="12" class="portraitrow"><br></ion-col>  					
       
     </ion-row>
-    <ion-row class="rowDisplay">
+    <ion-row class="rowDisplay" [ngClass]="{'bgred' : redBackground}">
       
         <ion-col size="12" size-sm="1">					
           <p>P4</p>				
@@ -252,16 +280,18 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select *ngIf='frequency2[3]' [(ngModel)]="frequency2[3]" (ngModelChange)="onEdit(3)">
+            <ion-select *ngIf='frequency2[3] && !redBackground' [(ngModel)]="frequency2[3]" (ngModelChange)="onEdit(3)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
             </ion-select>	
+            <ion-label *ngIf="redBackground">-</ion-label>
           </div>
         </ion-col>
         <ion-col size="12" size-sm="2.5">	
           <div class="form">	
             <div class="infosformhours">Début :</div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[3]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(3)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[3]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(3)"></ion-datetime>						
+              <ion-label *ngIf="redBackground">-</ion-label>
             </ion-item>	
           </div>
         </ion-col>
@@ -272,22 +302,24 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[3]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(3)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[3]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(3)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>	
         </div>
       </ion-col>
       <ion-col size="12" size-sm="2">	
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[3]" (ngModelChange)="onEdit(3)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[3]" (ngModelChange)="onEdit(3)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>   					
       
     </ion-row>
-    <ion-row class="rowDisplay">
+    <ion-row class="rowDisplay" [ngClass]="{'bgred' : redBackground}">
       
         <ion-col size="12" size-sm="1">					
           <p>P5</p>				
@@ -295,16 +327,18 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select *ngIf='frequency2[4]' [(ngModel)]="frequency2[4]" (ngModelChange)="onEdit(4)">
+            <ion-select *ngIf='frequency2[4] && !redBackground' [(ngModel)]="frequency2[4]" (ngModelChange)="onEdit(4)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
             </ion-select>	
+            <ion-label *ngIf="redBackground">-</ion-label>
           </div>
         </ion-col>
         <ion-col size="12" size-sm="2.5">	
           <div class="form">	
             <div class="infosformhours">Début :</div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[4]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(4)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[4]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(4)"></ion-datetime>						
+              <ion-label *ngIf="redBackground">-</ion-label>
             </ion-item>	
           </div>
         </ion-col>
@@ -315,22 +349,24 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[4]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(4)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[4]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(4)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>	
         </div>
       </ion-col>
       <ion-col size="12" size-sm="2">	
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[4]" (ngModelChange)="onEdit(4)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[4]" (ngModelChange)="onEdit(4)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>   					
       
     </ion-row>
-    <ion-row class="rowDisplay">
+    <ion-row class="rowDisplay" [ngClass]="{'bgred' : redBackground}">
       
         <ion-col size="12" size-sm="1">					
           <p>P6</p>				
@@ -338,16 +374,18 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select *ngIf='frequency2[5]' [(ngModel)]="frequency2[5]" (ngModelChange)="onEdit(5)">
+            <ion-select *ngIf='frequency2[5] && !redBackground' [(ngModel)]="frequency2[5]" (ngModelChange)="onEdit(5)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
             </ion-select>	
+            <ion-label *ngIf="redBackground">-</ion-label>
           </div>
         </ion-col>
         <ion-col size="12" size-sm="2.5">	
           <div class="form">	
             <div class="infosformhours">Début :</div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[5]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(5)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[5]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(5)"></ion-datetime>						
+              <ion-label *ngIf="redBackground">-</ion-label>
             </ion-item>	
           </div>
         </ion-col>
@@ -358,22 +396,24 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[5]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(5)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[5]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(5)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>	
         </div>
       </ion-col>
       <ion-col size="12" size-sm="2">	
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[5]" (ngModelChange)="onEdit(5)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[5]" (ngModelChange)="onEdit(5)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>   					
       
     </ion-row>
-    <ion-row class="rowDisplay">
+    <ion-row class="rowDisplay" [ngClass]="{'bgred' : redBackground}">
         
         <ion-col size="12" size-sm="1">					
           <p>P7</p>				
@@ -381,16 +421,18 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select *ngIf='frequency2[6]' [(ngModel)]="frequency2[6]" (ngModelChange)="onEdit(6)">
+            <ion-select *ngIf='frequency2[6] && !redBackground' [(ngModel)]="frequency2[6]" (ngModelChange)="onEdit(6)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
-            </ion-select>	
+            </ion-select>
+            <ion-label *ngIf="redBackground">-</ion-label>	
           </div>
         </ion-col>
         <ion-col size="12" size-sm="2.5">	
           <div class="form">	
             <div class="infosformhours">Début :</div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[6]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(6)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[6]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(6)"></ion-datetime>						
+              <ion-label *ngIf="redBackground">-</ion-label>
             </ion-item>	
           </div>
         </ion-col>
@@ -401,22 +443,24 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[6]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(6)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[6]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(6)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>	
         </div>
       </ion-col>
       <ion-col size="12" size-sm="2">	
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[6]" (ngModelChange)="onEdit(6)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[6]" (ngModelChange)="onEdit(6)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>   					
       
     </ion-row>
-    <ion-row class="rowDisplay">
+    <ion-row class="rowDisplay" [ngClass]="{'bgred' : redBackground}">
       
         <ion-col size="12" size-sm="1">					
           <p>P8</p>				
@@ -424,16 +468,18 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select *ngIf='frequency2[7]' [(ngModel)]="frequency2[7]" (ngModelChange)="onEdit(7)">
+            <ion-select *ngIf='frequency2[7] && !redBackground' [(ngModel)]="frequency2[7]" (ngModelChange)="onEdit(7)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
             </ion-select>	
+            <ion-label *ngIf="redBackground">-</ion-label>
           </div>
         </ion-col>
         <ion-col size="12" size-sm="2.5">	
           <div class="form">	
             <div class="infosformhours">Début :</div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[7]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(7)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[7]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(7)"></ion-datetime>						
+              <ion-label *ngIf="redBackground">-</ion-label>
             </ion-item>	
           </div>
         </ion-col>
@@ -444,22 +490,24 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[7]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(7)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[7]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(7)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>	
         </div>
       </ion-col>
       <ion-col size="12" size-sm="2">	
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[7]" (ngModelChange)="onEdit(7)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[7]" (ngModelChange)="onEdit(7)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>   					
      
     </ion-row>
-    <ion-row class="rowDisplay">
+    <ion-row class="rowDisplay" [ngClass]="{'bgred' : redBackground}">
       
         <ion-col size="12" size-sm="1">					
           <p>P9</p>				
@@ -467,16 +515,18 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select *ngIf='frequency2[8]' [(ngModel)]="frequency2[8]" (ngModelChange)="onEdit(8)">
+            <ion-select *ngIf='frequency2[8] && !redBackground' [(ngModel)]="frequency2[8]" (ngModelChange)="onEdit(8)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
             </ion-select>	
+            <ion-label *ngIf="redBackground">-</ion-label>
           </div>
         </ion-col>
         <ion-col size="12" size-sm="2.5">	
           <div class="form">	
             <div class="infosformhours">Début :</div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[8]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(8)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[8]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(8)"></ion-datetime>						
+              <ion-label *ngIf="redBackground">-</ion-label>
             </ion-item>	
           </div>
         </ion-col>
@@ -487,22 +537,24 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[8]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(8)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[8]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(8)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>	
         </div>
       </ion-col>
       <ion-col size="12" size-sm="2">	
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[8]" (ngModelChange)="onEdit(8)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[8]" (ngModelChange)="onEdit(8)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
           </ion-select> 
+          <ion-label *ngIf="redBackground">-</ion-label>
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>   					
       
     </ion-row>
-    <ion-row class="rowDisplay" height="100%">
+    <ion-row class="rowDisplay" height="100%" [ngClass]="{'bgred' : redBackground}">
       
         <ion-col size="12" size-sm="1">					
           <p>P10</p>				
@@ -510,7 +562,7 @@
         <ion-col size="12" size-sm="3.15">		
           <div class="form">	
             <div class="infosform">Fréquence :</div>		
-            <ion-select *ngIf='frequency2[9]' [(ngModel)]="frequency2[9]" (ngModelChange)="onEdit(9)">
+            <ion-select *ngIf='frequency2[9] && !redBackground' [(ngModel)]="frequency2[9]" (ngModelChange)="onEdit(9)">
               <ion-select-option *ngFor="let frequencyOption of frequencyOptions" [value]="frequencyOption">{{frequencyOption}}</ion-select-option>
             </ion-select>	
           </div>
@@ -519,7 +571,8 @@
           <div class="form">	
             <div class="infosformhours"><p>Début :</p></div>				
             <ion-item>							
-              <ion-datetime displayFormat="HH:mm" [(ngModel)]="pStart[9]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(9)"></ion-datetime>						
+              <ion-datetime *ngIf="!redBackground" displayFormat="HH:mm" [(ngModel)]="pStart[9]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(9)"></ion-datetime>						
+              <ion-label *ngIf="redBackground">-</ion-label>
             </ion-item>	
           </div>
         </ion-col>
@@ -530,16 +583,18 @@
         <div class="form"	>
           <div class="infosformhours">Fin :</div>	
           <ion-item>							
-            <ion-datetime value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[9]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(9)"></ion-datetime>							
+            <ion-datetime *ngIf="!redBackground" value="00:00" displayFormat="HH:mm" [(ngModel)]="pEnd[9]" [ngModelOptions]="{standalone: true}" (ngModelChange)="onEdit(9)"></ion-datetime>							
+            <ion-label *ngIf="redBackground">-</ion-label>
           </ion-item>	
         </div>
       </ion-col>
       <ion-col size="12" size-sm="2">	
         <div class="form">
           <div class="infosform">Intensité :</div>
-          <ion-select [(ngModel)]="intensity[9]" (ngModelChange)="onEdit(9)">
+          <ion-select *ngIf="!redBackground" [(ngModel)]="intensity[9]" (ngModelChange)="onEdit(9)">
              <ion-select-option *ngFor="let intensityOption of intensityOptions" [value]="intensityOption">{{intensityOption}}</ion-select-option>
-          </ion-select> 
+          </ion-select>
+          <ion-label *ngIf="redBackground">-</ion-label> 
         </div>
       </ion-col>
       <ion-col size="12" class="portraitrow"><br></ion-col>   					
@@ -581,3 +636,8 @@
   </ion-row>
 </ion-card>-->
 </ion-content>
+<ion-footer>
+  <ion-button *ngIf="display" style='float: right' fill='clear' (click)='goToNextPage()'>Suivant<ion-icon name='arrow-forward'></ion-icon></ion-button>
+</ion-footer>
+
+

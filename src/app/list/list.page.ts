@@ -63,13 +63,7 @@ export class ListPage implements OnInit {
     
     
   
-    /*for (let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }*/
+   
   }
   ngOnDestroy() {
     clearInterval(this.interval);
@@ -77,7 +71,7 @@ export class ListPage implements OnInit {
   ngOnInit() {
    this.interval = setInterval(()=>{
     this.upc.client.connect();
-    //this.readGeneralParameters();
+   
     this.readDiffusionParameters();
    },5000)
     
@@ -85,7 +79,7 @@ export class ListPage implements OnInit {
   doRefresh($event) {
     this.interval = setInterval(()=>{
       this.upc.client.connect();
-      //this.readGeneralParameters();
+      
       this.readDiffusionParameters();
       $event.target.complete();
      },5000)
@@ -230,7 +224,7 @@ export class ListPage implements OnInit {
         
         this.name = res.replace(/[^a-zA-Z0-9]+/g, "");
     })
-    //this.upc.client.connect();
+    
     
     this.upc.client.getIntFromHoldingRegister(40015,1).then(res=>{
        
@@ -326,7 +320,7 @@ export class ListPage implements OnInit {
         this.upcStatus = "B1 et B2 vide";
       }
     })
-    //this.upc.client.connect();
+  
     this.upc.client.getIntFromHoldingRegister(40011,1).then(res=>{
       
       this.upc.general.upcMode = res;
@@ -355,12 +349,12 @@ export class ListPage implements OnInit {
         this.upcMode = "UPC_RESET";
       }
     })
-    //this.upc.client.connect();
+   
     this.upc.client.getIntFromHoldingRegister(40168,1).then(res=>{
       //alert(res);
       this.upc.general.upcFwVer = res;
     })
-    //this.upc.client.connect();
+    
     this.upc.client.getIntFromHoldingRegister(40012,2).then(res=>{
       this.date = (new Date(res*1000));
       this.upc.general.upcClock = res;

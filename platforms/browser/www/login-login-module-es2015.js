@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-content class=\"bg-light\" *ngIf=\"isLog\">\n  <ion-row justify-content-center align-items-center>\n    <ion-col col-12 col-sm-10 col-md-6 col-lg-5 col-xl-4>\n\n      <ion-card>\n\n        <!-- Image -->\n        <img src=\"assets/bg_logo.png\"/>  \n\n        <!-- Content -->\n        <ion-card-content>\n\n          <!-- Title -->\n          <ion-card-title>Se connecter</ion-card-title>\n\n          <!-- Login form -->\n          <form #loginForm=\"ngForm\" (ngSubmit)=\"login()\" autocomplete=\"off\">\n\n            <ion-list inset>\n\n              <ion-item>\n                <ion-input placeholder=\"Email\" name=\"username\" type=\"email\" required [(ngModel)]=\"username\" #email></ion-input>\n              </ion-item>\n\n              <ion-item>\n                <ion-input placeholder=\"Mot de passe\" name=\"password\" type=\"password\" required [(ngModel)]=\"password\"></ion-input>\n              </ion-item>\n\n            </ion-list>\n\n            <ion-button class=\"submit-btn\" color=\"primary\" full type=\"submit\" [disabled]=\"!loginForm.form.valid\" margin-top>Se connecter</ion-button>\n\n          </form>\n        </ion-card-content>\n\n      </ion-card>\n\n    </ion-col>\n  </ion-row>\n</ion-content>\n"
+module.exports = "<ion-content class=\"bg-light\" *ngIf=\"needToLog\">\r\n  <ion-row justify-content-center align-items-center>\r\n    <ion-col col-12 col-sm-10 col-md-6 col-lg-5 col-xl-4>\r\n\r\n      <ion-card>\r\n\r\n        <!-- Image -->\r\n        <img src=\"assets/bg_logo.png\"/>  \r\n\r\n        <!-- Content -->\r\n        <ion-card-content>\r\n\r\n          <!-- Title -->\r\n          <ion-card-title>Se connecter</ion-card-title>\r\n\r\n          <!-- Login form -->\r\n          <form #loginForm=\"ngForm\" (ngSubmit)=\"login()\" autocomplete=\"off\">\r\n\r\n            <ion-list inset>\r\n\r\n              <ion-item>\r\n                <ion-input placeholder=\"Email\" name=\"username\" type=\"email\" required [(ngModel)]=\"username\" #email></ion-input>\r\n              </ion-item>\r\n\r\n              <ion-item>\r\n                <ion-input placeholder=\"Mot de passe\" name=\"password\" type=\"password\" required [(ngModel)]=\"password\"></ion-input>\r\n              </ion-item>\r\n\r\n            </ion-list>\r\n\r\n            <ion-button class=\"submit-btn\" color=\"primary\" full type=\"submit\" [disabled]=\"!loginForm.form.valid\" margin-top>Se connecter</ion-button>\r\n            <!--<ion-button class=\"submit-btn\" color=\"primary\" full margin-top (click)=\"onBBAM();\">Hors Connexion</ion-button>-->\r\n          </form>\r\n        </ion-card-content>\r\n\r\n      </ion-card>\r\n\r\n    </ion-col>\r\n  </ion-row>\r\n</ion-content>\r\n"
 
 /***/ }),
 
@@ -117,6 +117,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _model_user__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../model/user */ "./src/app/model/user.ts");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm2015/ionic-storage.js");
+/* harmony import */ var _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/hotspot/ngx */ "./node_modules/@ionic-native/hotspot/ngx/index.js");
+/* harmony import */ var _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/network/ngx */ "./node_modules/@ionic-native/network/ngx/index.js");
+
+
 
 
 
@@ -124,62 +128,28 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let LoginPage = class LoginPage {
-    constructor(upc3serv, navCtrl, toastCtrl, loadingCtrl, storage) {
+    constructor(upc3serv, navCtrl, toastCtrl, loadingCtrl, storage, platform, hotspot, network) {
         this.upc3serv = upc3serv;
         this.navCtrl = navCtrl;
         this.toastCtrl = toastCtrl;
         this.loadingCtrl = loadingCtrl;
         this.storage = storage;
-        this.isLog = false;
+        this.platform = platform;
+        this.hotspot = hotspot;
+        this.network = network;
+        this.needToLog = undefined;
     }
     ngOnInit() {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-            setTimeout(() => {
-                this.email.setFocus();
-            }, 500);
-            yield this.storage.get('user').then(val => this.username = val);
-            yield this.storage.get('pass').then(val => this.password = val);
+            this.storage.set("reconnect", true);
+            localStorage.setItem("BBAM", null);
             yield this.storage.get('remember').then((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
                 if (res === 1) {
-                    const loading = yield this.loadingCtrl.create({
-                        message: 'Connexion en cours...'
-                    });
-                    loading.present();
-                    let user = new _model_user__WEBPACK_IMPORTED_MODULE_4__["User"]();
-                    user.username = this.username;
-                    user.password = this.password;
-                    this.upc3serv.login(user).subscribe((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                        loading.dismiss();
-                        if (res.result) {
-                            localStorage.setItem("token", res.result);
-                            this.navCtrl.navigateRoot('home');
-                        }
-                        else {
-                            // Check code
-                            switch (res.code) {
-                                case 'TOKEN_WRONG_IDENTIFIERS':
-                                    let toast = yield this.toastCtrl.create({
-                                        message: 'Identifiants incorrects !',
-                                        duration: 3000,
-                                        position: 'top'
-                                    });
-                                    toast.present();
-                                    break;
-                            }
-                        }
-                    }), (err) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                        // Hide loading
-                        loading.dismiss();
-                        let toast = yield this.toastCtrl.create({
-                            message: 'Impossible de se connecter à internet !',
-                            duration: 3000,
-                            position: 'top'
-                        });
-                        toast.present();
-                    }));
+                    this.needToLog = false;
+                    this.navCtrl.navigateRoot('home');
                 }
                 else {
-                    this.isLog = true;
+                    this.needToLog = true;
                 }
             }));
         });
@@ -221,12 +191,13 @@ let LoginPage = class LoginPage {
                     }
                 }
             }), (err) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                // Hide loading
+                alert(JSON.stringify(err));
+                // Hide loading          
                 loading.dismiss();
                 let toast = yield this.toastCtrl.create({
                     message: 'Impossible de se connecter à internet !',
                     duration: 3000,
-                    position: 'top'
+                    position: 'bottom'
                 });
                 toast.present();
             }));
@@ -238,7 +209,10 @@ LoginPage.ctorParameters = () => [
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"] },
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ToastController"] },
     { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"] },
-    { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"] }
+    { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"] },
+    { type: _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_6__["Hotspot"] },
+    { type: _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_7__["Network"] }
 ];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('email', { static: false }),
@@ -254,7 +228,9 @@ LoginPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"],
         _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ToastController"],
         _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"],
-        _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"]])
+        _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
+        _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"],
+        _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_6__["Hotspot"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_7__["Network"]])
 ], LoginPage);
 
 

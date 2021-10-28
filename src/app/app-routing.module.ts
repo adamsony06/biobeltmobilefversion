@@ -98,7 +98,53 @@ const routes: Routes = [
   {
     path: 'retfournmodal',
     loadChildren: () => import('./retfournmodal/retfournmodal.module').then( m => m.RetfournmodalPageModule)
+  },
+  {
+    path: 'namepiege',
+    loadChildren: () => import('./namepiege/namepiege.module').then( m => m.NamepiegePageModule)
+  },
+  {
+    path: 'comunicationparam',
+    loadChildren: () => import('./comunicationparam/comunicationparam.module').then( m => m.ComunicationparamPageModule)
+  },
+  {
+    path: 'alarmparam',
+    loadChildren: () => import('./alarmparam/alarmparam.module').then( m => m.AlarmparamPageModule)
+  },
+  {
+    path: 'initechangeboitierupc',
+    loadChildren: () => import('./initechangeboitierupc/initechangeboitierupc.module').then( m => m.InitechangeboitierupcPageModule)
+  },
+  {
+    path: 'commentaires',
+    loadChildren: () => import('./commentaires/commentaires.module').then( m => m.CommentairesPageModule)
+  },
+  {
+    path: 'rapportvisite',
+    loadChildren: () => import('./rapportvisite/rapportvisite.module').then( m => m.RapportvisitePageModule)
+  },
+  {
+    path: 'modifnbpieges',
+    loadChildren: () => import('./modifnbpieges/modifnbpieges.module').then( m => m.ModifnbpiegesPageModule)
+  },
+  {
+    path: 'verifpiegesindividuels',
+    loadChildren: () => import('./verifpiegesindividuels/verifpiegesindividuels.module').then( m => m.VerifpiegesindividuelsPageModule)
+  },
+  {
+    path: 'testmode',
+    loadChildren: () => import('./testmode/testmode.module').then( m => m.TestmodePageModule)
+  },
+  {
+    path: 'finintervention',
+    loadChildren: () => import('./finintervention/finintervention.module').then( m => m.FininterventionPageModule)
+  },  {
+    path: 'debug',
+    loadChildren: () => import('./debug/debug.module').then( m => m.DebugPageModule)
   }
+
+
+
 ];
 
 @NgModule({

@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-content class=\"bg-light\" *ngIf=\"isLog\">\n  <ion-row justify-content-center align-items-center>\n    <ion-col col-12 col-sm-10 col-md-6 col-lg-5 col-xl-4>\n\n      <ion-card>\n\n        <!-- Image -->\n        <img src=\"assets/bg_logo.png\"/>  \n\n        <!-- Content -->\n        <ion-card-content>\n\n          <!-- Title -->\n          <ion-card-title>Se connecter</ion-card-title>\n\n          <!-- Login form -->\n          <form #loginForm=\"ngForm\" (ngSubmit)=\"login()\" autocomplete=\"off\">\n\n            <ion-list inset>\n\n              <ion-item>\n                <ion-input placeholder=\"Email\" name=\"username\" type=\"email\" required [(ngModel)]=\"username\" #email></ion-input>\n              </ion-item>\n\n              <ion-item>\n                <ion-input placeholder=\"Mot de passe\" name=\"password\" type=\"password\" required [(ngModel)]=\"password\"></ion-input>\n              </ion-item>\n\n            </ion-list>\n\n            <ion-button class=\"submit-btn\" color=\"primary\" full type=\"submit\" [disabled]=\"!loginForm.form.valid\" margin-top>Se connecter</ion-button>\n\n          </form>\n        </ion-card-content>\n\n      </ion-card>\n\n    </ion-col>\n  </ion-row>\n</ion-content>\n"
+module.exports = "<ion-content class=\"bg-light\" *ngIf=\"needToLog\">\r\n  <ion-row justify-content-center align-items-center>\r\n    <ion-col col-12 col-sm-10 col-md-6 col-lg-5 col-xl-4>\r\n\r\n      <ion-card>\r\n\r\n        <!-- Image -->\r\n        <img src=\"assets/bg_logo.png\"/>  \r\n\r\n        <!-- Content -->\r\n        <ion-card-content>\r\n\r\n          <!-- Title -->\r\n          <ion-card-title>Se connecter</ion-card-title>\r\n\r\n          <!-- Login form -->\r\n          <form #loginForm=\"ngForm\" (ngSubmit)=\"login()\" autocomplete=\"off\">\r\n\r\n            <ion-list inset>\r\n\r\n              <ion-item>\r\n                <ion-input placeholder=\"Email\" name=\"username\" type=\"email\" required [(ngModel)]=\"username\" #email></ion-input>\r\n              </ion-item>\r\n\r\n              <ion-item>\r\n                <ion-input placeholder=\"Mot de passe\" name=\"password\" type=\"password\" required [(ngModel)]=\"password\"></ion-input>\r\n              </ion-item>\r\n\r\n            </ion-list>\r\n\r\n            <ion-button class=\"submit-btn\" color=\"primary\" full type=\"submit\" [disabled]=\"!loginForm.form.valid\" margin-top>Se connecter</ion-button>\r\n            <!--<ion-button class=\"submit-btn\" color=\"primary\" full margin-top (click)=\"onBBAM();\">Hors Connexion</ion-button>-->\r\n          </form>\r\n        </ion-card-content>\r\n\r\n      </ion-card>\r\n\r\n    </ion-col>\r\n  </ion-row>\r\n</ion-content>\r\n"
 
 /***/ }),
 
@@ -123,6 +123,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
 /* harmony import */ var _model_user__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../model/user */ "./src/app/model/user.ts");
 /* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic-native/hotspot/ngx */ "./node_modules/@ionic-native/hotspot/ngx/index.js");
+/* harmony import */ var _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic-native/network/ngx */ "./node_modules/@ionic-native/network/ngx/index.js");
+
+
 
 
 
@@ -130,13 +134,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var LoginPage = /** @class */ (function () {
-    function LoginPage(upc3serv, navCtrl, toastCtrl, loadingCtrl, storage) {
+    function LoginPage(upc3serv, navCtrl, toastCtrl, loadingCtrl, storage, platform, hotspot, network) {
         this.upc3serv = upc3serv;
         this.navCtrl = navCtrl;
         this.toastCtrl = toastCtrl;
         this.loadingCtrl = loadingCtrl;
         this.storage = storage;
-        this.isLog = false;
+        this.platform = platform;
+        this.hotspot = hotspot;
+        this.network = network;
+        this.needToLog = undefined;
     }
     LoginPage.prototype.ngOnInit = function () {
         return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
@@ -144,87 +151,21 @@ var LoginPage = /** @class */ (function () {
             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        setTimeout(function () {
-                            _this.email.setFocus();
-                        }, 500);
-                        return [4 /*yield*/, this.storage.get('user').then(function (val) { return _this.username = val; })];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, this.storage.get('pass').then(function (val) { return _this.password = val; })];
-                    case 2:
-                        _a.sent();
+                        this.storage.set("reconnect", true);
+                        localStorage.setItem("BBAM", null);
                         return [4 /*yield*/, this.storage.get('remember').then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                var loading_1, user;
-                                var _this = this;
                                 return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            if (!(res === 1)) return [3 /*break*/, 2];
-                                            return [4 /*yield*/, this.loadingCtrl.create({
-                                                    message: 'Connexion en cours...'
-                                                })];
-                                        case 1:
-                                            loading_1 = _a.sent();
-                                            loading_1.present();
-                                            user = new _model_user__WEBPACK_IMPORTED_MODULE_4__["User"]();
-                                            user.username = this.username;
-                                            user.password = this.password;
-                                            this.upc3serv.login(user).subscribe(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                                var _a, toast;
-                                                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_b) {
-                                                    switch (_b.label) {
-                                                        case 0:
-                                                            loading_1.dismiss();
-                                                            if (!res.result) return [3 /*break*/, 1];
-                                                            localStorage.setItem("token", res.result);
-                                                            this.navCtrl.navigateRoot('home');
-                                                            return [3 /*break*/, 4];
-                                                        case 1:
-                                                            _a = res.code;
-                                                            switch (_a) {
-                                                                case 'TOKEN_WRONG_IDENTIFIERS': return [3 /*break*/, 2];
-                                                            }
-                                                            return [3 /*break*/, 4];
-                                                        case 2: return [4 /*yield*/, this.toastCtrl.create({
-                                                                message: 'Identifiants incorrects !',
-                                                                duration: 3000,
-                                                                position: 'top'
-                                                            })];
-                                                        case 3:
-                                                            toast = _b.sent();
-                                                            toast.present();
-                                                            return [3 /*break*/, 4];
-                                                        case 4: return [2 /*return*/];
-                                                    }
-                                                });
-                                            }); }, function (err) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                                                var toast;
-                                                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                                                    switch (_a.label) {
-                                                        case 0:
-                                                            // Hide loading
-                                                            loading_1.dismiss();
-                                                            return [4 /*yield*/, this.toastCtrl.create({
-                                                                    message: 'Impossible de se connecter à internet !',
-                                                                    duration: 3000,
-                                                                    position: 'top'
-                                                                })];
-                                                        case 1:
-                                                            toast = _a.sent();
-                                                            toast.present();
-                                                            return [2 /*return*/];
-                                                    }
-                                                });
-                                            }); });
-                                            return [3 /*break*/, 3];
-                                        case 2:
-                                            this.isLog = true;
-                                            _a.label = 3;
-                                        case 3: return [2 /*return*/];
+                                    if (res === 1) {
+                                        this.needToLog = false;
+                                        this.navCtrl.navigateRoot('home');
                                     }
+                                    else {
+                                        this.needToLog = true;
+                                    }
+                                    return [2 /*return*/];
                                 });
                             }); })];
-                    case 3:
+                    case 1:
                         _a.sent();
                         return [2 /*return*/];
                 }
@@ -284,12 +225,13 @@ var LoginPage = /** @class */ (function () {
                             return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
-                                        // Hide loading
+                                        alert(JSON.stringify(err));
+                                        // Hide loading          
                                         loading.dismiss();
                                         return [4 /*yield*/, this.toastCtrl.create({
                                                 message: 'Impossible de se connecter à internet !',
                                                 duration: 3000,
-                                                position: 'top'
+                                                position: 'bottom'
                                             })];
                                     case 1:
                                         toast = _a.sent();
@@ -308,7 +250,10 @@ var LoginPage = /** @class */ (function () {
         { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"] },
         { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ToastController"] },
         { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"] },
-        { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"] }
+        { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"] },
+        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"] },
+        { type: _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_6__["Hotspot"] },
+        { type: _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_7__["Network"] }
     ]; };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])('email', { static: false }),
@@ -324,7 +269,9 @@ var LoginPage = /** @class */ (function () {
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["NavController"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ToastController"],
             _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["LoadingController"],
-            _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"]])
+            _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"],
+            _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["Platform"],
+            _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_6__["Hotspot"], _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_7__["Network"]])
     ], LoginPage);
     return LoginPage;
 }());

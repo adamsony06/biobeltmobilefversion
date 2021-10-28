@@ -89,6 +89,10 @@
             {
               "xml": "<feature name=\"WifiWizard2\"><param name=\"ios-package\" value=\"WifiWizard2\" /></feature>",
               "count": 1
+            },
+            {
+              "xml": "<feature name=\"Notification\"><param name=\"ios-package\" value=\"CDVNotification\" /></feature>",
+              "count": 1
             }
           ]
         }
@@ -190,6 +194,9 @@
       "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     },
     "wifiwizard2": {
+      "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
+    },
+    "cordova-plugin-dialogs": {
       "PACKAGE_NAME": "$(PRODUCT_BUNDLE_IDENTIFIER)"
     }
   },
@@ -360,6 +367,14 @@
       "clobbers": [
         "window.WifiWizard2"
       ]
+    },
+    {
+      "id": "cordova-plugin-dialogs.notification",
+      "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+      "pluginId": "cordova-plugin-dialogs",
+      "merges": [
+        "navigator.notification"
+      ]
     }
   ],
   "plugin_metadata": {
@@ -379,6 +394,7 @@
     "cordova-sqlite-storage": "4.0.0",
     "es6-promise-plugin": "4.1.0",
     "phonegap-plugin-barcodescanner": "8.1.0",
-    "wifiwizard2": "3.1.1"
+    "wifiwizard2": "3.1.1",
+    "cordova-plugin-dialogs": "2.0.2"
   }
 }

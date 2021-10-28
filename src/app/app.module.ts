@@ -15,10 +15,12 @@ import { WifiWizard2 } from '@ionic-native/wifi-wizard-2/ngx';
 import { AddbottlemodalPage } from './addbottlemodal/addbottlemodal.page';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { RackcontentPage } from './rackcontent/rackcontent.page';
+import { GlobalService } from './api/global.service';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 
 @NgModule({
-  declarations: [AppComponent,RackcontentPage,AddbottlemodalPage],
-  entryComponents: [RackcontentPage,AddbottlemodalPage],
+  declarations: [AppComponent,RackcontentPage],
+  entryComponents: [RackcontentPage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -34,6 +36,8 @@ import { RackcontentPage } from './rackcontent/rackcontent.page';
     Hotspot,
     WifiWizard2,
     Geolocation,
+    GlobalService,
+    Diagnostic,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

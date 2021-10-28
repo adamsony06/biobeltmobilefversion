@@ -351,7 +351,7 @@ export class WriteMultipleRegistersRequest extends ModbusRequest {
 export class ModbusRequestManager extends StateMachine {
   queue = [];
   currentRequest;
-  socketId = 0;
+  socketId = 1;
   receiveBuffer = [];
 
   verbose: boolean = false;
@@ -359,7 +359,7 @@ export class ModbusRequestManager extends StateMachine {
   constructor(verbose: boolean = false) {
     super('ready');
     this.currentRequest = null;
-    this.socketId = null;
+    this.socketId = 1;
 
     this.verbose = verbose;
 
@@ -418,6 +418,7 @@ export class ModbusRequestManager extends StateMachine {
   }
 
   send() {
+   
     if (this.queue.length === 0) {
       if (this.verbose) console.log('ModbusRequestManager', 'Nothing in Queue.');
       return;
@@ -431,10 +432,11 @@ export class ModbusRequestManager extends StateMachine {
         if (this.verbose) console.log('ModbusRequestManager', 'Timeout occured.');
         this.currentRequest.reject({ errCode: 'timeout' });
         this.fire('error', [{ errCode: 'timeout' }]);
-    }.bind(this), 5000);
+    }.bind(this), 10000);
     this.currentRequest.setTimeout(timeout_no);
     if (this.verbose) console.log('ModbusRequestManager', 'Sending packet...');
     window['chrome'].sockets.tcp.send(this.socketId, this.currentRequest.packet, function (sendInfo) {
+      
         if (sendInfo.resultCode < 0) {
             if (this.verbose) console.log('ModbusRequestManager', 'A error occured while sending packet.', sendInfo.resultCode);
             this.currentRequest.reject({ errCode: 'sendError' });
@@ -452,6 +454,7 @@ export class ModbusRequestManager extends StateMachine {
   }
 
   sendPacket(packet) {
+   
     if (this.verbose) console.log('ModbusRequestManager', 'Queing a new packet.');
     this.queue.push(packet);
 
@@ -484,7 +487,7 @@ export class ModbusRequestManager extends StateMachine {
 }
 
 export class ModbusClient extends StateMachine {
-  host: string = 'localhost';
+  host: string = '10.1.1.1';
   port: number = 502;
   id: number = 0;
   requestManager: ModbusRequestManager;
@@ -492,11 +495,11 @@ export class ModbusClient extends StateMachine {
   isReconnecting: boolean = false;
   socketId: number = 0;
 
-  timeout: number = 15000;
-  autoreconnect: boolean = false;
+  timeout: number = 32000;
+  autoreconnect: boolean = true;
   verbose: boolean = true;
   
-  constructor(timeout: number = 15000, autoreconnect: boolean = false, verbose: boolean = true) {
+  constructor(timeout: number = 32000, autoreconnect: boolean = true, verbose: boolean = true) {
     super('init');
     this.timeout = timeout;
     this.autoreconnect = autoreconnect;
@@ -555,6 +558,7 @@ export class ModbusClient extends StateMachine {
   }
 
   createSocket() {
+    return new Promise<void>(async (resolve, reject)=>{
     if (this.verbose) console.log('ModbusClient', 'Creating socket.');
 
     window['chrome'].sockets.tcp.onReceiveError.addListener(this.onReceiveError.bind(this));
@@ -565,7 +569,12 @@ export class ModbusClient extends StateMachine {
         this.requestManager.setSocketId(this.socketId);
         this.setState('offline');
         this.fire('ready');
+        this.setHost(this.host);
+        this.setPort(this.port);
+        this.connect();
+        resolve();
     }.bind(this));
+    })
   }
 
   createNewId() {
@@ -575,6 +584,7 @@ export class ModbusClient extends StateMachine {
 
   sendPacket(req) {
     // invalid states for sending packages
+    
     if (!this.inState('online')) return;
     this.requestManager.sendPacket(req);
   }
@@ -598,7 +608,7 @@ export class ModbusClient extends StateMachine {
 
   readHoldingRegisters(start, count) {
     var request = new ReadHoldingRegistersRequest(this.createNewId(), start, count);
-    
+   
     if (!this.inState('online')) {
       request.reject({ errCode: 'offline' });
       return request.getPromise();
@@ -650,7 +660,7 @@ export class ModbusClient extends StateMachine {
 
   writeMultipleRegisters(address, values) {
     var request = new WriteMultipleRegistersRequest(this.createNewId(), address, values);
-
+    
     if (!this.inState('online')) {
       request.reject({ errCode: 'offline' });
       return request.getPromise();
@@ -670,22 +680,27 @@ export class ModbusClient extends StateMachine {
   
       if (this.verbose) console.log('ModbusClient', 'Establishing connection.', this.socketId, this.host, this.port);
       
+      
       window['chrome'].sockets.tcp.connect(this.socketId, this.host, this.port, function (result) {
-        //38 error 0 successful
+        //38 error 0 successful Echec connection UPC 
+        //-104 not connected WiFi non connecté
+        //popup pour donner l'erreur à l'utilisateur 
+        //Retentative de connexion
+
         if (this.verbose) console.log('ModbusClient', 'Connect returned', arguments);
   
         if (result !== 0) {
-          if (this.verbose) console.log('ModbusClient', 'Connection failed.', result);
+          if (this.verbose) {console.log('ModbusClient', 'Connection failed.', result);localStorage.removeItem("isConnected");}
   
           this.fire('error', [{
             errCode: 'connectionError',
             result: result
           }]);
   
-          if (this.autoreconnect) {
+          //if (this.autoreconnect) {
             if (this.verbose) console.log('ModbusClient', 'Auto Reconnect enabled, trying to reconnect.');
             this.reconnect(5000);
-          }
+          //}
           return;
           
         }
@@ -726,7 +741,7 @@ export class ModbusClient extends StateMachine {
     this.fire('busy', null);
 
     if (this.verbose) console.log('ModbusClient', 'Disconnecting client.');
-
+    
     window['chrome'].sockets.tcp.disconnect(this.socketId, function () {
         if (this.verbose) console.log('ModbusClient', 'Client disconnected.');
         this.setState('offline');
@@ -739,6 +754,7 @@ export class ModbusClient extends StateMachine {
 
   close(cb = null) {
     this.disconnect(function () {
+      
         if (this.verbose) console.log('ModbusClient', 'Close socket.');
         window['chrome'].sockets.tcp.close(this.socketId, function () {
             if (this.verbose) console.log('ModbusClient', 'Client closed.');

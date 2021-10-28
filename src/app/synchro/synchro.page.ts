@@ -14,8 +14,7 @@ import * as d3 from "d3";
 import * as moment from 'moment';
 import { parse } from 'querystring';
 import { GlobalService } from '../api/global.service';
-//import { WifiWizard2 } from '@ionic-native/wifi-wizard-2';
-//import { Console } from 'console';
+import { Storage } from '@ionic/storage';
 
 declare var WifiWizard2: any;
 declare var google: { visualization: { arrayToDataTable: (arg0: (string | number)[][]) => any; BarChart: new (arg0: HTMLElement) => any; }; };
@@ -27,10 +26,11 @@ declare var google2: { visualization: { arrayToDataTable: (arg0: (string | numbe
   templateUrl: './synchro.page.html',
   styleUrls: ['./synchro.page.scss'],
 })
-export class SynchroPage implements OnInit { 
+export class SynchroPage { 
   upc: UPCModbus		
   upc3: UPCV3		
-  nbpiege:number;	    
+  nbpiege:number;	
+  colordif = "light";    
   programmes = []; 
   pStart = [];
   pEnd = [];
@@ -57,7 +57,9 @@ export class SynchroPage implements OnInit {
   pAubeStart = [];
   pAubeEnd = [];
   pCrepusculeStart = [];
-  pCrepusculeEnd = [];				 		
+  pCrepusculeEnd = [];
+  redBackground = false;	
+  display = false;			 		
 
 
   constructor(
@@ -67,10 +69,14 @@ export class SynchroPage implements OnInit {
     private router:Router,
     private ngZone : NgZone, private network : Network,
     private hotspot : Hotspot,private cg :ChangeDetectorRef,
-    private global : GlobalService
+    private global : GlobalService,
+    private cd : ChangeDetectorRef,
+    
+    private storage : Storage
+
   ) {
     
-        
+    this.global.checkMode()  
           
     
     
@@ -80,24 +86,42 @@ export class SynchroPage implements OnInit {
   time : String = "08:10"
   googleChartLibrary;
   
-  ngOnInit() {
-    /*if(this.platform.is("ios")){
-      this.platform.ready().then(()=>{
-        WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(async ()=>{
-          this.pageInit();
-        }).catch(error => {alert(JSON.stringify(error))})
-      })
-    }
-    
-    else if(this.platform.is("android")) {
-      this.hotspot.connectToWifi("BBAM","BioBeltService").then(async res=>{
-        this.pageInit();
-      }).catch(error => {alert(JSON.stringify(error))})
-    }*/
+  ionViewWillEnter() {
+    this.storage.set("connexionRequise","UPC").then(()=>{
+      /*affichage bouton suivant*/    
+      this.global.checkNextPage().then(res=>{
+        if(res == true){
+          this.display = true;
+        } 
         
-    this.pageInit();
+      }) 
+    })
+
+    this.pageInit();    
+  
+    
+    
   
    
+  }
+  onDiff() {
+    this.ngZone.run(()=>{
+      if(this.colordif == 'light'){
+        this.global.upcmodbus.client.setIntInHoldingRegister(40011,1,1).then(res=>{
+          this.global.upcmodbus.general.upcStatus = 7;
+          this.colordif = "primary";
+          this.cd.detectChanges();
+        })
+      } else {
+        this.global.upcmodbus.client.setIntInHoldingRegister(40011,1,0).then(res=>{
+          this.colordif = "light";
+          this.global.upcmodbus.general.upcStatus = 0;
+          this.cd.detectChanges();
+        })
+      }
+    })
+    
+    
   }
 
   async pageInit(){
@@ -105,159 +129,271 @@ export class SynchroPage implements OnInit {
     this.platform.ready().then(
       async readySource => {
         if (readySource == 'cordova') {
-          this.upc = new UPCModbus(state => {
-            this.ngZone.run(() => {
-              // Force refresh UI
+          this.global.onConnectWiFi().then(async res=>{
               
+              
+              //setTimeout(async ()=>{    
+                // 7 enable diff 0 disable 2 Adjust 
+                if(this.global.upcmodbus.general.upcStatus == 7) {
+                  this.colordif = "primary";
+                } else {
+                  this.colordif = "light";
+                }
+                //localStorage.setItem("upcname",this.global.upcmodbus.nameId);
+                //localStorage.setItem("currentssid",this.global.upcmodbus.communicationParameters.comGsmName);
+               /* await this.global.upcmodbus.client.getIntFromHoldingRegister(40011,1).then(res=>{
+                  if(res == 1){
+                    this.colordif = "primary";
+                  }
+                  else {
+                    this.colordif = "light";
+                  }
+                  this.redBackground = false;
+                  this.cd.detectChanges();
+                }).catch(err=>{
+                  //localStorage.removeItem("isConnected");
+                  this.redBackground = true;
+                  this.colordif = "danger";
+                  this.cd.detectChanges();
+                  
+                  //this.ngOnInit();
+                })*/
                 
-                //this.readDiffusionParameters();
-              
-            });
-          });
-          
-              await this.upc.client.connect();
-              this.global.ssid = "BBAM";
-              this.global.isBBAM = true;
-              setTimeout(async ()=>{    
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[0].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[0].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[0].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[0].intensity);
 
-                await this.upc.client.readHoldingRegisters(40068,100).then(res =>{                                         
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[1].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[1].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[1].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[1].intensity);
+
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[2].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[2].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[2].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[2].intensity);
+
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[3].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[3].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[3].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[3].intensity);
+
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[4].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[4].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[4].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[4].intensity);
+
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[5].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[5].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[5].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[5].intensity);
+
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[6].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[6].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[6].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[6].intensity);
+
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[7].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[7].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[7].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[7].intensity);
+
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[8].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[8].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[8].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[8].intensity);
+
+                this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[9].start));
+                this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Program[9].stop));
+                this.frequency2.push(this.frequencyOptions[this.convertDaysCode(this.global.upcmodbus.diffCo2Program[9].mode)]);
+                this.intensity.push(this.global.upcmodbus.diffCo2Program[9].intensity);
+
+                this.paDelay.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Sunrise.offset));
+                this.paDuration.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Sunrise.duration));
+                this.intensity.push(this.global.upcmodbus.diffCo2Sunrise.intensity);
+
+                if(this.paDelay[0]>=0){
+                  this.sign.push("+");
+                 
+                } else {
+                  this.sign.push("-");
+
+                }
+                this.currentDawnTime = this.global.upcmodbus.diffHourSunrise;
+                this.pAubeStart.push(this.secondsToHoursMinutes(this.currentDawnTime + this.global.upcmodbus.diffCo2Sunrise.offset));
+                this.pAubeEnd.push(this.secondsToHoursMinutes(this.currentDawnTime + this.global.upcmodbus.diffCo2Sunrise.offset + this.global.upcmodbus.diffCo2Sunrise.duration));  
+
+                this.pcDelay.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Sunset.offset));
+                this.pcDuration.push(this.secondsToHoursMinutes(this.global.upcmodbus.diffCo2Sunset.duration));
+                this.intensity.push(this.global.upcmodbus.diffCo2Sunset.intensity);
+
+                if(this.pcDelay[0]>=0) {
+                  this.sign.push("+");
+                } else {
+                  this.sign.push("-");
+                }
+                this.currentDuskTime = this.global.upcmodbus.diffHourSunset;    
+                this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.currentDuskTime + this.global.upcmodbus.diffCo2Sunset.offset));
+                this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.currentDuskTime + this.global.upcmodbus.diffCo2Sunset.offset + this.global.upcmodbus.diffCo2Sunset.duration));
+
+                this.drawChartjs();
+
+
+                setTimeout(()=>{
+                  this.finishRead = true;
+                },1000)
+                /*await this.global.upcmodbus.client.readHoldingRegisters(40068,100).then(res =>{                                         
 
                   //programme 1 
                   var tab=[res[4],res[5]];                      
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                                       
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                                       
                   var tab = [res[6],res[7]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                    
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                    
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[8])]);                      
                   var tab = [res[9]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
                  
 
                   //programme 2
                   tab=[res[10],res[11]];
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[12],res[13]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                  
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[14])]);                      
                   tab = [res[15]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme 3
                   tab=[res[16],res[17]];
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[18],res[19]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                  
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[20])]);
                   tab = [res[21]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme 4
                   tab=[res[22],res[23]];
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[24],res[25]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                   
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                   
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[26])]);
                   tab = [res[27]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme 5
                   tab=[res[28],res[29]];
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[30],res[31]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));              
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));              
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[32])]);
                   tab = [res[33]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme 6
                   tab=[res[34],res[35]];
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[36],res[37]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));          
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));          
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[38])]);
                   tab = [res[39]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme 7
                   tab=[res[40],res[41]];
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[42],res[43]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                 
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                 
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[44])]);
                   tab = [res[45]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme 8
                   tab=[res[46],res[47]];
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[48],res[49]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[50])]);
                   tab = [res[51]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme 9
                   tab=[res[52],res[53]];
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[54],res[55]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                   
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                   
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[56])]);
                   tab = [res[57]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme 10
                   tab=[res[58],res[59]];
-                  this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[60],res[61]];
-                  this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                      
+                  this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                      
                   this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[62])]);
                   tab = [res[63]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme aube
                   tab=[res[64],res[65]];
-                  this.paDelay.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+                  this.paDelay.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                  
                   tab = [res[66],res[67]];
-                  this.paDuration.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+                  this.paDuration.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                  
                   tab = [res[69]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
                   
                   //programme aube sign                      
-                  if (this.upc.client.registerToUint32([res[64],res[65]]) >= 0){
+                  if (this.global.upcmodbus.client.registerToUint32([res[64],res[65]]) >= 0){
                     this.sign.push("+");      
-                    this.currentDawnTime = this.upc.client.registerToUint32([res[0],res[1]]);                 
-                    this.pAubeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]])));
-                    this.pAubeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]]) + this.upc.client.registerToUint32([res[66],res[67]])));                    
+                    this.currentDawnTime = this.global.upcmodbus.client.registerToUint32([res[0],res[1]]);                 
+                    this.pAubeStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[0],res[1]]) + this.global.upcmodbus.client.registerToUint32([res[64],res[65]])));
+                    this.pAubeEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[0],res[1]]) + this.global.upcmodbus.client.registerToUint32([res[64],res[65]]) + this.global.upcmodbus.client.registerToUint32([res[66],res[67]])));                    
                   }
                   else {
                     this.sign.push("-");
-                    this.currentDawnTime = this.upc.client.registerToUint32([res[0],res[1]]);                      
-                    this.pAubeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]])));      
-                    this.pAubeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]]) + this.upc.client.registerToUint32([res[66],res[67]])))
+                    this.currentDawnTime = this.global.upcmodbus.client.registerToUint32([res[0],res[1]]);                      
+                    this.pAubeStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[0],res[1]]) + this.global.upcmodbus.client.registerToUint32([res[64],res[65]])));      
+                    this.pAubeEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[0],res[1]]) + this.global.upcmodbus.client.registerToUint32([res[64],res[65]]) + this.global.upcmodbus.client.registerToUint32([res[66],res[67]])))
                   }
 
                   //programme crepuscule
                   tab=[res[70],res[71]];
-                  this.pcDelay.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+                  this.pcDelay.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
                   tab = [res[72],res[73]];
-                  this.pcDuration.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                     
+                  this.pcDuration.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                     
                   tab = [res[75]];
-                  this.intensity.push(this.upc.client.registerToUint32(tab));
+                  this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
                   //programme crepuscule sign
-                  if (this.upc.client.registerToUint32([res[70],res[71]]) >= 0){
+                  if (this.global.upcmodbus.client.registerToUint32([res[70],res[71]]) >= 0){
                     this.sign.push("+");                  
-                    this.currentDuskTime = this.upc.client.registerToUint32([res[2],res[3]]);    
-                    this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]])));
-                    this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]) + this.upc.client.registerToUint32([res[72],res[73]])))
+                    this.currentDuskTime = this.global.upcmodbus.client.registerToUint32([res[2],res[3]]);    
+                    this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[2],res[3]]) + this.global.upcmodbus.client.registerToUint32([res[70],res[71]])));
+                    this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[2],res[3]]) + this.global.upcmodbus.client.registerToUint32([res[70],res[71]]) + this.global.upcmodbus.client.registerToUint32([res[72],res[73]])))
                   }
                   else {
                     this.sign.push("-");
-                    this.currentDuskTime = this.upc.client.registerToUint32([res[2],res[3]]);    
-                    this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]])));
-                    this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]) + this.upc.client.registerToUint32([res[72],res[73]])))
+                    this.currentDuskTime = this.global.upcmodbus.client.registerToUint32([res[2],res[3]]);    
+                    this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[2],res[3]]) + this.global.upcmodbus.client.registerToUint32([res[70],res[71]])));
+                    this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[2],res[3]]) + this.global.upcmodbus.client.registerToUint32([res[70],res[71]]) + this.global.upcmodbus.client.registerToUint32([res[72],res[73]])))
                   }
-                  
-                  this.drawChartjs();
+                  /*this.global.interval = setInterval(()=>{
+                    this.global.upcmodbus.client.getIntFromHoldingRegister(40168,1).then(res=>{
+                        this.redBackground = false;
+                        this.cd.detectChanges();
+                    }).catch(err=>{
+                      this.redBackground = true;
+                      this.colordif = "danger";
+                      this.cd.detectChanges();
+                    })
+                    if(this.redBackground) {
+                      clearInterval(this.global.interval);
+                      this.ngOnInit();
+                    }
+                  },500)*/
+                 /* this.drawChartjs();
 
 
                   setTimeout(()=>{
@@ -265,13 +401,13 @@ export class SynchroPage implements OnInit {
                   },1000)
                   
                 }).catch(err=>{
-                  alert("Veuillez vous connecter à BBAM !");
-                  this.global.ssid = "ADMIN";
-                  this.global.isBBAM = false;
                   
-                })
+                  
+                })*/
                 
-              },1000)
+              //},1000)
+          })
+          
               
 
             
@@ -292,16 +428,19 @@ this.upcv3Service.login(user).subscribe(res=>{
 })
 
 this.fillTab()
-//this.drawChartjs()
 }
+doRefresh(event) {
+  this.ionViewWillEnter();
+  event.target.complete();
+
+}
+
 
   fillTab(){
     for (var i = 0; i<10;i++){
       this.programmes.push(["00:00","00:00"]);
     }  
-    /*for (var i = 0; i<10;i++){
-      this.intensity.push("Désactivée");
-    }*/  
+    
     for (var i = 0; i<10;i++){
       this.frequency.push("Tous les jours");
     } 
@@ -424,141 +563,141 @@ this.fillTab()
   
   getUPCparams(){
     setTimeout(async ()=>{   
-      await this.upc.client.readHoldingRegisters(40068,100).then(res =>{
+      await this.global.upcmodbus.client.readHoldingRegisters(40068,100).then(res =>{
 
         //programme 1 
         var tab=[res[4],res[5]];                      
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                                       
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                                       
         var tab = [res[6],res[7]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                    
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                    
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[8])]);                      
         var tab = [res[9]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
        
 
         //programme 2
         tab=[res[10],res[11]];
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[12],res[13]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                  
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[14])]);                      
         tab = [res[15]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme 3
         tab=[res[16],res[17]];
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[18],res[19]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                  
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[20])]);
         tab = [res[21]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme 4
         tab=[res[22],res[23]];
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[24],res[25]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                   
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                   
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[26])]);
         tab = [res[27]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme 5
         tab=[res[28],res[29]];
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[30],res[31]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));              
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));              
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[32])]);
         tab = [res[33]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme 6
         tab=[res[34],res[35]];
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[36],res[37]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));          
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));          
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[38])]);
         tab = [res[39]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme 7
         tab=[res[40],res[41]];
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[42],res[43]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                 
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                 
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[44])]);
         tab = [res[45]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme 8
         tab=[res[46],res[47]];
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[48],res[49]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[50])]);
         tab = [res[51]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme 9
         tab=[res[52],res[53]];
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[54],res[55]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                   
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                   
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[56])]);
         tab = [res[57]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme 10
         tab=[res[58],res[59]];
-        this.pStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[60],res[61]];
-        this.pEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                      
+        this.pEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                      
         this.frequency2.push(this.frequencyOptions[this.convertDaysCode(res[62])]);
         tab = [res[63]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme aube
         tab=[res[64],res[65]];
-        this.paDelay.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));        
+        this.paDelay.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));        
         tab = [res[66],res[67]];
-        this.paDuration.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                  
+        this.paDuration.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                  
         tab = [res[69]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme aube sign                      
-        if (this.upc.client.registerToUint32([res[64],res[65]]) >= 0){
+        if (this.global.upcmodbus.client.registerToUint32([res[64],res[65]]) >= 0){
           this.sign.push("+");      
-          this.currentDawnTime = this.upc.client.registerToUint32([res[0],res[1]]);                 
-          this.pAubeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]])));
-          this.pAubeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[0],res[1]]) + this.upc.client.registerToUint32([res[64],res[65]]) + this.upc.client.registerToUint32([res[66],res[67]])));
+          this.currentDawnTime = this.global.upcmodbus.client.registerToUint32([res[0],res[1]]);                 
+          this.pAubeStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[0],res[1]]) + this.global.upcmodbus.client.registerToUint32([res[64],res[65]])));
+          this.pAubeEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[0],res[1]]) + this.global.upcmodbus.client.registerToUint32([res[64],res[65]]) + this.global.upcmodbus.client.registerToUint32([res[66],res[67]])));
         }
         else {
           this.sign.push("-");
-          this.currentDawnTime = this.upc.client.registerToUint32([res[0],res[1]]);             
+          this.currentDawnTime = this.global.upcmodbus.client.registerToUint32([res[0],res[1]]);             
           this.pAubeStart[0]=this.secondsToHoursMinutes(this.currentDawnTime + this.hoursMinutesToSeconds(this.paDelay[0]));
           this.pAubeEnd[0]=this.secondsToHoursMinutes(this.currentDawnTime + this.hoursMinutesToSeconds(this.paDelay[0]) + this.hoursMinutesToSeconds(this.paDuration[0]));
         }
 
         //programme crepuscule
         tab=[res[70],res[71]];
-        this.pcDelay.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));
+        this.pcDelay.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));
         tab = [res[72],res[73]];
-        this.pcDuration.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32(tab)));                     
+        this.pcDuration.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32(tab)));                     
         tab = [res[75]];
-        this.intensity.push(this.upc.client.registerToUint32(tab));
+        this.intensity.push(this.global.upcmodbus.client.registerToUint32(tab));
 
         //programme crepuscule sign
-        if (this.upc.client.registerToUint32([res[70],res[71]]) >= 0){
+        if (this.global.upcmodbus.client.registerToUint32([res[70],res[71]]) >= 0){
           this.sign.push("+");       
-          this.currentDuskTime = this.upc.client.registerToUint32([res[2],res[3]]);    
-          this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]])));
-          this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]) + this.upc.client.registerToUint32([res[72],res[73]])));
+          this.currentDuskTime = this.global.upcmodbus.client.registerToUint32([res[2],res[3]]);    
+          this.pCrepusculeStart.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[2],res[3]]) + this.global.upcmodbus.client.registerToUint32([res[70],res[71]])));
+          this.pCrepusculeEnd.push(this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[2],res[3]]) + this.global.upcmodbus.client.registerToUint32([res[70],res[71]]) + this.global.upcmodbus.client.registerToUint32([res[72],res[73]])));
         }
         else {
           this.sign.push("-");
-          this.currentDuskTime = this.upc.client.registerToUint32([res[2],res[3]]);    
-          this.pCrepusculeStart[0]=this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]));
-          this.pCrepusculeEnd[0]=this.secondsToHoursMinutes(this.upc.client.registerToUint32([res[2],res[3]]) + this.upc.client.registerToUint32([res[70],res[71]]) + this.upc.client.registerToUint32([res[72],res[73]]));
+          this.currentDuskTime = this.global.upcmodbus.client.registerToUint32([res[2],res[3]]);    
+          this.pCrepusculeStart[0]=this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[2],res[3]]) + this.global.upcmodbus.client.registerToUint32([res[70],res[71]]));
+          this.pCrepusculeEnd[0]=this.secondsToHoursMinutes(this.global.upcmodbus.client.registerToUint32([res[2],res[3]]) + this.global.upcmodbus.client.registerToUint32([res[70],res[71]]) + this.global.upcmodbus.client.registerToUint32([res[72],res[73]]));
         }
         
         this.drawChartjs();
@@ -569,9 +708,7 @@ this.fillTab()
         },1000)
         
       }).catch(err=>{
-        alert("Veuillez vous connecter à BBAM !");
-        this.global.ssid = "ADMIN";
-        this.global.isBBAM = false;
+        
         
       })
        
@@ -585,24 +722,24 @@ this.fillTab()
         switch(i){
           case 0:         
             //Program 1            
-            await this.upc.client.setIntInHoldingRegister(40072,2,this.hoursMinutesToSeconds(this.pStart[0])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40072,2,this.hoursMinutesToSeconds(this.pStart[0])).then(data=>{ //40072 correspond à starttime 1, sa taille est de 2, exprimé en secondes 
+                this.global.upcmodbus.diffCo2Program[0].start = this.hoursMinutesToSeconds(this.pStart[0]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40074,2,this.hoursMinutesToSeconds(this.pEnd[0])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40074,2,this.hoursMinutesToSeconds(this.pEnd[0])).then(data=>{//40074 correspond à end time 1, sa taille est de 2, exprimé en secondes 
+                this.global.upcmodbus.diffCo2Program[0].stop = this.hoursMinutesToSeconds(this.pEnd[0]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40076,1,this.reverseConvertDaysCode(this.frequency2[0])).then(data=>{//daycode 1, taille 1
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40076,1,this.reverseConvertDaysCode(this.frequency2[0])).then(data=>{//daycode 1, taille 1
+              this.global.upcmodbus.diffCo2Program[0].mode = this.reverseConvertDaysCode(this.frequency2[0]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40077,1,this.intensity[0]).then(data=>{//intensité premier programme, taille 1
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40077,1,this.intensity[0]).then(data=>{//intensité premier programme, taille 1
+              this.global.upcmodbus.diffCo2Program[0].intensity = this.intensity[0];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -610,24 +747,24 @@ this.fillTab()
   
           case 1:
                 //Program 2
-            await this.upc.client.setIntInHoldingRegister(40078,2,this.hoursMinutesToSeconds(this.pStart[1])).then(data=>{  
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40078,2,this.hoursMinutesToSeconds(this.pStart[1])).then(data=>{  
+              this.global.upcmodbus.diffCo2Program[1].start = this.hoursMinutesToSeconds(this.pStart[1]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40080,2,this.hoursMinutesToSeconds(this.pEnd[1])).then(data=>{
-            
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40080,2,this.hoursMinutesToSeconds(this.pEnd[1])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[1].stop = this.hoursMinutesToSeconds(this.pEnd[1]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });;
-            await this.upc.client.setIntInHoldingRegister(40082,1,this.reverseConvertDaysCode(this.frequency2[1])).then(data=>{
-            
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40082,1,this.reverseConvertDaysCode(this.frequency2[1])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[1].mode = this.reverseConvertDaysCode(this.frequency2[1])
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40083,1,this.intensity[1]).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40083,1,this.intensity[1]).then(data=>{
+              this.global.upcmodbus.diffCo2Program[1].intensity = this.intensity[1];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -635,24 +772,24 @@ this.fillTab()
   
           case 2: 
               //Program 3
-            await this.upc.client.setIntInHoldingRegister(40084,2,this.hoursMinutesToSeconds(this.pStart[2])).then(data=>{ 
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40084,2,this.hoursMinutesToSeconds(this.pStart[2])).then(data=>{ 
+              this.global.upcmodbus.diffCo2Program[2].start = this.hoursMinutesToSeconds(this.pStart[2]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40086,2,this.hoursMinutesToSeconds(this.pEnd[2])).then(data=>{
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40086,2,this.hoursMinutesToSeconds(this.pEnd[2])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[2].stop = this.hoursMinutesToSeconds(this.pEnd[2]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40088,1,this.reverseConvertDaysCode(this.frequency2[2])).then(data=>{
-           
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40088,1,this.reverseConvertDaysCode(this.frequency2[2])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[2].mode = this.reverseConvertDaysCode(this.frequency2[2]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40089,1,this.intensity[2]).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40089,1,this.intensity[2]).then(data=>{
+              this.global.upcmodbus.diffCo2Program[2].intensity = this.intensity[2];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -660,24 +797,24 @@ this.fillTab()
   
           case 3:
                 //Program 4
-            await this.upc.client.setIntInHoldingRegister(40090,2,this.hoursMinutesToSeconds(this.pStart[3])).then(data=>{ 
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40090,2,this.hoursMinutesToSeconds(this.pStart[3])).then(data=>{ 
+                this.global.upcmodbus.diffCo2Program[3].start = this.hoursMinutesToSeconds(this.pStart[3]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40092,2,this.hoursMinutesToSeconds(this.pEnd[3])).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40092,2,this.hoursMinutesToSeconds(this.pEnd[3])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[3].stop = this.hoursMinutesToSeconds(this.pEnd[3]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40094,1,this.reverseConvertDaysCode(this.frequency2[3])).then(data=>{
-     
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40094,1,this.reverseConvertDaysCode(this.frequency2[3])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[3].mode = this.reverseConvertDaysCode(this.frequency2[3]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40095,1,this.intensity[3]).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40095,1,this.intensity[3]).then(data=>{
+              this.global.upcmodbus.diffCo2Program[3].intensity = this.intensity[3];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -685,24 +822,24 @@ this.fillTab()
   
           case 4:
             //Program 5
-            await this.upc.client.setIntInHoldingRegister(40096,2,this.hoursMinutesToSeconds(this.pStart[4])).then(data=>{  
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40096,2,this.hoursMinutesToSeconds(this.pStart[4])).then(data=>{  
+              this.global.upcmodbus.diffCo2Program[4].start = this.hoursMinutesToSeconds(this.pStart[4]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
   
-            await this.upc.client.setIntInHoldingRegister(40098,2,this.hoursMinutesToSeconds(this.pEnd[4])).then(data=>{ 
-           
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40098,2,this.hoursMinutesToSeconds(this.pEnd[4])).then(data=>{ 
+              this.global.upcmodbus.diffCo2Program[4].stop = this.hoursMinutesToSeconds(this.pEnd[4]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40100,1,this.reverseConvertDaysCode(this.frequency2[4])).then(data=>{
-           
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40100,1,this.reverseConvertDaysCode(this.frequency2[4])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[4].mode =this.reverseConvertDaysCode(this.frequency2[4]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40101,1,this.intensity[4]).then(data=>{
-            
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40101,1,this.intensity[4]).then(data=>{
+              this.global.upcmodbus.diffCo2Program[4] = this.intensity[4];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -710,24 +847,24 @@ this.fillTab()
   
           case 5:
             //Program 6
-            await this.upc.client.setIntInHoldingRegister(40102,2,this.hoursMinutesToSeconds(this.pStart[5])).then(data=>{ 
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40102,2,this.hoursMinutesToSeconds(this.pStart[5])).then(data=>{ 
+              this.global.upcmodbus.diffCo2Program[5].start = this.hoursMinutesToSeconds(this.pStart[5]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40104,2,this.hoursMinutesToSeconds(this.pEnd[5])).then(data=>{
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40104,2,this.hoursMinutesToSeconds(this.pEnd[5])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[5].stop = this.hoursMinutesToSeconds(this.pEnd[5]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40106,1,this.reverseConvertDaysCode(this.frequency2[5])).then(data=>{
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40106,1,this.reverseConvertDaysCode(this.frequency2[5])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[5].mode = this.reverseConvertDaysCode(this.frequency2[5]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40107,1,this.intensity[5]).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40107,1,this.intensity[5]).then(data=>{
+              this.global.upcmodbus.diffCo2Program[5].intensity = this.intensity[5];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -735,24 +872,24 @@ this.fillTab()
   
           case 6:
             //Program 7
-            await this.upc.client.setIntInHoldingRegister(40108,2,this.hoursMinutesToSeconds(this.pStart[6])).then(data=>{ 
-     
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40108,2,this.hoursMinutesToSeconds(this.pStart[6])).then(data=>{ 
+              this.global.upcmodbus.diffCo2Program[6].start = this.hoursMinutesToSeconds(this.pStart[6]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
   
-            await this.upc.client.setIntInHoldingRegister(40110,2,this.hoursMinutesToSeconds(this.pEnd[6])).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40110,2,this.hoursMinutesToSeconds(this.pEnd[6])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[6].stop = this.hoursMinutesToSeconds(this.pEnd[6]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40112,1,this.reverseConvertDaysCode(this.frequency2[6])).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40112,1,this.reverseConvertDaysCode(this.frequency2[6])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[6].mode = this.reverseConvertDaysCode(this.frequency2[6]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40113,1,this.intensity[6]).then(data=>{
-         
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40113,1,this.intensity[6]).then(data=>{
+              this.global.upcmodbus.diffCo2Program[6].intensity = this.intensity[6];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -760,24 +897,24 @@ this.fillTab()
   
           case 7:          
             //Program 8
-            await this.upc.client.setIntInHoldingRegister(40114,2,this.hoursMinutesToSeconds(this.pStart[7])).then(data=>{ 
-         
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40114,2,this.hoursMinutesToSeconds(this.pStart[7])).then(data=>{ 
+              this.global.upcmodbus.diffCo2Program[7].start = this.hoursMinutesToSeconds(this.pStart[7]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40116,2,this.hoursMinutesToSeconds(this.pEnd[7])).then(data=>{
-            
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40116,2,this.hoursMinutesToSeconds(this.pEnd[7])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[7].stop = this.hoursMinutesToSeconds(this.pEnd[7]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40118,1,this.reverseConvertDaysCode(this.frequency2[7])).then(data=>{
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40118,1,this.reverseConvertDaysCode(this.frequency2[7])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[7].mode = this.reverseConvertDaysCode(this.frequency2[7]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40119,1,this.intensity[7]).then(data=>{
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40119,1,this.intensity[7]).then(data=>{
+              this.global.upcmodbus.diffCo2Program[7].intensity = this.intensity[7];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -785,24 +922,24 @@ this.fillTab()
   
           case 8:
                 //Program 9
-            await this.upc.client.setIntInHoldingRegister(40120,2,this.hoursMinutesToSeconds(this.pStart[8])).then(data=>{ 
-   
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40120,2,this.hoursMinutesToSeconds(this.pStart[8])).then(data=>{ 
+              this.global.upcmodbus.diffCo2Program[8].start = this.hoursMinutesToSeconds(this.pStart[8]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40122,2,this.hoursMinutesToSeconds(this.pEnd[8])).then(data=>{ 
-            
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40122,2,this.hoursMinutesToSeconds(this.pEnd[8])).then(data=>{ 
+              this.global.upcmodbus.diffCo2Program[8].stop = this.hoursMinutesToSeconds(this.pEnd[8]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40124,1,this.reverseConvertDaysCode(this.frequency2[8])).then(data=>{
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40124,1,this.reverseConvertDaysCode(this.frequency2[8])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[8].mode = this.reverseConvertDaysCode(this.frequency2[8]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40125,1,this.intensity[8]).then(data=>{
-             
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40125,1,this.intensity[8]).then(data=>{
+              this.global.upcmodbus.diffCo2Program[8].intensity = this.intensity[8];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -810,24 +947,24 @@ this.fillTab()
   
           case 9:
             //Program 10
-            await this.upc.client.setIntInHoldingRegister(40126,2,this.hoursMinutesToSeconds(this.pStart[9])).then(data=>{ 
-           
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40126,2,this.hoursMinutesToSeconds(this.pStart[9])).then(data=>{ 
+              this.global.upcmodbus.diffCo2Program[9].start = this.hoursMinutesToSeconds(this.pStart[9]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40128,2,this.hoursMinutesToSeconds(this.pEnd[9])).then(data=>{
-            
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40128,2,this.hoursMinutesToSeconds(this.pEnd[9])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[9].stop = this.hoursMinutesToSeconds(this.pEnd[9]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40130,1,this.reverseConvertDaysCode(this.frequency2[9])).then(data=>{
-           
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40130,1,this.reverseConvertDaysCode(this.frequency2[9])).then(data=>{
+              this.global.upcmodbus.diffCo2Program[9].mode = this.reverseConvertDaysCode(this.frequency2[9]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
-            await this.upc.client.setIntInHoldingRegister(40131,1,this.intensity[9]).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40131,1,this.intensity[9]).then(data=>{
+                this.global.upcmodbus.diffCo2Program[9].intensity = this.intensity[9];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -836,8 +973,8 @@ this.fillTab()
           case 10:
             //Programme aube
             if (this.sign[0] == "+"){
-              await this.upc.client.setIntInHoldingRegister(40132,2,this.hoursMinutesToSeconds(this.paDelay[0])).then(data=>{ 
-                            
+              await this.global.upcmodbus.client.setIntInHoldingRegister(40132,2,this.hoursMinutesToSeconds(this.paDelay[0])).then(data=>{ 
+                   this.global.upcmodbus.diffCo2Sunrise.offset =  this.hoursMinutesToSeconds(this.paDelay[0]);      
               }).catch(err=>{
                alert(JSON.stringify(err));
               });
@@ -847,22 +984,22 @@ this.fillTab()
                           
             }
             else{              
-              await this.upc.client.setIntInHoldingRegister(40132,2,this.positiveToNegative(this.hoursMinutesToSeconds(this.paDelay[0]))).then(data=>{ 
-           
+              await this.global.upcmodbus.client.setIntInHoldingRegister(40132,2,this.positiveToNegative(this.hoursMinutesToSeconds(this.paDelay[0]))).then(data=>{ 
+                this.global.upcmodbus.diffCo2Sunrise.offset = this.positiveToNegative(this.hoursMinutesToSeconds(this.paDelay[0]));
               }).catch(err=>{
                alert(JSON.stringify(err));
               });
               this.pAubeStart[0]=this.secondsToHoursMinutes(this.currentDawnTime - this.hoursMinutesToSeconds(this.paDelay[0]));
               this.pAubeEnd[0]=this.secondsToHoursMinutes(this.currentDawnTime - this.hoursMinutesToSeconds(this.paDelay[0]) + this.hoursMinutesToSeconds(this.paDuration[0]));
             }
-            await this.upc.client.setIntInHoldingRegister(40134,2,this.hoursMinutesToSeconds(this.paDuration[0])).then(data=>{
-            
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40134,2,this.hoursMinutesToSeconds(this.paDuration[0])).then(data=>{
+              this.global.upcmodbus.diffCo2Sunrise.duration = this.hoursMinutesToSeconds(this.paDuration[0]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40137,1,this.intensity[10]).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40137,1,this.intensity[10]).then(data=>{
+              this.global.upcmodbus.diffCo2Sunrise.intensity = this.intensity[10];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -871,8 +1008,8 @@ this.fillTab()
           case 11:
             //Programme crépuscule
             if (this.sign[1] == "+"){
-              await this.upc.client.setIntInHoldingRegister(40138,2,this.hoursMinutesToSeconds(this.pcDelay[0])).then(data=>{ 
-                         
+              await this.global.upcmodbus.client.setIntInHoldingRegister(40138,2,this.hoursMinutesToSeconds(this.pcDelay[0])).then(data=>{ 
+                this.global.upcmodbus.diffCo2Sunset.offset = this.hoursMinutesToSeconds(this.pcDelay[0]);        
               }).catch(err=>{
                 alert(JSON.stringify(err));
               });
@@ -881,8 +1018,8 @@ this.fillTab()
               this.pCrepusculeEnd[0]=this.secondsToHoursMinutes(this.currentDuskTime + this.hoursMinutesToSeconds(this.pcDelay[0]) + this.hoursMinutesToSeconds(this.pcDuration[0]));
             }
             else{
-              await this.upc.client.setIntInHoldingRegister(40138,2,this.positiveToNegative(this.hoursMinutesToSeconds(this.pcDelay[0]))).then(data=>{ 
-           
+              await this.global.upcmodbus.client.setIntInHoldingRegister(40138,2,this.positiveToNegative(this.hoursMinutesToSeconds(this.pcDelay[0]))).then(data=>{ 
+                this.global.upcmodbus.diffCo2Sunset.offset = this.positiveToNegative(this.hoursMinutesToSeconds(this.pcDelay[0]));
               }).catch(err=>{
                 alert(JSON.stringify(err));
               });
@@ -891,14 +1028,14 @@ this.fillTab()
               this.pCrepusculeEnd[0]=this.secondsToHoursMinutes(this.currentDuskTime - this.hoursMinutesToSeconds(this.pcDelay[0]) + this.hoursMinutesToSeconds(this.pcDuration[0]));
             }
             
-            await this.upc.client.setIntInHoldingRegister(40140,2,this.hoursMinutesToSeconds(this.pcDuration[0])).then(data=>{
-            
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40140,2,this.hoursMinutesToSeconds(this.pcDuration[0])).then(data=>{
+              this.global.upcmodbus.diffCo2Sunset.duration = this.hoursMinutesToSeconds(this.pcDuration[0]);
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
             
-            await this.upc.client.setIntInHoldingRegister(40143,1,this.intensity[11]).then(data=>{
-              
+            await this.global.upcmodbus.client.setIntInHoldingRegister(40143,1,this.intensity[11]).then(data=>{
+              this.global.upcmodbus.diffCo2Sunset.intensity = this.intensity[11];
             }).catch(err=>{
               alert(JSON.stringify(err));
             });
@@ -907,7 +1044,7 @@ this.fillTab()
            
             
         }    
-        this.getUPCparams();
+        this.ionViewWillEnter();
     
        }
       
@@ -1056,5 +1193,13 @@ this.fillTab()
         }
     });   
     }
+    goToNextPage(){ 
+      clearInterval(this.global.interval); 
+   
+      this.storage.get("nexturl").then(res=>{  
+        this.router.navigate([res]);
+      })  
+    }
+
 
 }

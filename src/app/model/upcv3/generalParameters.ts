@@ -5,7 +5,7 @@ export class GeneralParameters {
 	upcMode: number = 0;
 	upcStatus: number = 0;
 
-	upcClock: number = 0;
+	upcClock: string;
 	upcTimeZone: number = 0;
 
 	upcLanguage: number = 0;

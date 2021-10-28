@@ -45,6 +45,8 @@
 		EA9E5F5A29054D22B461AAF2 /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 15B2F7E9BB7F4B69A213CFC5 /* CDVViewController+SplashScreen.m */; };
 		F0D9781CAAF04D5B94B150FC /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E54ECDC84EB4590BE06C292 /* GCDAsyncSocket.m */; };
 		FF0C1C539ED04A9B93B2927D /* CDVIonicKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = C3943740A0B747E281809FF3 /* CDVIonicKeyboard.m */; };
+		1F9521F252A94D8FB83B1643 /* CDVNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 023CFC47757E4445A50DFCF1 /* CDVNotification.m */; };
+		E6CE65E75B994B45AA3A1DE6 /* CDVNotification.bundle in Resources */ = {isa = PBXBuildFile; fileRef = FFD8FE054BB14A02A8375177 /* CDVNotification.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +143,9 @@
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = biobeltMobile/config.xml; sourceTree = "<group>"; };
 		FB722DEDA8E74AC0B40DFC72 /* CDVViewController+SplashScreen.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = "CDVViewController+SplashScreen.h"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.h"; sourceTree = "<group>"; };
 		FCBBF17FDA354806B4D2DD1A /* IONAssetHandler.h */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.c.h; name = IONAssetHandler.h; path = "cordova-plugin-ionic-webview/IONAssetHandler.h"; sourceTree = "<group>"; };
+		023CFC47757E4445A50DFCF1 /* CDVNotification.m */ = {isa = PBXFileReference; name = "CDVNotification.m"; path = "cordova-plugin-dialogs/CDVNotification.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		1FE17B85C3DF420F8567A02A /* CDVNotification.h */ = {isa = PBXFileReference; name = "CDVNotification.h"; path = "cordova-plugin-dialogs/CDVNotification.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		FFD8FE054BB14A02A8375177 /* CDVNotification.bundle */ = {isa = PBXFileReference; name = "CDVNotification.bundle"; path = "CDVNotification.bundle"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.plug-in; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -222,6 +227,7 @@
 				6AFF5BF81D6E424B00AB3073 /* CDVLaunchScreen.storyboard */,
 				069A08AD6EDA4341AD98E1BC /* scannerOverlay.xib */,
 				1A3151E99BCC4199BB29663E /* CDVBarcodeScanner.bundle */,
+				FFD8FE054BB14A02A8375177 /* CDVNotification.bundle */,
 			);
 			name = Resources;
 			path = biobeltMobile/Resources;
@@ -303,6 +309,8 @@
 				8065E11FD60B4AB0AA6288D2 /* CDVBarcodeScanner.mm */,
 				7355828DFBC1467990C2AACC /* WifiWizard2.m */,
 				595AC5D320784BB482184710 /* WifiWizard2.h */,
+				023CFC47757E4445A50DFCF1 /* CDVNotification.m */,
+				1FE17B85C3DF420F8567A02A /* CDVNotification.h */,
 			);
 			name = Plugins;
 			path = biobeltMobile/Plugins;
@@ -404,6 +412,7 @@
 				6AFF5BF91D6E424B00AB3073 /* CDVLaunchScreen.storyboard in Resources */,
 				D3FC767ECA3D4909B054CB2C /* scannerOverlay.xib in Resources */,
 				61CE433B13004369B36C60B3 /* CDVBarcodeScanner.bundle in Resources */,
+				E6CE65E75B994B45AA3A1DE6 /* CDVNotification.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,6 +464,7 @@
 				D871B04F17E34B36B3293F24 /* sqlite3.c in Sources */,
 				607EE0EB3188430B8CD5A1DF /* CDVBarcodeScanner.mm in Sources */,
 				9B544BB865F44E80BB65B82A /* WifiWizard2.m in Sources */,
+				1F9521F252A94D8FB83B1643 /* CDVNotification.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,6 @@
      <ion-buttons slot="end" *ngIf="global.isBBAM">
       <ion-button fill="clear"> <ion-icon name="wifi" color="light"></ion-icon>{{global.ssid}}</ion-button> 
      </ion-buttons>
-     <ion-title>Accueil</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -19,13 +18,23 @@
         <ion-col size="12" text-center style="padding-top: 5%;"><h3>Accueil</h3></ion-col>
         <ion-col size="12">
           <fieldset>
-            <legend>Type d'opération</legend> 
-          
-           <ion-select  [(ngModel)]="operationType">
-              <ion-select-option class="home-wrapper" *ngFor="let operationTypeOption of operationTypeOptions" [value]="operationTypeOption">
-                {{operationTypeOption}}
-              </ion-select-option>
-            </ion-select>
+            <legend>Type d'opération</legend>           
+            <ion-button class="ion-text-wrap" color="primary" size="block" style="height: 7vh;" (click)="goToBottles()">
+              
+                Mouvement de bouteilles dans l'entrepôt
+              
+            </ion-button>
+            <ion-button color="primary" size="block" (click)="goToInterventionCeinture();" style="margin-top: 2%;">
+              <ion-label class="ion-text-wrap">
+                Intervention sur une ceinture
+              </ion-label>
+            </ion-button>
+
+            <ion-button color="primary" size="block" (click)="testMode($event);" style="margin-top: 2%;">
+              <ion-label class="ion-text-wrap">
+                Mode Test
+              </ion-label>
+            </ion-button>
           </fieldset>
         </ion-col>
       
@@ -37,9 +46,4 @@
   </ion-grid>
  
 </ion-content>
-<ion-footer>
-  
-  <ion-button color="primary" size="block" (click)="goTo(operationType);">Suivant</ion-button>
-
-</ion-footer>
 

@@ -25,6 +25,15 @@ export class ReservesParameters {
 	co2Res2StartVol: number = 0;
 	co2Res2AuxVol: number = 0;
 
+	co2Res1Bottle : number = 0;
+	co2Res2Bottle : number = 0;
+
+	co2Res1FillNew : number = 0;
+	co2Res2FillNew : number = 0;
+
+	bottlesB1 : string[] = [];
+	bottlesB2 : string[] = [];
+
 	co2ResLow: number = 0;
 
 	static loadFromJSON(json): ReservesParameters {

@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar>\n    <ion-title>check</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <div class=\"col-12\">\n    <div class=\"card bg-light mb-2\">\n      <div class=\"card-body\">\n        <h5 class=\"card-title\">Table des pressions</h5>\n        <table class=\"table table-borderless table-sm text-center mb-0\">\n          <thead>\n            <tr>\n              <th>Intensité</th>\n              <th>Entrée B1 [bar]</th>\n              <th>Entrée B2 [bar]</th>\n              <th>Sortie [bar]</th>\n              <th>Sortie réf. [bar]</th>\n            </tr>\n          </thead>\n          <tbody>\n            <tr *ngFor=\"let c of co2PresOutRef;let i = index;\">\n\n            </tr>\n          </tbody>\n        </table>\n      </div>\n    </div>\n  </div>\n</ion-content>\n"
+module.exports = "<ion-header>\r\n  <ion-toolbar>\r\n    <ion-title>check</ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n  <ion-refresher slot=\"fixed\" id=\"refresher\" (ionRefresh)=\"doRefresh($event)\">\r\n    <ion-refresher-content></ion-refresher-content>\r\n  </ion-refresher>\r\n  <h3 style=\"text-align: center;\">Mesure des pressions de sortie </h3>\r\n  <ion-refresher slot=\"fixed\" id=\"refresher\" (ionRefresh)=\"doRefresh($event)\">\r\n    <ion-refresher-content></ion-refresher-content>\r\n  </ion-refresher>\r\n  <ion-grid style=\"padding-top: 5%;\">\r\n    <ion-row style=\"text-align: center;\">\r\n      <ion-col size=\"12\"><ion-button shape=\"round\" size=\"large\" [color]=\"colordif\" (click)=\"startstop();\">{{textdiff}}</ion-button></ion-col>\r\n    </ion-row>\r\n  </ion-grid>\r\n  <ion-grid>\r\n    <ion-row [ngClass]=\"{'bgred' : redBackground}\">\r\n      <ion-col>Intensité</ion-col>\r\n      <ion-col>PE-B1</ion-col>\r\n      <ion-col>PE-B2</ion-col>\r\n      <ion-col>PS</ion-col>\r\n      <ion-col>PS-Ref</ion-col>\r\n    </ion-row>\r\n    <ion-row *ngFor=\"let p of pres\" [ngClass]=\"{'bgred' : redBackground}\">\r\n      <ion-col *ngIf=\"!redBackground\">{{p.id}}</ion-col><ion-col *ngIf=\"redBackground\">-</ion-col>\r\n      <ion-col *ngIf=\"!redBackground\">{{p.peb1.toFixed(2)}}</ion-col><ion-col *ngIf=\"redBackground\">-</ion-col>\r\n      <ion-col *ngIf=\"!redBackground\">{{p.peb2.toFixed(2)}}</ion-col><ion-col *ngIf=\"redBackground\">-</ion-col>\r\n      <ion-col *ngIf=\"!redBackground\" >{{p.ps.toFixed(2)}}</ion-col><ion-col *ngIf=\"redBackground\">-</ion-col>\r\n      <ion-col *ngIf=\"!redBackground\">{{p.psref.toFixed(2)}}</ion-col><ion-col *ngIf=\"redBackground\">-</ion-col>\r\n    </ion-row>\r\n  </ion-grid>\r\n</ion-content>\r\n<ion-footer>\r\n  <ion-button *ngIf=\"display\" style='float: right' fill='clear' (click)='goToNextPage()'>Suivant<ion-icon name='arrow-forward'></ion-icon></ion-button>\r\n</ion-footer>\r\n\r\n"
 
 /***/ }),
 
@@ -114,10 +114,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic-native/hotspot/ngx */ "./node_modules/@ionic-native/hotspot/ngx/index.js");
-/* harmony import */ var _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../model/upcv3/upcmodbus */ "./src/app/model/upcv3/upcmodbus.ts");
-/* harmony import */ var _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/network/ngx */ "./node_modules/@ionic-native/network/ngx/index.js");
-/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _api_global_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/global.service */ "./src/app/api/global.service.ts");
+/* harmony import */ var _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic-native/network/ngx */ "./node_modules/@ionic-native/network/ngx/index.js");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _api_global_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../api/global.service */ "./src/app/api/global.service.ts");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm2015/ionic-storage.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+
 
 
 
@@ -126,7 +128,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let CheckPage = class CheckPage {
-    constructor(platform, loadingCTRL, global, ngZone, network, hotspot, cd) {
+    constructor(platform, loadingCTRL, global, ngZone, network, hotspot, cd, router, storage) {
         this.platform = platform;
         this.loadingCTRL = loadingCTRL;
         this.global = global;
@@ -134,128 +136,194 @@ let CheckPage = class CheckPage {
         this.network = network;
         this.hotspot = hotspot;
         this.cd = cd;
+        this.router = router;
+        this.storage = storage;
         this.co2PresOutRef = [];
         this.co2PresInp1 = [];
         this.cos2PresInp2 = [];
         this.co2PresOutSet = [];
+        this.textdiff = "Start";
+        this.colordif = "primary";
+        this.redBackground = false;
+        this.pres = [{
+                id: 1, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }, {
+                id: 2, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }, {
+                id: 3, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }, {
+                id: 4, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }, {
+                id: 5, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }, {
+                id: 6, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }, {
+                id: 7, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }, {
+                id: 8, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }, {
+                id: 9, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }, {
+                id: 10, peb1: 0, peb2: 0, ps: 0, psref: 0,
+            }];
+        this.display = false;
+        this.global.checkMode();
     }
-    ngOnInit() {
+    ngOnInit() { }
+    ionViewWillEnter() {
+        /*affichage bouton suivant*/
+        this.global.checkNextPage().then(res => {
+            if (res == true) {
+                this.display = true;
+            }
+        });
         this.platform.ready().then(() => {
-            if (this.platform.is("ios")) {
-                WifiWizard2.iOSConnectNetwork("BBAM", "BioBeltService").then((item) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                    var loadingCTRL = yield this.loadingCTRL.create({
-                        message: "Connection à l'UPC en cours...",
-                        duration: 10000
+            this.global.onConnectWiFi().then(res => {
+                this.global.upcmodbus.client.readHoldingRegisters(40271, 20).then(res => {
+                    for (var i = 0; i < this.pres.length; i++) {
+                        this.pres[i].psref = this.global.upcmodbus.client.registerToFloat([res[i], res[i + 1]]);
+                        this.redBackground = false;
+                        this.colordif = "primary";
+                        this.cd.detectChanges();
+                    }
+                }).catch(err => {
+                    this.redBackground = true;
+                    this.colordif = "danger";
+                    this.cd.detectChanges();
+                });
+                this.global.upcmodbus.client.readHoldingRegisters(40229, 20).then(res => {
+                    this.pres[0].peb1 = this.global.upcmodbus.client.registerToFloat([res[0], res[1]]);
+                    this.pres[1].peb1 = this.global.upcmodbus.client.registerToFloat([res[2], res[3]]);
+                    this.pres[2].peb1 = this.global.upcmodbus.client.registerToFloat([res[4], res[5]]);
+                    this.pres[3].peb1 = this.global.upcmodbus.client.registerToFloat([res[6], res[7]]);
+                    this.pres[4].peb1 = this.global.upcmodbus.client.registerToFloat([res[8], res[9]]);
+                    this.pres[5].peb1 = this.global.upcmodbus.client.registerToFloat([res[10], res[11]]);
+                    this.pres[6].peb1 = this.global.upcmodbus.client.registerToFloat([res[12], res[13]]);
+                    this.pres[7].peb1 = this.global.upcmodbus.client.registerToFloat([res[14], res[15]]);
+                    this.pres[8].peb1 = this.global.upcmodbus.client.registerToFloat([res[16], res[17]]);
+                    this.pres[9].peb1 = this.global.upcmodbus.client.registerToFloat([res[18], res[19]]);
+                    this.cd.detectChanges();
+                });
+                this.global.upcmodbus.client.readHoldingRegisters(40249, 20).then(res => {
+                    this.pres[0].peb2 = this.global.upcmodbus.client.registerToFloat([res[0], res[1]]);
+                    this.pres[1].peb2 = this.global.upcmodbus.client.registerToFloat([res[2], res[3]]);
+                    this.pres[2].peb2 = this.global.upcmodbus.client.registerToFloat([res[4], res[5]]);
+                    this.pres[3].peb2 = this.global.upcmodbus.client.registerToFloat([res[6], res[7]]);
+                    this.pres[4].peb2 = this.global.upcmodbus.client.registerToFloat([res[8], res[9]]);
+                    this.pres[5].peb2 = this.global.upcmodbus.client.registerToFloat([res[10], res[11]]);
+                    this.pres[6].peb2 = this.global.upcmodbus.client.registerToFloat([res[12], res[13]]);
+                    this.pres[7].peb2 = this.global.upcmodbus.client.registerToFloat([res[14], res[15]]);
+                    this.pres[8].peb2 = this.global.upcmodbus.client.registerToFloat([res[16], res[17]]);
+                    this.pres[9].peb2 = this.global.upcmodbus.client.registerToFloat([res[18], res[19]]);
+                    this.cd.detectChanges();
+                });
+                this.global.upcmodbus.client.readHoldingRegisters(40356, 20).then(res => {
+                    this.pres[0].ps = this.global.upcmodbus.client.registerToFloat([res[0], res[1]]);
+                    this.pres[1].ps = this.global.upcmodbus.client.registerToFloat([res[2], res[3]]);
+                    this.pres[2].ps = this.global.upcmodbus.client.registerToFloat([res[4], res[5]]);
+                    this.pres[3].ps = this.global.upcmodbus.client.registerToFloat([res[6], res[7]]);
+                    this.pres[4].ps = this.global.upcmodbus.client.registerToFloat([res[8], res[9]]);
+                    this.pres[5].ps = this.global.upcmodbus.client.registerToFloat([res[10], res[11]]);
+                    this.pres[6].ps = this.global.upcmodbus.client.registerToFloat([res[12], res[13]]);
+                    this.pres[7].ps = this.global.upcmodbus.client.registerToFloat([res[14], res[15]]);
+                    this.pres[8].ps = this.global.upcmodbus.client.registerToFloat([res[16], res[17]]);
+                    this.pres[9].ps = this.global.upcmodbus.client.registerToFloat([res[18], res[19]]);
+                    this.cd.detectChanges();
+                });
+                this.global.interval = setInterval(() => {
+                    this.global.upcmodbus.client.getIntFromHoldingRegister(40168, 1).then(res => {
+                        this.redBackground = false;
+                        this.cd.detectChanges();
+                    }).catch(err => {
+                        this.redBackground = true;
+                        this.colordif = "danger";
+                        this.cd.detectChanges();
                     });
-                    loadingCTRL.present();
-                    this.global.isBBAM = true;
-                    this.platform.ready().then((readySource) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                        if (readySource == 'cordova') {
-                            this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_3__["UPCModbus"](state => {
-                                this.ngZone.run(() => {
-                                    // Force refresh UI
-                                    //this.readDiffusionParameters();
-                                });
-                            });
-                            this.network.onConnect().subscribe((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                                if (this.network.type === this.network.Connection.WIFI) {
-                                    yield this.upc.client.connect();
-                                    setTimeout(() => {
-                                        this.ngZone.run(() => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                                            //Read parameters for check 40271 40291
-                                            for (var i = 40271; i < 40291; i += 2) {
-                                                this.upc.client.getFloatFromHoldingRegister(i).then(res => {
-                                                    this.co2PresOutRef.push(res);
-                                                });
-                                            }
-                                            this.cd.detectChanges();
-                                            // 40229 - 40249
-                                            for (var j = 40229; j < 40249; j += 2) {
-                                                this.upc.client.getFloatFromHoldingRegister(j).then(res => {
-                                                    this.co2PresInp1.push(res / 1000);
-                                                });
-                                            }
-                                            this.cd.detectChanges();
-                                            for (var k = 40249; k < 40269; k += 2) {
-                                                this.upc.client.getFloatFromHoldingRegister(k).then(res => {
-                                                    this.cos2PresInp2.push(res / 1000);
-                                                });
-                                            }
-                                            this.cd.detectChanges();
-                                            for (var l = 40356; l < 40376; l += 2) {
-                                                this.upc.client.getFloatFromHoldingRegister(l).then(res => {
-                                                    this.co2PresOutSet.push(res / 1000);
-                                                });
-                                            }
-                                            this.cd.detectChanges();
-                                        }));
-                                    }, 5000);
-                                }
-                            }));
-                        }
-                    }));
-                }));
-            }
-            else if (this.platform.is("android")) {
-                this.hotspot.connectToWifi("BBAM", "BioBeltService").then((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                    var loading = yield this.loadingCTRL.create({
-                        message: "Connection à l'UPC en cours...",
-                        duration: 10000
+                    if (this.redBackground) {
+                        clearInterval(this.global.interval);
+                        this.ngOnInit();
+                    }
+                }, 500);
+            });
+        });
+    }
+    doRefresh(event) {
+        this.ngOnInit();
+        event.target.complete();
+    }
+    startstop() {
+        var interval;
+        if (this.textdiff == "Start") {
+            this.global.upcmodbus.client.setIntInHoldingRegister(40011, 1, 3).then(res => {
+                this.textdiff = "Stop";
+                this.colordif = "danger";
+                interval = setInterval(() => {
+                    this.global.upcmodbus.client.readHoldingRegisters(40229, 20).then(res => {
+                        this.pres[0].peb1 = this.global.upcmodbus.client.registerToFloat([res[0], res[1]]);
+                        this.pres[1].peb1 = this.global.upcmodbus.client.registerToFloat([res[2], res[3]]);
+                        this.pres[2].peb1 = this.global.upcmodbus.client.registerToFloat([res[4], res[5]]);
+                        this.pres[3].peb1 = this.global.upcmodbus.client.registerToFloat([res[6], res[7]]);
+                        this.pres[4].peb1 = this.global.upcmodbus.client.registerToFloat([res[8], res[9]]);
+                        this.pres[5].peb1 = this.global.upcmodbus.client.registerToFloat([res[10], res[11]]);
+                        this.pres[6].peb1 = this.global.upcmodbus.client.registerToFloat([res[12], res[13]]);
+                        this.pres[7].peb1 = this.global.upcmodbus.client.registerToFloat([res[14], res[15]]);
+                        this.pres[8].peb1 = this.global.upcmodbus.client.registerToFloat([res[16], res[17]]);
+                        this.pres[9].peb1 = this.global.upcmodbus.client.registerToFloat([res[18], res[19]]);
+                        this.cd.detectChanges();
                     });
-                    loading.present();
-                    this.global.isBBAM = true;
-                    this.platform.ready().then((readySource) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                        if (readySource == 'cordova') {
-                            this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_3__["UPCModbus"](state => {
-                                this.ngZone.run(() => {
-                                    // Force refresh UI
-                                    //this.readDiffusionParameters();
-                                });
-                            });
-                        }
-                        yield this.upc.client.connect();
-                        setTimeout(() => {
-                            //Read parameters for check 40271 40291
-                            for (var i = 40271; i < 40291; i += 2) {
-                                this.upc.client.getFloatFromHoldingRegister(i).then(res => {
-                                    this.co2PresOutRef.push(res);
-                                });
-                            }
-                            this.cd.detectChanges();
-                            // 40229 - 40249
-                            for (var j = 40229; j < 40249; j += 2) {
-                                this.upc.client.getFloatFromHoldingRegister(j).then(res => {
-                                    this.co2PresInp1.push(res / 1000);
-                                });
-                            }
-                            this.cd.detectChanges();
-                            for (var k = 40249; k < 40269; k += 2) {
-                                this.upc.client.getFloatFromHoldingRegister(k).then(res => {
-                                    this.cos2PresInp2.push(res / 1000);
-                                });
-                            }
-                            this.cd.detectChanges();
-                            for (var l = 40356; l < 40376; l += 2) {
-                                this.upc.client.getFloatFromHoldingRegister(l).then(res => {
-                                    this.co2PresOutSet.push(res / 1000);
-                                });
-                            }
-                            this.cd.detectChanges();
-                        }, 5000);
-                    }));
-                }));
-            }
+                    this.global.upcmodbus.client.readHoldingRegisters(40249, 20).then(res => {
+                        this.pres[0].peb2 = this.global.upcmodbus.client.registerToFloat([res[0], res[1]]);
+                        this.pres[1].peb2 = this.global.upcmodbus.client.registerToFloat([res[2], res[3]]);
+                        this.pres[2].peb2 = this.global.upcmodbus.client.registerToFloat([res[4], res[5]]);
+                        this.pres[3].peb2 = this.global.upcmodbus.client.registerToFloat([res[6], res[7]]);
+                        this.pres[4].peb2 = this.global.upcmodbus.client.registerToFloat([res[8], res[9]]);
+                        this.pres[5].peb2 = this.global.upcmodbus.client.registerToFloat([res[10], res[11]]);
+                        this.pres[6].peb2 = this.global.upcmodbus.client.registerToFloat([res[12], res[13]]);
+                        this.pres[7].peb2 = this.global.upcmodbus.client.registerToFloat([res[14], res[15]]);
+                        this.pres[8].peb2 = this.global.upcmodbus.client.registerToFloat([res[16], res[17]]);
+                        this.pres[9].peb2 = this.global.upcmodbus.client.registerToFloat([res[18], res[19]]);
+                        this.cd.detectChanges();
+                    });
+                    this.global.upcmodbus.client.readHoldingRegisters(40356, 20).then(res => {
+                        this.pres[0].ps = this.global.upcmodbus.client.registerToFloat([res[0], res[1]]);
+                        this.pres[1].ps = this.global.upcmodbus.client.registerToFloat([res[2], res[3]]);
+                        this.pres[2].ps = this.global.upcmodbus.client.registerToFloat([res[4], res[5]]);
+                        this.pres[3].ps = this.global.upcmodbus.client.registerToFloat([res[6], res[7]]);
+                        this.pres[4].ps = this.global.upcmodbus.client.registerToFloat([res[8], res[9]]);
+                        this.pres[5].ps = this.global.upcmodbus.client.registerToFloat([res[10], res[11]]);
+                        this.pres[6].ps = this.global.upcmodbus.client.registerToFloat([res[12], res[13]]);
+                        this.pres[7].ps = this.global.upcmodbus.client.registerToFloat([res[14], res[15]]);
+                        this.pres[8].ps = this.global.upcmodbus.client.registerToFloat([res[16], res[17]]);
+                        this.pres[9].ps = this.global.upcmodbus.client.registerToFloat([res[18], res[19]]);
+                        this.cd.detectChanges();
+                    });
+                }, 500);
+            });
+        }
+        else {
+            this.global.upcmodbus.client.setIntInHoldingRegister(40011, 1, 0).then(res => {
+                this.textdiff = "Start";
+                this.colordif = "primary";
+                clearInterval(interval);
+            });
+        }
+    }
+    goToNextPage() {
+        this.storage.get("nexturl").then(res => {
+            this.router.navigate([res]);
         });
     }
 };
 CheckPage.ctorParameters = () => [
-    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["Platform"] },
-    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["LoadingController"] },
-    { type: _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["Platform"] },
+    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["LoadingController"] },
+    { type: _api_global_service__WEBPACK_IMPORTED_MODULE_5__["GlobalService"] },
     { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"] },
-    { type: _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_4__["Network"] },
+    { type: _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_3__["Network"] },
     { type: _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_2__["Hotspot"] },
-    { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"] }
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"] },
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"] },
+    { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_6__["Storage"] }
 ];
 CheckPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -263,13 +331,15 @@ CheckPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         template: __webpack_require__(/*! raw-loader!./check.page.html */ "./node_modules/raw-loader/index.js!./src/app/check/check.page.html"),
         styles: [__webpack_require__(/*! ./check.page.scss */ "./src/app/check/check.page.scss")]
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_5__["Platform"],
-        _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["LoadingController"],
-        _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"],
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_4__["Platform"],
+        _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["LoadingController"],
+        _api_global_service__WEBPACK_IMPORTED_MODULE_5__["GlobalService"],
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"],
-        _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_4__["Network"],
+        _ionic_native_network_ngx__WEBPACK_IMPORTED_MODULE_3__["Network"],
         _ionic_native_hotspot_ngx__WEBPACK_IMPORTED_MODULE_2__["Hotspot"],
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"]])
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"],
+        _angular_router__WEBPACK_IMPORTED_MODULE_7__["Router"],
+        _ionic_storage__WEBPACK_IMPORTED_MODULE_6__["Storage"]])
 ], CheckPage);
 
 

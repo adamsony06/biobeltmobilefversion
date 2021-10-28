@@ -15,10 +15,11 @@
 </ion-header>
 
 <ion-content>
+  <h3 style="text-align: center;">Réglages des détendeurs </h3>
     <ion-refresher slot="fixed" id="refresher" (ionRefresh)="doRefresh($event)">
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
-  <ion-grid>
+  <ion-grid style="padding-top: 5%;">
     <ion-row style="text-align: center;">
       <ion-col size="12"><ion-button shape="round" size="large" [color]="colordif" (click)="startstop();">{{textdiff}}</ion-button></ion-col>
     </ion-row>
@@ -36,38 +37,41 @@
     <ion-card-content>
       <ion-grid>
         <ion-row>
-          <ion-col size="6">
-            <ion-label color="dark">{{"Intensité : "+ intensityFlux}}</ion-label>
+          <ion-col size="6" [ngClass]="{'bgred' : redBackground}">
+            <ion-label *ngIf="!redBackground" color="dark">{{"Intensité : "+ intensityFlux}}</ion-label>
+            <ion-label *ngIf="redBackground" color="dark">-</ion-label>
           </ion-col>
-          <ion-col size="6">
-            <ion-label color="dark">{{"Température : "+temp.toFixed(2)+" °C"}}</ion-label>
+          <ion-col size="6" [ngClass]="{'bgred' : redBackground}">
+            <ion-label *ngIf="!redBackground" color="dark">{{"Température : "+temp.toFixed(2)+" °C"}}</ion-label>
+            <ion-label *ngIf="redBackground" color="dark">-</ion-label>
+
         </ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row [ngClass]="{'bgred' : redBackground}">
           <ion-col size="6"></ion-col>
           <ion-col size="3"><ion-label color="dark" style="font-weight :bolder"> Réf</ion-label></ion-col>
           <ion-col size="3"><ion-label color="dark" style="font-weight :bolder">Mesure</ion-label></ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row [ngClass]="{'bgred' : redBackground}">
           <ion-col size="6"><ion-label color="dark">Débit (nl/min):</ion-label></ion-col>
-          <ion-col size="3"><ion-label color="dark">{{fluxref.toFixed(3)}}</ion-label></ion-col>
-          <ion-col size="3" [ngClass]="{'bgsuccess':backgroundDeb,'bgdanger':!backgroundDeb, 'bgwarning':bgdebwarning}"><ion-label color="dark">{{flux.toFixed(3)}}</ion-label></ion-col>
+          <ion-col size="3"><ion-label *ngIf="!redBackground" color="dark">{{fluxref.toFixed(3)}}</ion-label><ion-label *ngIf="redBackground" color="dark">-</ion-label></ion-col>
+          <ion-col size="3" [ngClass]="{'bgsuccess':backgroundDeb,'bgdanger':!backgroundDeb, 'bgwarning':bgdebwarning}"><ion-label *ngIf="!redBackground" color="dark">{{flux.toFixed(3)}}</ion-label><ion-label *ngIf="redBackground" color="dark">-</ion-label></ion-col>
         </ion-row>
         <ion-row [ngClass]="{'bgsuccess':backgroundPE,'bgdanger':!backgroundPE}" >
           <ion-col size="6"><ion-label color="dark" style="font-weight : bolder;">PE (Bars):</ion-label></ion-col>
-          <ion-col size="3"><ion-label color="dark" style="font-weight: bolder;">{{inputref.toFixed(3)}}</ion-label></ion-col>
-          <ion-col size="3"><ion-label color="dark" style="font-weight: bolder;" >{{input.toFixed(3)}}</ion-label></ion-col>
+          <ion-col size="3"><ion-label *ngIf="!redBackground" color="dark" style="font-weight: bolder;">{{inputref.toFixed(3)}}</ion-label><ion-label *ngIf="redBackground" color="dark" style="font-weight: bolder;">-</ion-label></ion-col>
+          <ion-col size="3"><ion-label *ngIf="!redBackground" color="dark" style="font-weight: bolder;" >{{input.toFixed(3)}}</ion-label><ion-label *ngIf="redBackground" color="dark" style="font-weight: bolder;" >-</ion-label></ion-col>
 
         </ion-row>
-        <ion-row>
+        <ion-row [ngClass]="{'bgred' : redBackground}">
           <ion-col size="6"><ion-label color="dark">PS (Bars):</ion-label></ion-col>
           <ion-col size="3"></ion-col>
-          <ion-col size="3"><ion-label color="dark">{{output.toFixed(3)}}</ion-label></ion-col>
+          <ion-col size="3"><ion-label color="dark" *ngIf="!redBackground">{{output.toFixed(3)}}</ion-label><ion-label *ngIf="redBackground" color="dark">-</ion-label></ion-col>
         </ion-row>
-        <ion-row>
+        <ion-row [ngClass]="{'bgred' : redBackground}">
           <ion-col size="6"><ion-label color="dark">PS comp (Bars):</ion-label></ion-col>
-          <ion-col size="3"><ion-label color="dark">{{outputref.toFixed(3)}}</ion-label></ion-col>
-          <ion-col size="3" [ngClass]="{'bgsuccess':backgroundPS,'bgdanger':!backgroundPS,'bgwarning':bgpswarning}"><ion-label color="dark">{{outputcomp.toFixed(3)}}</ion-label></ion-col>
+          <ion-col size="3"><ion-label *ngIf="!redBackground" color="dark">{{outputref.toFixed(3)}}</ion-label><ion-label *ngIf="redBackground" color="dark">-</ion-label></ion-col>
+          <ion-col size="3" [ngClass]="{'bgsuccess':backgroundPS,'bgdanger':!backgroundPS,'bgwarning':bgpswarning}"><ion-label *ngIf="!redBackground" color="dark">{{outputcomp.toFixed(3)}}</ion-label><ion-label *ngIf="redBackground" color="dark">-</ion-label></ion-col>
         </ion-row>
       </ion-grid>
     </ion-card-content>
@@ -281,7 +285,11 @@
 </div>
 </div>-->
 </ion-content>
+<ion-footer>
+  <ion-button *ngIf="display" style='float: right' fill='clear' (click)='goToNextPage()'>Suivant<ion-icon name='arrow-forward'></ion-icon></ion-button>
+</ion-footer>
 <!--<ion-footer>
   <ion-button size="block" [color]="colordif" (click)="onChangeDiff();">{{textdiff}}</ion-button>
   <ion-button size="block" color="danger" (click)="onDisableDiff()" *ngIf="modediff == 2">Désactiver Diffusion</ion-button>
 </ion-footer>-->
+

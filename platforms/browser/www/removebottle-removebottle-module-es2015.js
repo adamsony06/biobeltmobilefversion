@@ -7,113 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\"><ion-back-button></ion-back-button></ion-buttons>\n    <ion-title>Installation</ion-title>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <h1 style=\"text-align: center;\">Enlever des bouteilles</h1>\n  <ion-grid>\n    <ion-row>\n      <ion-col size=\"6\" style=\"border-right: solid 3px green;\">\n        <!--<ion-select placeholder=\"Type de bouteilles\">\n          <ion-select-option *ngFor=\"let bottle of listBottles\">\n            {{bottle.brand+\" \"+bottle.designation.toFixed(2)+\" kg\"}}\n          </ion-select-option>\n        </ion-select>-->\n      <h1 style=\"text-align: center;\">\n        B1\n      </h1>\n      \n      </ion-col>\n      \n      <ion-col size=\"6\">\n        <h1 style=\"text-align: center;\">\n          B2\n        </h1>  \n      </ion-col>\n    </ion-row>\n    <ion-row>\n      <ion-col size=\"6\" style=\"border-right: solid 3px green;\">\n        <ion-list>\n          <ion-item (click)=\"onScanBarCodeB1();\">\n            <ion-icon color=\"primary\" name=\"add-circle\"></ion-icon>  Enlever une Bouteille à B1\n          </ion-item>\n          <div *ngFor=\"let b1 of global.B1;let i = index;\">\n          <ion-item  *ngIf=\"global.B1.length > 0\">\n            <ion-label>{{b1.designation === 0 ? b1.marque: b1.marque+\" \"+b1.designation.toFixed()+\" kg\"}}</ion-label>\n            <ion-select placeholder=\"Designation (en kg)\" *ngIf=\"b1.marque === 'Air liquide'\" (ionChange)=\"setDesignationB1(i,$event);\">\n              <ion-select-option value=\"10\">10 kg</ion-select-option>\n              <ion-select-option value=\"20\">20 kg</ion-select-option>\n              <ion-select-option value=\"22.6796\">22,68 kg</ion-select-option>\n              <ion-select-option value=\"34\">34 kg</ion-select-option>\n              \n            </ion-select>\n            \n            <!--<ion-badge color=\"primary\" slot=\"end\">{{'x'+b1.qty}}</ion-badge>-->\n          </ion-item>\n        </div>\n        \n        </ion-list>\n        <ion-button color=\"danger\" (click)=\"deleteB1();\" size=\"block\">\n          Tout Effacer\n        </ion-button>\n      </ion-col>\n      <ion-col size=\"6\">\n        <ion-list>\n          <ion-item (click)=\"onScanBarCodeB2();\">\n            <ion-icon color=\"primary\" name=\"add-circle\"></ion-icon>  Enlever une Bouteille à B2\n          </ion-item>\n          <div *ngFor=\"let b2 of global.B2;let i = index;\">\n            <ion-item  *ngIf=\"global.B2.length > 0\"> \n              <ion-label>{{b2.designation === 0 ? b2.marque: b2.marque+' '+b2.designation.toFixed()+' kg'}}</ion-label>\n              <ion-select placeholder=\"Designation (en kg)\" *ngIf=\"b2.marque === 'Air liquide'\" (ionChange)=\"setDesignationB2(i,$event);\">\n                <ion-select-option value=\"10\">10 kg</ion-select-option>\n                <ion-select-option value=\"20\">20 kg</ion-select-option>\n                <ion-select-option value=\"22.6796\">22,68 kg</ion-select-option>\n                <ion-select-option value=\"34\">34 kg</ion-select-option>\n                \n              </ion-select>\n              \n              <!--<ion-badge color=\"primary\">{{'x'+b2.qty}}</ion-badge>-->\n            </ion-item>\n          </div>\n        </ion-list>\n        <ion-button color=\"danger\" (click)=\"deleteB2();\" size=\"block\">\n          Tout Effacer\n        </ion-button>\n      </ion-col>\n    </ion-row>\n  </ion-grid>\n  <ion-button size=\"block\" color=\"primary\" (click)=\"addToBelt();\"> Continuer</ion-button>\n</ion-content>\n"
-
-/***/ }),
-
-/***/ "./src/app/api/global.service.ts":
-/*!***************************************!*\
-  !*** ./src/app/api/global.service.ts ***!
-  \***************************************/
-/*! exports provided: GlobalService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GlobalService", function() { return GlobalService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _upcv3service_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./upcv3service.service */ "./src/app/api/upcv3service.service.ts");
-
-
-
-
-let GlobalService = class GlobalService {
-    constructor(platform, loadingCTRL, upcv3Service) {
-        this.platform = platform;
-        this.loadingCTRL = loadingCTRL;
-        this.upcv3Service = upcv3Service;
-        this.B1 = [];
-        this.B2 = [];
-        this.designationB1 = [];
-        this.designationB2 = [];
-        this.ssid = "";
-        this.isBBAM = false;
-    }
-    onSynchroB1B2(token) {
-        if (localStorage.getItem("bottleB1")) {
-            var jsonB1 = JSON.parse(localStorage.getItem("bottleB1"));
-            alert(JSON.stringify(jsonB1));
-            jsonB1.endate = new Date().toISOString().substr(0, 16);
-            if (this.platform.is("ios")) {
-                WifiWizard2.iOSDisconnectNetwork("BBAM").then((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                    var loading = yield this.loadingCTRL.create({
-                        message: "Synchronisation avec le Serveur en cours...",
-                        duration: 10000
-                    });
-                    loading.present();
-                    this.upcv3Service.addBottleBelt(jsonB1, token).subscribe(res => {
-                        loading.dismiss();
-                    });
-                }));
-            }
-            else {
-                WifiWizard2.disconnect("BBAM").then((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                    var loading = yield this.loadingCTRL.create({
-                        message: "Synchronisation avec le Serveur en cours...",
-                        duration: 10000
-                    });
-                    loading.present();
-                    this.upcv3Service.addBottleBelt(jsonB1, token).subscribe(res => {
-                        loading.dismiss();
-                    });
-                }));
-            }
-        }
-        if (localStorage.getItem("bottleB2")) {
-            var jsonB2 = JSON.parse(localStorage.getItem("bottleB2"));
-            jsonB2.endate = new Date().toISOString().substr(0, 16);
-            if (this.platform.is("ios")) {
-                WifiWizard2.iOSDisconnectNetwork(("BBAM")).then((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                    var loading = yield this.loadingCTRL.create({
-                        message: "Synchronisation avec le Serveur en cours...",
-                        duration: 10000
-                    });
-                    loading.present();
-                    this.upcv3Service.addBottleBelt(jsonB2, token).subscribe(res => {
-                        loading.dismiss();
-                    });
-                }));
-            }
-            else {
-                WifiWizard2.disconnect("BBAM").then((res) => tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function* () {
-                    var loading = yield this.loadingCTRL.create({
-                        message: "Synchronisation avec le Serveur en cours...",
-                        duration: 10000
-                    });
-                    loading.present();
-                    this.upcv3Service.addBottleBelt(jsonB2, token).subscribe(res => {
-                        loading.dismiss();
-                    });
-                }));
-            }
-        }
-    }
-};
-GlobalService.ctorParameters = () => [
-    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["Platform"] },
-    { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["LoadingController"] },
-    { type: _upcv3service_service__WEBPACK_IMPORTED_MODULE_3__["Upcv3serviceService"] }
-];
-GlobalService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-        providedIn: 'root'
-    }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["Platform"], _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["LoadingController"], _upcv3service_service__WEBPACK_IMPORTED_MODULE_3__["Upcv3serviceService"]])
-], GlobalService);
-
-
+module.exports = "<ion-header>\r\n  <ion-toolbar color=\"primary\">\r\n    <ion-buttons slot=\"start\"><ion-back-button></ion-back-button></ion-buttons>\r\n    <ion-title>Installation</ion-title>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n  <h1 style=\"text-align: center;\">Enlever des bouteilles</h1>\r\n  <ion-grid>\r\n    <ion-row>\r\n      <ion-col size=\"6\" style=\"border-right: solid 3px green;\">\r\n        \r\n      <h1 style=\"text-align: center;\">\r\n        B1\r\n      </h1>\r\n      \r\n      </ion-col>\r\n      \r\n      <ion-col size=\"6\">\r\n        <h1 style=\"text-align: center;\">\r\n          B2\r\n        </h1>  \r\n      </ion-col>\r\n    </ion-row>\r\n    <ion-row>\r\n      <ion-col size=\"6\" style=\"border-right: solid 3px green;\">\r\n        <ion-list>\r\n          <ion-item (click)=\"onScanBarCodeB1();\">\r\n            <ion-icon color=\"primary\" name=\"add-circle\"></ion-icon>  Enlever une Bouteille à B1\r\n          </ion-item>\r\n          <div *ngFor=\"let b1 of global.B1;let i = index;\">\r\n          <ion-item  *ngIf=\"global.B1.length > 0\">\r\n            <ion-label>{{b1.designation === 0 ? b1.marque: b1.marque+\" \"+b1.designation.toFixed()+\" kg\"}}</ion-label>\r\n            <ion-select placeholder=\"Designation (en kg)\" *ngIf=\"b1.marque === 'Air liquide'\" (ionChange)=\"setDesignationB1(i,$event);\">\r\n              <ion-select-option value=\"10\">10 kg</ion-select-option>\r\n              <ion-select-option value=\"20\">20 kg</ion-select-option>\r\n              <ion-select-option value=\"22.6796\">22,68 kg</ion-select-option>\r\n              <ion-select-option value=\"34\">34 kg</ion-select-option>\r\n              \r\n            </ion-select>\r\n            \r\n          </ion-item>\r\n        </div>\r\n        \r\n        </ion-list>\r\n        <ion-button color=\"danger\" (click)=\"deleteB1();\" size=\"block\">\r\n          Tout Effacer\r\n        </ion-button>\r\n      </ion-col>\r\n      <ion-col size=\"6\">\r\n        <ion-list>\r\n          <ion-item (click)=\"onScanBarCodeB2();\">\r\n            <ion-icon color=\"primary\" name=\"add-circle\"></ion-icon>  Enlever une Bouteille à B2\r\n          </ion-item>\r\n          <div *ngFor=\"let b2 of global.B2;let i = index;\">\r\n            <ion-item  *ngIf=\"global.B2.length > 0\"> \r\n              <ion-label>{{b2.designation === 0 ? b2.marque: b2.marque+' '+b2.designation.toFixed()+' kg'}}</ion-label>\r\n              <ion-select placeholder=\"Designation (en kg)\" *ngIf=\"b2.marque === 'Air liquide'\" (ionChange)=\"setDesignationB2(i,$event);\">\r\n                <ion-select-option value=\"10\">10 kg</ion-select-option>\r\n                <ion-select-option value=\"20\">20 kg</ion-select-option>\r\n                <ion-select-option value=\"22.6796\">22,68 kg</ion-select-option>\r\n                <ion-select-option value=\"34\">34 kg</ion-select-option>\r\n                \r\n              </ion-select>\r\n              \r\n            </ion-item>\r\n          </div>\r\n        </ion-list>\r\n        <ion-button color=\"danger\" (click)=\"deleteB2();\" size=\"block\">\r\n          Tout Effacer\r\n        </ion-button>\r\n      </ion-col>\r\n    </ion-row>\r\n  </ion-grid>\r\n  <ion-button size=\"block\" color=\"primary\" (click)=\"addToBelt();\"> Continuer</ion-button>\r\n</ion-content>\r\n"
 
 /***/ }),
 
@@ -264,7 +158,6 @@ let RemovebottlePage = class RemovebottlePage {
                                 this.bottle.name = json.name;
                                 if (json.stock !== null) {
                                     this.bottle.stock = json.stock.id;
-                                    //alert(json.stock.id);
                                 }
                             }
                         });
@@ -366,11 +259,9 @@ let RemovebottlePage = class RemovebottlePage {
     }
     setDesignationB1(i, $event) {
         this.global.designationB1[i] = $event.target.value;
-        //this.global.B1[i].designation = this.global.B1[i].designation;
     }
     setDesignationB2(i, $event) {
         this.global.designationB2[i] = $event.target.value;
-        //this.global.B2[i].designation = this.global.B2[i].designation;
     }
     deleteB1() {
         this.global.B1 = [];

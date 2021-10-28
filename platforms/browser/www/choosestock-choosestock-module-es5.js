@@ -7,147 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\"><ion-back-button></ion-back-button></ion-buttons>\n    <ion-title>Choisir un stock</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n    <ion-item *ngFor=\"let s of stock\" (click)=\"goToStock(s);\">\n        {{s.name}}\n    </ion-item>\n  </ion-list>\n</ion-content>\n"
-
-/***/ }),
-
-/***/ "./src/app/api/global.service.ts":
-/*!***************************************!*\
-  !*** ./src/app/api/global.service.ts ***!
-  \***************************************/
-/*! exports provided: GlobalService */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GlobalService", function() { return GlobalService; });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _upcv3service_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./upcv3service.service */ "./src/app/api/upcv3service.service.ts");
-
-
-
-
-var GlobalService = /** @class */ (function () {
-    function GlobalService(platform, loadingCTRL, upcv3Service) {
-        this.platform = platform;
-        this.loadingCTRL = loadingCTRL;
-        this.upcv3Service = upcv3Service;
-        this.B1 = [];
-        this.B2 = [];
-        this.designationB1 = [];
-        this.designationB2 = [];
-        this.ssid = "";
-        this.isBBAM = false;
-    }
-    GlobalService.prototype.onSynchroB1B2 = function (token) {
-        var _this = this;
-        if (localStorage.getItem("bottleB1")) {
-            var jsonB1 = JSON.parse(localStorage.getItem("bottleB1"));
-            alert(JSON.stringify(jsonB1));
-            jsonB1.endate = new Date().toISOString().substr(0, 16);
-            if (this.platform.is("ios")) {
-                WifiWizard2.iOSDisconnectNetwork("BBAM").then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                    var loading;
-                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.loadingCTRL.create({
-                                    message: "Synchronisation avec le Serveur en cours...",
-                                    duration: 10000
-                                })];
-                            case 1:
-                                loading = _a.sent();
-                                loading.present();
-                                this.upcv3Service.addBottleBelt(jsonB1, token).subscribe(function (res) {
-                                    loading.dismiss();
-                                });
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-            }
-            else {
-                WifiWizard2.disconnect("BBAM").then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                    var loading;
-                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.loadingCTRL.create({
-                                    message: "Synchronisation avec le Serveur en cours...",
-                                    duration: 10000
-                                })];
-                            case 1:
-                                loading = _a.sent();
-                                loading.present();
-                                this.upcv3Service.addBottleBelt(jsonB1, token).subscribe(function (res) {
-                                    loading.dismiss();
-                                });
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-            }
-        }
-        if (localStorage.getItem("bottleB2")) {
-            var jsonB2 = JSON.parse(localStorage.getItem("bottleB2"));
-            jsonB2.endate = new Date().toISOString().substr(0, 16);
-            if (this.platform.is("ios")) {
-                WifiWizard2.iOSDisconnectNetwork(("BBAM")).then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                    var loading;
-                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.loadingCTRL.create({
-                                    message: "Synchronisation avec le Serveur en cours...",
-                                    duration: 10000
-                                })];
-                            case 1:
-                                loading = _a.sent();
-                                loading.present();
-                                this.upcv3Service.addBottleBelt(jsonB2, token).subscribe(function (res) {
-                                    loading.dismiss();
-                                });
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-            }
-            else {
-                WifiWizard2.disconnect("BBAM").then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
-                    var loading;
-                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.loadingCTRL.create({
-                                    message: "Synchronisation avec le Serveur en cours...",
-                                    duration: 10000
-                                })];
-                            case 1:
-                                loading = _a.sent();
-                                loading.present();
-                                this.upcv3Service.addBottleBelt(jsonB2, token).subscribe(function (res) {
-                                    loading.dismiss();
-                                });
-                                return [2 /*return*/];
-                        }
-                    });
-                }); });
-            }
-        }
-    };
-    GlobalService.ctorParameters = function () { return [
-        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["Platform"] },
-        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["LoadingController"] },
-        { type: _upcv3service_service__WEBPACK_IMPORTED_MODULE_3__["Upcv3serviceService"] }
-    ]; };
-    GlobalService = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
-            providedIn: 'root'
-        }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_angular__WEBPACK_IMPORTED_MODULE_2__["Platform"], _ionic_angular__WEBPACK_IMPORTED_MODULE_2__["LoadingController"], _upcv3service_service__WEBPACK_IMPORTED_MODULE_3__["Upcv3serviceService"]])
-    ], GlobalService);
-    return GlobalService;
-}());
-
-
+module.exports = "<ion-header>\r\n  <ion-toolbar color=\"primary\">\r\n    <ion-buttons slot=\"start\"><ion-back-button></ion-back-button></ion-buttons>\r\n    <ion-title>Choisir un dépôt</ion-title>\r\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\" (click)=\"onSynchroB1B2();\"></ion-icon>ADMIN</ion-button> \r\n     </ion-buttons>\r\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \r\n     </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n  <ion-list>\r\n    <ion-item *ngFor=\"let s of stock\" (click)=\"goToStock(s);\">\r\n        {{s.name}}\r\n    </ion-item>\r\n  </ion-list>\r\n</ion-content>\r\n"
 
 /***/ }),
 
@@ -264,6 +124,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ionic_native_geolocation_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/geolocation/ngx */ "./node_modules/@ionic-native/geolocation/ngx/index.js");
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _api_global_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/global.service */ "./src/app/api/global.service.ts");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../model/upcv3/upcmodbus */ "./src/app/model/upcv3/upcmodbus.ts");
+
+
 
 
 
@@ -272,17 +136,21 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ChoosestockPage = /** @class */ (function () {
-    function ChoosestockPage(upc3Service, storage, geolocation, router, global) {
+    function ChoosestockPage(upc3Service, storage, geolocation, router, global, platform, ngZone, cd) {
         this.upc3Service = upc3Service;
         this.storage = storage;
         this.geolocation = geolocation;
         this.router = router;
         this.global = global;
+        this.platform = platform;
+        this.ngZone = ngZone;
+        this.cd = cd;
         this.stock = [];
         this.lonlat = [{ lat: 43.6667, lon: 7.15 }, { lat: 42.0396, lon: 9.01289 }, { lat: 43.6107, lon: 3.8767 }];
     }
     ChoosestockPage.prototype.ngOnInit = function () {
         var _this = this;
+        this.getUpcStateConnexion();
         this.storage.get("token").then(function (val) {
             _this.upc3Service.getAllStock(val).subscribe(function (res) {
                 var stock = res.result;
@@ -323,12 +191,35 @@ var ChoosestockPage = /** @class */ (function () {
     ChoosestockPage.prototype.deg2rad = function (deg) {
         return deg * (Math.PI / 180);
     };
+    ChoosestockPage.prototype.getUpcStateConnexion = function () {
+        var _this = this;
+        this.platform.ready().then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.upc = new _model_upcv3_upcmodbus__WEBPACK_IMPORTED_MODULE_8__["UPCModbus"](function (state) {
+                            _this.ngZone.run(function () {
+                                // Force refresh UI
+                            });
+                        });
+                        return [4 /*yield*/, this.upc.client.connect()];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    };
     ChoosestockPage.ctorParameters = function () { return [
         { type: _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"] },
         { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"] },
         { type: _ionic_native_geolocation_ngx__WEBPACK_IMPORTED_MODULE_4__["Geolocation"] },
         { type: _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"] },
-        { type: _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"] }
+        { type: _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"] },
+        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"] },
+        { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"] },
+        { type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"] }
     ]; };
     ChoosestockPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -336,7 +227,7 @@ var ChoosestockPage = /** @class */ (function () {
             template: __webpack_require__(/*! raw-loader!./choosestock.page.html */ "./node_modules/raw-loader/index.js!./src/app/choosestock/choosestock.page.html"),
             styles: [__webpack_require__(/*! ./choosestock.page.scss */ "./src/app/choosestock/choosestock.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"], _ionic_native_geolocation_ngx__WEBPACK_IMPORTED_MODULE_4__["Geolocation"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"], _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"], _ionic_native_geolocation_ngx__WEBPACK_IMPORTED_MODULE_4__["Geolocation"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"], _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"], _ionic_angular__WEBPACK_IMPORTED_MODULE_7__["Platform"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["NgZone"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ChangeDetectorRef"]])
     ], ChoosestockPage);
     return ChoosestockPage;
 }());

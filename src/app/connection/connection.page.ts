@@ -3,6 +3,8 @@ import { Platform, LoadingController } from '@ionic/angular';
 import { Hotspot, HotspotNetwork } from '@ionic-native/hotspot/ngx';
 import { UPCModbus } from '../model/upcv3/upcmodbus';
 import { GlobalService } from '../api/global.service';
+import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage';
 
 declare var WifiWizard2: any;
 
@@ -11,7 +13,7 @@ declare var WifiWizard2: any;
   templateUrl: './connection.page.html',
   styleUrls: ['./connection.page.scss'],
 })
-export class ConnectionPage implements OnInit {
+export class ConnectionPage {
   upc : UPCModbus;
   mode = "";
   level = 0;
@@ -20,127 +22,144 @@ export class ConnectionPage implements OnInit {
   fw = 0;
   levelTab = [];
   dureTab = [];
+  redBackground = false;
+  display=false;
 
-  constructor(private platform : Platform, private global : GlobalService, private loadingCTRL : LoadingController,private hotspot : Hotspot,private ngZone : NgZone, private cd : ChangeDetectorRef) { }
+  constructor(private platform : Platform, private global : GlobalService, private loadingCTRL : LoadingController,private hotspot : Hotspot,private ngZone : NgZone, private cd : ChangeDetectorRef,private router : Router,
+    private storage : Storage
+) { this.global.checkMode() }
 
-  ngOnInit() {
+ionViewWillEnter() {
+  this.storage.set("connexionRequise","UPC")
+    /*affichage bouton suivant*/    
+    this.global.checkNextPage().then(res=>{
+      if(res == true){
+        this.display = true;
+      }
+    })
+
+    this.levelTab = [];
+    this.bertab = [];
+    this.dureTab = []
     this.platform.ready().then(async ()=>{
-      /*if( this.platform.is('ios')){
-        WifiWizard2.iOSConnectNetwork("BBAM","BioBeltService").then(async ()=>{
-          var loading = await this.loadingCTRL.create({
-            message : "Connection à l'UPC en cours...",
-            duration : 10000
-          })
-          loading.present();
-          this.global.isBBAM = true;
-          this.upc = new UPCModbus(state => {
-            this.ngZone.run(() => {
-              // Force refresh UI
-              
+      
+            this.global.onConnectWiFi().then(async res=>{
                 
-                //this.readDiffusionParameters();
-              
-            });
-          });
-          setTimeout(async ()=>{
-                  await this.upc.client.connect();
-
-                  this.readConnectionParams();
-                  loading.dismiss();
-          },5000)
-          
-        })
-      }*/ //else if (this.platform.is("android")){
-          //this.hotspot.connectToWifi("BBAM","BioBeltService").then(async ()=>{
-            var loading = await this.loadingCTRL.create({
-              message : "Connection à l'UPC en cours...",
-              duration : 10000
-            })
-            loading.present();
-            this.global.isBBAM = true;
-            this.upc = new UPCModbus(state => {
-              this.ngZone.run(() => {
-                // Force refresh UI
-                
-                  
-                  //this.readDiffusionParameters();
-                
-              });
-            });
-            await this.upc.client.connect();
 
             this.readConnectionParams();
-            loading.dismiss();
-          /*}).catch(err=>{
-            alert(JSON.stringify(err));
-          })*/
-      //}
+            })
+            
+            
+          
     })
     
   }
+  doRefresh(event) {
+    this.ionViewWillEnter();
+    event.target.complete();
+  } 
   readConnectionParams() {
     //40414 40415 
     //41225 41239
-    var intervalconnect =
+    localStorage.setItem("currentssid",this.global.upcmodbus.communicationParameters.comGsmName);
+    /*this.global.upcmodbus.client.getStringFromHoldingRegister(40045,10).then(res=>{
+      this.redBackground = false;
+      localStorage.setItem("currentssid",res);
+      this.cd.detectChanges();
+    }).catch(err=>{
+      //localStorage.removeItem("isConnected");
+      this.redBackground = true;
+      this.cd.detectChanges();
+    
+      //this.ngOnInit();
+    })*/
+    this.levelTab.push(this.global.upcmodbus.communicationParameters.xComMdmRssuMoyen2G.toFixed(2));
+    this.levelTab.push(this.global.upcmodbus.communicationParameters.xComMdmRssuMoyen3G.toFixed(2));
+    this.levelTab.push(this.global.upcmodbus.communicationParameters.xComMdmRssuMoyen4G.toFixed(2));
+    
+    this.bertab.push(this.global.upcmodbus.communicationParameters.xComMdmQualMoyen2GGPRS.toFixed(2));
+    this.bertab.push(this.global.upcmodbus.communicationParameters.xComMdmQualMoyen2GEDGE.toFixed(2));
+    this.bertab.push(this.global.upcmodbus.communicationParameters.xComMdmQualMoyen3G.toFixed(2));
+    this.bertab.push(this.global.upcmodbus.communicationParameters.xComMdmQualMoyen4G.toFixed(2));
+    
+    this.dureTab.push(this.global.upcmodbus.communicationParameters.xComMdmRatioTimeIn2G.toFixed(2));
+    this.dureTab.push(this.global.upcmodbus.communicationParameters.xComMdmRatioTimeIn3G.toFixed(2));
+    this.dureTab.push(this.global.upcmodbus.communicationParameters.xComMdmRatioTimeIn4G.toFixed(2));
+    this.dureTab.push(this.global.upcmodbus.communicationParameters.xComMdmRatioTimeOffline.toFixed(2));
+
+    if(this.global.upcmodbus.communicationParameters.comMdmMode == 0){
+        this.mode = 'Non enregistré';this.ber = 0;
+    } if(this.global.upcmodbus.communicationParameters.comMdmMode == 1){
+      this.mode =  '2G GPRS'; this.ber = this.bertab[0];
+    } if(this.global.upcmodbus.communicationParameters.comMdmMode == 2){
+      this.mode =  '2G EDGE'; this.ber = this.bertab[1];
+    } if(this.global.upcmodbus.communicationParameters.comMdmMode == 3) {
+      this.mode =  '3G WCDMA';this.ber = this.bertab[2];
+    }if (this.global.upcmodbus.communicationParameters.comMdmMode == 4){
+      this.mode =  '3G HSDPA';this.ber = this.bertab[2];
+    } if(this.global.upcmodbus.communicationParameters.comMdmMode == 5) {
+      this.mode =  '3G HSUPA';this.ber = this.bertab[2];
+    } if(this.global.upcmodbus.communicationParameters.comMdmMode == 6) {
+      this.mode =  '3G HSDPA/HSUPA';this.ber = this.bertab[2];
+    } if(this.global.upcmodbus.communicationParameters.comMdmMode == 7){
+      this.mode =  '4G';this.ber = this.bertab[3];
+    }
+    this.level = this.global.upcmodbus.communicationParameters.comGsmLevel;
+    /*this.global.interval =
     setInterval(()=>{
-      //this.upc.client.readHoldingRegisters(41225,20).then(res=>{
-        
-        /*this.bertab.push(this.upc.client.registerToFloat([res[0],res[1]]));
-        this.bertab.push(this.upc.client.registerToFloat([res[2],res[3]]));
-        this.bertab.push(this.upc.client.registerToFloat([res[4],res[5]]));
-        this.bertab.push(this.upc.client.registerToFloat([res[6],res[7]]));*/
-        //this.upc.client.getIntFromHoldingRegister(40168,1).then(res=>{
+     
+        this.global.upcmodbus.client.readHoldingRegisters(40414,10).then(res=>{
+          var connect = res[0];
           
-          
-            this.upc.client.readHoldingRegisters(41219,50).then(res=>{
-              this.levelTab.push(this.upc.client.registerToFloat([res[0],res[1]]));
-              this.levelTab.push(this.upc.client.registerToFloat([res[2],res[3]]));
-              this.levelTab.push(this.upc.client.registerToFloat([res[4],res[5]]));
-
-
-              this.bertab.push(this.upc.client.registerToFloat([res[6],res[7]]));
-              this.bertab.push(this.upc.client.registerToFloat([res[8],res[9]]));
-              this.bertab.push(this.upc.client.registerToFloat([res[10],res[11]]));
-              this.bertab.push(this.upc.client.registerToFloat([res[12],res[13]]));
-
-              //this.dureTab.push(this.upc.client.registerToFloat([res[14],res[15]]));
-              this.dureTab.push(this.upc.client.registerToFloat([res[16],res[17]]));
-              this.dureTab.push(this.upc.client.registerToFloat([res[18],res[19]]));
-              this.dureTab.push(this.upc.client.registerToFloat([res[20],res[21]]));
-
-            })
-          
-          
-        //})
-        this.upc.client.readHoldingRegisters(40414,10).then(res=>{
-          var connect = this.upc.client.registerToUint32([res[0]]);
-          switch(connect) {
-            case 0: this.mode = 'Non enregistré';this.ber = 0;
-            case 1: this.mode =  '2G GPRS'; this.ber = this.bertab[0];
-            case 2: this.mode =  '2G EDGE'; this.ber = this.bertab[1];
-            case 3: this.mode =  '3G WCDMA';this.ber = this.bertab[2];
-            case 4: this.mode =  '3G HSDPA';this.ber = this.bertab[2];
-            case 5: this.mode =  '3G HSUPA';this.ber = this.bertab[2];
-            case 6: this.mode =  '3G HSDPA/HSUPA';this.ber = this.bertab[2];
-            case 7: this.mode =  '4G';this.ber = this.bertab[3];
+          if(connect == 0){
+            this.mode = 'Non enregistré';this.ber = 0;
+          } if(connect == 1) {
+            this.mode =  '2G GPRS'; this.ber = this.bertab[0];
+          } if(connect == 2){
+            this.mode =  '2G EDGE'; this.ber = this.bertab[1];
+          } if(connect == 3){
+            this.mode =  '3G WCDMA';this.ber = this.bertab[2];
+          } if(connect == 4) {
+            this.mode =  '3G HSDPA';this.ber = this.bertab[2];
+          } if(connect == 5) {
+            this.mode =  '3G HSUPA';this.ber = this.bertab[2];
+          } if(connect == 6) {
+            this.mode =  '3G HSDPA/HSUPA';this.ber = this.bertab[2];
+          } if(connect == 7) {
+            this.mode =  '4G';this.ber = this.bertab[3];
           }
-          this.level = this.upc.client.registerToUint32([res[1]]);
+          
+          
+          this.level = this.global.upcmodbus.client.registerToUint32([res[1]]);
           if(this.level > 500) {
             this.level = 0;
           }
+          this.redBackground = false;
           this.cd.detectChanges();
           
         }).catch(err=>{
-          alert("Veuillez vous connecter à BBAM");
-          this.global.ssid = "ADMIN";
-          this.global.isBBAM = false;
-          clearInterval(intervalconnect);
+          this.redBackground = true;
+          this.cd.detectChanges();
+          //clearInterval(intervalconnect);
         })
-    //})
+        if(this.redBackground) {
+          clearInterval(this.global.interval);
+          this.ionViewWillEnter()
+        }
+    
     
       
-    },500)
+    },500)*/
     
   }
+  goToNextPage(){  
+    clearInterval(this.global.interval); 
+  
+    this.storage.get("nexturl").then(res=>{  
+      this.router.navigate([res]);
+    })  
+  }
+
+
 
 }

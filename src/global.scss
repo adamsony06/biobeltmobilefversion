@@ -27,6 +27,15 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+.alert-radio-label.sc-ion-alert-md {
+    padding-left: unset;
+    padding-right: unset;
+    -webkit-padding-start: 13px;
+    padding-inline-start: 13px;
+    -webkit-padding-end: 13px;
+    padding-inline-end: 13px;
+    white-space: pre-wrap;
+}
 .alert-radio-label.sc-ion-alert-ios {
     padding-left: unset;
     padding-right: unset;
@@ -37,20 +46,11 @@
     white-space: pre-wrap;
 }
 
-.alert-radio-label.sc-ion-alert-md {
-    padding-left: unset;
-    padding-right: unset;
-    -webkit-padding-start: 13px;
-    padding-inline-start: 13px;
-    -webkit-padding-end: 13px;
-    padding-inline-end: 13px;
-    white-space: pre-wrap;
-}
 .alert-checkbox-label.sc-ion-alert-md {
-    padding-left: 52px;
-    padding-right: 26px;
-    padding-top: 13px;
-    padding-bottom: 13px;
+    padding-left: 20%;
+    padding-right: 10%;
+    padding-top: 5%;
+    padding-bottom: 5%;
     flex: 1;
     color: var(--ion-color-step-850, #262626);
     font-size: 14px;
@@ -58,14 +58,75 @@
     white-space: pre-line !important;
 }
 
-.alert-checkbox-label.sc-ion-alert-ios {
+.alert-radio-label.sc-ion-alert-md {
     padding-left: 52px;
-    padding-right: 26px;
-    padding-top: 13px;
-    padding-bottom: 13px;
-    flex: 1;
-    color: var(--ion-color-step-850, #262626);
-    font-size: 14px;
-    text-overflow: ellipsis;
-    white-space: pre-line !important;
 }
+
+/*.select-text{        
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    word-wrap: normal !important;
+    white-space: normal !important;
+    color: purple !important;    
+    display: none !important;
+}*/
+ion-label {
+    white-space: normal !important;
+    transform: none !important;
+}
+::ng-deep {
+    .select-text {
+      color: white !important;
+     
+    }
+  } 
+
+
+ng-multiselect-dropdown .dropdown-btn {
+    float: left;
+    margin-bottom: 4% !important;
+    border: none !important;   
+}
+
+
+ng-multiselect-dropdown .dropdown-btn .selected-item {
+    //display: inline-block;
+    border: 1px solid #adadad;
+    display: table !important;
+    float:left; 
+    max-width:none !important;       
+    white-space: normal;    
+    font-weight: 400;
+    line-height: 1.1;
+    text-align: left;
+    vertical-align: middle;
+    cursor: pointer;
+    background: #2E7117 !important;
+    border-radius: 2px !important;
+}
+
+ng-multiselect-dropdown .dropdown-btn .selected-item a{
+    visibility: hidden;
+}
+
+ng-multiselect-dropdown .dropdown-btn .selected-item span{
+    vertical-align: 20%;
+}
+
+ng-multiselect-dropdown .dropdown-btn .selected-item a:after{
+    visibility: visible;
+    padding-left: 5px !important; 
+    font-size: 1.6rem;
+    font-family: "Bell MT", Helvetica !important;
+   
+    
+    content: "×";
+}
+
+.maxWidth{
+    max-width:none;
+}
+
+
+

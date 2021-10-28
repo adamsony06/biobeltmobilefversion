@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { InterventionceinturePageRoutingModule } from './interventionceinture-routing.module';
 
 import { InterventionceinturePage } from './interventionceinture.page';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    InterventionceinturePageRoutingModule
+    InterventionceinturePageRoutingModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   declarations: [InterventionceinturePage]
 })

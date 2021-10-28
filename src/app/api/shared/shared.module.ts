@@ -5,8 +5,8 @@ import { IonicModule } from '@ionic/angular';
 
 
 @NgModule({
-  declarations: [AddbottlemodalPage],
-  entryComponents : [AddbottlemodalPage],
+  declarations: [],
+  entryComponents : [],
   imports: [
     CommonModule,
     IonicModule

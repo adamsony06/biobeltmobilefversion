@@ -1,4 +1,4 @@
-<ion-content class="bg-light" *ngIf="isLog">
+<ion-content class="bg-light" *ngIf="needToLog">
   <ion-row justify-content-center align-items-center>
     <ion-col col-12 col-sm-10 col-md-6 col-lg-5 col-xl-4>
 
@@ -29,7 +29,7 @@
             </ion-list>
 
             <ion-button class="submit-btn" color="primary" full type="submit" [disabled]="!loginForm.form.valid" margin-top>Se connecter</ion-button>
-
+            <!--<ion-button class="submit-btn" color="primary" full margin-top (click)="onBBAM();">Hors Connexion</ion-button>-->
           </form>
         </ion-card-content>
 

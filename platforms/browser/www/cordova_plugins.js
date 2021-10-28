@@ -147,6 +147,22 @@ module.exports = [
         "clobbers": [
             "window.WifiWizard2"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/www/notification.js",
+        "id": "cordova-plugin-dialogs.notification",
+        "pluginId": "cordova-plugin-dialogs",
+        "merges": [
+            "navigator.notification"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-dialogs/www/browser/notification.js",
+        "id": "cordova-plugin-dialogs.notification_browser",
+        "pluginId": "cordova-plugin-dialogs",
+        "merges": [
+            "navigator.notification"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -167,7 +183,8 @@ module.exports.metadata =
     "cordova-plugin-network-information": "2.0.2",
     "es6-promise-plugin": "4.1.0",
     "wifiwizard2": "3.1.1",
-    "cordova-plugin-geolocation": "4.1.0"
+    "cordova-plugin-geolocation": "4.1.0",
+    "cordova-plugin-dialogs": "2.0.2"
 }
 // BOTTOM OF METADATA
 });

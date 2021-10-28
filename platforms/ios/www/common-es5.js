@@ -403,45 +403,48 @@ var findCheckedOption = function (el, tagName) {
 
 /***/ }),
 
-/***/ "./node_modules/raw-loader/index.js!./src/app/rackcontent/rackcontent.page.html":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/raw-loader!./src/app/rackcontent/rackcontent.page.html ***!
-  \*****************************************************************************/
+/***/ "./node_modules/raw-loader/index.js!./src/app/retfournmodal/retfournmodal.page.html":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/raw-loader!./src/app/retfournmodal/retfournmodal.page.html ***!
+  \*********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons>\n      <ion-button fill=\"clear\" (click)=\"onClose();\">\n        <ion-icon name=\"close\"></ion-icon>\n      </ion-button>\n    </ion-buttons>\n    <ion-title>Enlever bouteilles du Rack</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n</ion-header>\n\n<ion-content>\n  <ion-list>\n    <ion-item *ngFor=\"let r of rackContent;let i = index;\">\n      <ion-label>{{r.bottleString}}</ion-label>\n      <ion-badge color=\"success\" *ngIf=\"r.state === 'FULL'\">Plein</ion-badge>\n      <ion-badge color=\"secondary\" *ngIf=\"r.state === 'IN_USE'\">Entamée</ion-badge>\n      <ion-badge color=\"danger\" *ngIf=\"r.state === 'EMPTY'\">Vide</ion-badge>\n    </ion-item>\n  </ion-list>\n</ion-content>\n\n<ion-footer>\n  <ion-button size=\"block\" (click)=\"onRetourFourn();\">Retour Au Fournisseur</ion-button>\n</ion-footer>"
+module.exports = "<ion-header>\r\n  <ion-toolbar color=\"primary\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-button fill=\"clear\" (click)=\"onClose();\">\r\n        <ion-icon name=\"close\"></ion-icon>\r\n      </ion-button>\r\n    </ion-buttons>\r\n    <ion-title>Retour au Fournisseur</ion-title>\r\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\"></ion-icon>ADMIN</ion-button> \r\n     </ion-buttons>\r\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \r\n     </ion-buttons>\r\n  </ion-toolbar>\r\n</ion-header>\r\n\r\n<ion-content>\r\n  <ion-list>\r\n    <ion-item (click)=\"onRemBot();\"><ion-icon name=\"hourglass\"></ion-icon>Bouteilles</ion-item>\r\n    <ion-item (click)=\"onRemRack();\"><ion-icon name=\"speedometer\"></ion-icon>Rack</ion-item>\r\n  </ion-list>\r\n</ion-content>"
 
 /***/ }),
 
-/***/ "./src/app/rackcontent/rackcontent.page.scss":
-/*!***************************************************!*\
-  !*** ./src/app/rackcontent/rackcontent.page.scss ***!
-  \***************************************************/
+/***/ "./src/app/retfournmodal/retfournmodal.page.scss":
+/*!*******************************************************!*\
+  !*** ./src/app/retfournmodal/retfournmodal.page.scss ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3JhY2tjb250ZW50L3JhY2tjb250ZW50LnBhZ2Uuc2NzcyJ9 */"
+module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3JldGZvdXJubW9kYWwvcmV0Zm91cm5tb2RhbC5wYWdlLnNjc3MifQ== */"
 
 /***/ }),
 
-/***/ "./src/app/rackcontent/rackcontent.page.ts":
-/*!*************************************************!*\
-  !*** ./src/app/rackcontent/rackcontent.page.ts ***!
-  \*************************************************/
-/*! exports provided: RackcontentPage */
+/***/ "./src/app/retfournmodal/retfournmodal.page.ts":
+/*!*****************************************************!*\
+  !*** ./src/app/retfournmodal/retfournmodal.page.ts ***!
+  \*****************************************************/
+/*! exports provided: RetfournmodalPage */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RackcontentPage", function() { return RackcontentPage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RetfournmodalPage", function() { return RetfournmodalPage; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/upcv3service.service */ "./src/app/api/upcv3service.service.ts");
-/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
-/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
-/* harmony import */ var _api_ApiResponse__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../api/ApiResponse */ "./src/app/api/ApiResponse.ts");
-/* harmony import */ var _api_global_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/global.service */ "./src/app/api/global.service.ts");
+/* harmony import */ var _api_global_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/global.service */ "./src/app/api/global.service.ts");
+/* harmony import */ var _ionic_angular__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @ionic/angular */ "./node_modules/@ionic/angular/dist/fesm5.js");
+/* harmony import */ var _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @ionic-native/barcode-scanner/ngx */ "./node_modules/@ionic-native/barcode-scanner/ngx/index.js");
+/* harmony import */ var _ionic_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @ionic/storage */ "./node_modules/@ionic/storage/fesm5/ionic-storage.js");
+/* harmony import */ var _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/upcv3service.service */ "./src/app/api/upcv3service.service.ts");
+/* harmony import */ var _rackcontent_rackcontent_page__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../rackcontent/rackcontent.page */ "./src/app/rackcontent/rackcontent.page.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _addbottlemodal_addbottlemodal_page__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../addbottlemodal/addbottlemodal.page */ "./src/app/addbottlemodal/addbottlemodal.page.ts");
 
 
 
@@ -449,60 +452,104 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var RackcontentPage = /** @class */ (function () {
-    function RackcontentPage(upcv3Service, storage, modal, global) {
-        this.upcv3Service = upcv3Service;
-        this.storage = storage;
-        this.modal = modal;
+
+
+
+var RetfournmodalPage = /** @class */ (function () {
+    function RetfournmodalPage(global, modal, modalravk, scan, storage, upc3Service, router) {
         this.global = global;
-        this.designation = [];
-        this.isMesser = [];
+        this.modal = modal;
+        this.modalravk = modalravk;
+        this.scan = scan;
+        this.storage = storage;
+        this.upc3Service = upc3Service;
+        this.router = router;
     }
-    RackcontentPage.prototype.ngOnInit = function () {
-        var _this = this;
-        this.storage.get("token").then(function (val) {
-            _this.token = val;
-            _this.upcv3Service.getBottleFromRack(val, _this.rack).subscribe(function (res) {
-                _this.rackContent = res.result;
-                _this.rackContent.forEach(function (item) {
-                    if (item.bottleType.designation == 37.5) {
-                        _this.isMesser.push(true);
-                        _this.designation.push("37.5");
-                    }
-                    else {
-                        _this.isMesser.push(false);
-                        _this.designation.push("" + item.bottleType.designation);
-                    }
+    RetfournmodalPage.prototype.ngOnInit = function () { };
+    RetfournmodalPage.prototype.onClose = function () {
+        this.modal.dismiss();
+    };
+    RetfournmodalPage.prototype.onRemRack = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                this.storage.get('token').then(function (res) {
+                    _this.token = res;
                 });
+                this.scan.scan().then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                    var text;
+                    var _this = this;
+                    return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                        if (res.text != '') {
+                            text = res.text;
+                            this.upc3Service.getBottleFromRack(this.token, res.text).subscribe(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                                var modal;
+                                return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (!(res.result.length > 0)) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, this.modalravk.create({
+                                                    component: _rackcontent_rackcontent_page__WEBPACK_IMPORTED_MODULE_7__["RackcontentPage"],
+                                                    componentProps: {
+                                                        rack: text
+                                                    }
+                                                })];
+                                        case 1:
+                                            modal = _a.sent();
+                                            modal.present();
+                                            return [3 /*break*/, 3];
+                                        case 2:
+                                            alert("Aucune bouteille est associée à ce Rack !");
+                                            _a.label = 3;
+                                        case 3: return [2 /*return*/];
+                                    }
+                                });
+                            }); }, function (err) {
+                                alert(JSON.stringify(err));
+                            });
+                        }
+                        return [2 /*return*/];
+                    });
+                }); });
+                return [2 /*return*/];
             });
         });
     };
-    RackcontentPage.prototype.onClose = function () {
-        this.modal.dismiss();
-    };
-    RackcontentPage.prototype.onRetourFourn = function () {
-        var _this = this;
-        this.upcv3Service.removeRack(this.rack, this.token).subscribe(function (res) {
-            if (res.code === _api_ApiResponse__WEBPACK_IMPORTED_MODULE_5__["Code"].BOTTLE_DELETED) {
-                _this.modal.dismiss();
-            }
+    RetfournmodalPage.prototype.onRemBot = function () {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var modal;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.modalravk.create({
+                            component: _addbottlemodal_addbottlemodal_page__WEBPACK_IMPORTED_MODULE_9__["AddbottlemodalPage"],
+                            componentProps: { barcode: "ABC-abc-1234", mode: 0 }
+                        })];
+                    case 1:
+                        modal = _a.sent();
+                        modal.present();
+                        return [2 /*return*/];
+                }
+            });
         });
     };
-    RackcontentPage.ctorParameters = function () { return [
-        { type: _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"] },
-        { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"] },
-        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["ModalController"] },
-        { type: _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"] }
+    RetfournmodalPage.ctorParameters = function () { return [
+        { type: _api_global_service__WEBPACK_IMPORTED_MODULE_2__["GlobalService"] },
+        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"] },
+        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"] },
+        { type: _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_4__["BarcodeScanner"] },
+        { type: _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"] },
+        { type: _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_6__["Upcv3serviceService"] },
+        { type: _angular_router__WEBPACK_IMPORTED_MODULE_8__["Router"] }
     ]; };
-    RackcontentPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    RetfournmodalPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
-            selector: 'app-rackcontent',
-            template: __webpack_require__(/*! raw-loader!./rackcontent.page.html */ "./node_modules/raw-loader/index.js!./src/app/rackcontent/rackcontent.page.html"),
-            styles: [__webpack_require__(/*! ./rackcontent.page.scss */ "./src/app/rackcontent/rackcontent.page.scss")]
+            selector: 'app-retfournmodal',
+            template: __webpack_require__(/*! raw-loader!./retfournmodal.page.html */ "./node_modules/raw-loader/index.js!./src/app/retfournmodal/retfournmodal.page.html"),
+            styles: [__webpack_require__(/*! ./retfournmodal.page.scss */ "./src/app/retfournmodal/retfournmodal.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_upcv3service_service__WEBPACK_IMPORTED_MODULE_2__["Upcv3serviceService"], _ionic_storage__WEBPACK_IMPORTED_MODULE_3__["Storage"], _ionic_angular__WEBPACK_IMPORTED_MODULE_4__["ModalController"], _api_global_service__WEBPACK_IMPORTED_MODULE_6__["GlobalService"]])
-    ], RackcontentPage);
-    return RackcontentPage;
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_api_global_service__WEBPACK_IMPORTED_MODULE_2__["GlobalService"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"], _ionic_angular__WEBPACK_IMPORTED_MODULE_3__["ModalController"], _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_4__["BarcodeScanner"], _ionic_storage__WEBPACK_IMPORTED_MODULE_5__["Storage"], _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_6__["Upcv3serviceService"], _angular_router__WEBPACK_IMPORTED_MODULE_8__["Router"]])
+    ], RetfournmodalPage);
+    return RetfournmodalPage;
 }());
 
 

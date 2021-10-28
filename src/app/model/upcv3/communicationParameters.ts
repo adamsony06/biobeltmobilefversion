@@ -16,6 +16,22 @@ export class CommunicationParameters {
 	comMdmApnUser: string = "orange";
 	comMdmApnPass: string = "orange";
 	comWifiApCh: number = 11;
+	comMdmName : string ="";
+	comMdmMode : number = 0;
+
+	xComMdmRssuMoyen2G : number = 0;
+	xComMdmRssuMoyen3G : number = 0;
+	xComMdmRssuMoyen4G : number = 0;
+
+	xComMdmQualMoyen2GGPRS : number = 0;
+	xComMdmQualMoyen2GEDGE : number = 0;
+	xComMdmQualMoyen3G : number = 0;
+	xComMdmQualMoyen4G : number = 0;
+
+	xComMdmRatioTimeIn2G : number = 0;
+	xComMdmRatioTimeIn3G : number = 0;
+	xComMdmRatioTimeIn4G : number = 0;
+	xComMdmRatioTimeOffline : number = 0;
 
 	get comGsmModeString(): string {
 		switch (this.comGsmMode) {

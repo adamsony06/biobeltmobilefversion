@@ -17,7 +17,6 @@
 <ion-content>
   <ion-list>
       <div *ngFor="let s of stock; let i = index;">
-      <!--<ion-item-divider><ion-label>{{s.rack}}</ion-label></ion-item-divider>-->
       
 
       <div *ngIf="stock[i+1] != null">
@@ -55,7 +54,6 @@
 <ion-button *ngIf="retStock" expand="block" (click)="retRack();">
   Sélectionner un Rack
 </ion-button>
-<!--<ion-button *ngIf="remStock" expand="block" color="danger" (click)="remRack();">
-  Enlever un Rack
-</ion-button>-->
+
 </ion-footer>
+

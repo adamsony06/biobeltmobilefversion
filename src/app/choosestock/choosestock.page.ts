@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { Upcv3serviceService } from '../api/upcv3service.service';
 import {Storage} from '@ionic/storage';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Router } from '@angular/router';
 import { GlobalService } from '../api/global.service';
+import { Platform } from '@ionic/angular';
+import { UPCModbus } from '../model/upcv3/upcmodbus';
 
 @Component({
   selector: 'app-choosestock',
@@ -12,10 +14,12 @@ import { GlobalService } from '../api/global.service';
 })
 export class ChoosestockPage implements OnInit {
   stock = [];
+  upc : UPCModbus;
   lonlat = [{lat : 43.6667,lon : 7.15},{lat : 42.0396,lon : 9.01289},{lat : 43.6107,lon : 3.8767}]
-  constructor(private upc3Service : Upcv3serviceService,private storage : Storage,private geolocation : Geolocation,private router: Router,private global : GlobalService) { }
+  constructor(private upc3Service : Upcv3serviceService,private storage : Storage,private geolocation : Geolocation,private router: Router,private global : GlobalService,private platform : Platform,private ngZone : NgZone,private cd : ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.getUpcStateConnexion();
     this.storage.get("token").then(val=>{
       this.upc3Service.getAllStock(val).subscribe(res=>{
         var stock = res.result;
@@ -51,6 +55,23 @@ export class ChoosestockPage implements OnInit {
   
   deg2rad(deg) {
     return deg * (Math.PI/180)
+  }
+  getUpcStateConnexion() {
+    this.platform.ready().then(async res=>{
+      this.upc = new UPCModbus(state => {
+        this.ngZone.run(() => {
+          // Force refresh UI
+          
+            
+            
+          
+        });
+      });
+
+      await this.upc.client.connect();
+
+      
+    })
   }
 
 }

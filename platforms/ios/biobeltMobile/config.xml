@@ -58,6 +58,9 @@
     <feature name="WifiWizard2">
         <param name="ios-package" value="WifiWizard2" />
     </feature>
+    <feature name="Notification">
+        <param name="ios-package" value="CDVNotification" />
+    </feature>
     <name>biobeltMobile</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>

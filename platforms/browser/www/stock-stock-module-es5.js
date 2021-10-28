@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<ion-header>\n  <ion-toolbar color=\"primary\">\n    <ion-buttons slot=\"start\">\n      <ion-back-button></ion-back-button>\n    </ion-buttons>\n    <ion-title>{{name.name}}</ion-title>\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\"></ion-icon>ADMIN</ion-button> \n     </ion-buttons>\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \n     </ion-buttons>\n  </ion-toolbar>\n  \n</ion-header>\n\n<ion-content>\n  <ion-list>\n      <div *ngFor=\"let s of stock; let i = index;\">\n      <!--<ion-item-divider><ion-label>{{s.rack}}</ion-label></ion-item-divider>-->\n      \n\n      <div *ngIf=\"stock[i+1] != null\">\n\n      \n      <ion-item-divider sticky=\"true\" *ngIf=\"s.rack != stock[i+1].rack\">\n        <ion-label *ngIf=\"s.rack == '' || s.rack == null\">Bouteilles Non associés au rack</ion-label>\n        <ion-label *ngIf=\"s.rack != '' || s.rack != null\">{{s.rack}}</ion-label>\n      </ion-item-divider> \n      </div>\n    <ion-item> \n      <ion-label>{{s.bottleString}}</ion-label>\n      <ion-badge color=\"success\" *ngIf=\"s.state === 'FULL'\">Plein</ion-badge>\n      <ion-badge color=\"secondary\" *ngIf=\"s.state === 'IN_USE'\">Entamée</ion-badge>\n      <ion-badge color=\"danger\" *ngIf=\"s.state === 'EMPTY'\">Vide</ion-badge>\n    </ion-item>\n  </div>\n    \n  </ion-list>\n</ion-content>\n\n<ion-footer>\n  <ion-button *ngIf=\"addStock\" expand=\"block\" (click)=\"addBottle();\">\n      Ajouter une Bouteille\n  </ion-button>\n  <ion-button *ngIf=\"retStock\" expand=\"block\" (click)=\"retBottles();\">\n    Retour au dépôt\n  </ion-button>\n  <ion-button *ngIf=\"remStock\" color=\"danger\" expand=\"block\" (click)=\"delBottle();\">\n    Enlever une Bouteille\n</ion-button>\n<ion-button *ngIf=\"addStock\" expand=\"block\" (click)=\"addRack();\">\n    Ajouter un Rack\n</ion-button>\n<ion-button *ngIf=\"retStock\" expand=\"block\" (click)=\"retRack();\">\n  Retour au Rack\n</ion-button>\n<!--<ion-button *ngIf=\"remStock\" expand=\"block\" color=\"danger\" (click)=\"remRack();\">\n  Enlever un Rack\n</ion-button>-->\n</ion-footer>\n"
+module.exports = "<ion-header>\r\n  <ion-toolbar color=\"primary\">\r\n    <ion-buttons slot=\"start\">\r\n      <ion-back-button defaultHref=\"home\"></ion-back-button>\r\n    </ion-buttons>\r\n    <ion-title>{{name.name}}</ion-title>\r\n    <ion-buttons slot=\"end\" *ngIf=\"!global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"globe\" color=\"light\"></ion-icon>ADMIN</ion-button> \r\n     </ion-buttons>\r\n     <ion-buttons slot=\"end\" *ngIf=\"global.isBBAM\">\r\n      <ion-button fill=\"clear\"> <ion-icon name=\"wifi\" color=\"light\"></ion-icon>{{global.ssid}}</ion-button> \r\n     </ion-buttons>\r\n  </ion-toolbar>\r\n  \r\n</ion-header>\r\n\r\n<ion-content>\r\n  <ion-list>\r\n      <div *ngFor=\"let s of stock; let i = index;\">\r\n      \r\n\r\n      <div *ngIf=\"stock[i+1] != null\">\r\n\r\n      \r\n      <ion-item-divider sticky=\"true\" *ngIf=\"s.rack != stock[i+1].rack\">\r\n        <ion-label *ngIf=\"s.rack == '' || s.rack == null\">Bouteilles Non associés au rack</ion-label>\r\n        <ion-label *ngIf=\"s.rack != '' || s.rack != null\">{{s.rack}}</ion-label>\r\n      </ion-item-divider> \r\n      </div>\r\n    <ion-item> \r\n      <ion-label>{{s.bottleString}}</ion-label>\r\n      <ion-badge color=\"success\" *ngIf=\"s.state === 'FULL'\">Plein</ion-badge>\r\n      <ion-badge color=\"secondary\" *ngIf=\"s.state === 'IN_USE'\">Entamée</ion-badge>\r\n      <ion-badge color=\"danger\" *ngIf=\"s.state === 'EMPTY'\">Vide</ion-badge>\r\n    </ion-item>\r\n  </div>\r\n    \r\n  </ion-list>\r\n</ion-content>\r\n\r\n<ion-footer>\r\n  <ion-button *ngIf=\"addStock\" expand=\"block\" (click)=\"addBottle();\">\r\n    Réception de Bouteilles\r\n  </ion-button>\r\n  <ion-button *ngIf=\"retStock\" expand=\"block\" (click)=\"retBottles();\">\r\n    Retour au dépôt\r\n  </ion-button>\r\n  <ion-button *ngIf=\"remStock\" color=\"danger\" expand=\"block\" (click)=\"delBottle();\">\r\n    Enlever une Bouteille\r\n</ion-button>\r\n<ion-button *ngIf=\"addStock\" expand=\"block\" (click)=\"addRack();\">\r\n    Ajouter/Sélectionner un Rack\r\n</ion-button>\r\n<ion-button *ngIf=\"retStock\" expand=\"block\" (click)=\"retRack();\">\r\n  Sélectionner un Rack\r\n</ion-button>\r\n\r\n</ion-footer>\r\n\r\n"
 
 /***/ }),
 
@@ -138,13 +138,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var StockPage = /** @class */ (function () {
-    function StockPage(storage, barcode, upcv3Service, modalService, global) {
+    function StockPage(storage, barcode, upcv3Service, modalService, global, alertController) {
         this.storage = storage;
         this.barcode = barcode;
         this.upcv3Service = upcv3Service;
         this.modalService = modalService;
         this.global = global;
+        this.alertController = alertController;
         this.addStock = false;
         this.remStock = false;
         this.retStock = false;
@@ -215,15 +217,96 @@ var StockPage = /** @class */ (function () {
                             }
                         });
                     }); });
-                    /*this.upcv3Service.removeRack(res.text,this.token).subscribe(res=>{
-            
-                    })*/
                 }
                 return [2 /*return*/];
             });
         }); });
     };
     StockPage.prototype.addRack = function () {
+        var _this = this;
+        this.barcode.scan().then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+            var text;
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                if (res.text != "") {
+                    text = res.text;
+                    this.upcv3Service.getBottleFromRack(this.token, res.text).subscribe(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                        var modal;
+                        return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    if (!(res.result.length == 0)) return [3 /*break*/, 1];
+                                    this.presentAlertRack(text);
+                                    return [3 /*break*/, 3];
+                                case 1:
+                                    localStorage.setItem("rack", text);
+                                    return [4 /*yield*/, this.modalService.create({
+                                            component: _addbottlemodal_addbottlemodal_page__WEBPACK_IMPORTED_MODULE_6__["AddbottlemodalPage"],
+                                            componentProps: {
+                                                barcode: "",
+                                                stockRet: this.name,
+                                                mode: 1
+                                            }
+                                        })];
+                                case 2:
+                                    modal = _a.sent();
+                                    modal.present();
+                                    _a.label = 3;
+                                case 3: return [2 /*return*/];
+                            }
+                        });
+                    }); });
+                }
+                return [2 /*return*/];
+            });
+        }); });
+    };
+    StockPage.prototype.presentAlertRack = function (text) {
+        return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](this, void 0, void 0, function () {
+            var alert;
+            var _this = this;
+            return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.alertController.create({
+                            cssClass: 'my-custom-class',
+                            header: 'Nouveau Rack',
+                            subHeader: '',
+                            message: 'Vous avez ajouter un nouveau rack ?',
+                            buttons: [{ text: 'Annuler', handler: function () { } }, { text: 'Confirmer',
+                                    handler: function () { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
+                                        var modal;
+                                        return tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"](this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0:
+                                                    localStorage.setItem("rack", text);
+                                                    return [4 /*yield*/, this.modalService.create({
+                                                            component: _addbottlemodal_addbottlemodal_page__WEBPACK_IMPORTED_MODULE_6__["AddbottlemodalPage"],
+                                                            componentProps: {
+                                                                barcode: "",
+                                                                stockRet: this.name,
+                                                                mode: 1
+                                                            }
+                                                        })];
+                                                case 1:
+                                                    modal = _a.sent();
+                                                    modal.present();
+                                                    return [2 /*return*/];
+                                            }
+                                        });
+                                    }); }
+                                }],
+                        })];
+                    case 1:
+                        alert = _a.sent();
+                        return [4 /*yield*/, alert.present()];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    StockPage.prototype.retRack = function () {
         var _this = this;
         this.barcode.scan().then(function (res) { return tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"](_this, void 0, void 0, function () {
             var modal;
@@ -237,7 +320,7 @@ var StockPage = /** @class */ (function () {
                                 componentProps: {
                                     barcode: "",
                                     stockRet: this.name,
-                                    mode: 1
+                                    mode: 2
                                 }
                             })];
                     case 1:
@@ -331,6 +414,7 @@ var StockPage = /** @class */ (function () {
                                     })];
                             case 1:
                                 modal = _a.sent();
+                                modal.present();
                                 _a.label = 2;
                             case 2: return [2 /*return*/];
                         }
@@ -345,7 +429,8 @@ var StockPage = /** @class */ (function () {
         { type: _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_3__["BarcodeScanner"] },
         { type: _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_4__["Upcv3serviceService"] },
         { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"] },
-        { type: _api_global_service__WEBPACK_IMPORTED_MODULE_8__["GlobalService"] }
+        { type: _api_global_service__WEBPACK_IMPORTED_MODULE_8__["GlobalService"] },
+        { type: _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["AlertController"] }
     ]; };
     StockPage = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
@@ -353,7 +438,7 @@ var StockPage = /** @class */ (function () {
             template: __webpack_require__(/*! raw-loader!./stock.page.html */ "./node_modules/raw-loader/index.js!./src/app/stock/stock.page.html"),
             styles: [__webpack_require__(/*! ./stock.page.scss */ "./src/app/stock/stock.page.scss")]
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"], _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_3__["BarcodeScanner"], _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_4__["Upcv3serviceService"], _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"], _api_global_service__WEBPACK_IMPORTED_MODULE_8__["GlobalService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_ionic_storage__WEBPACK_IMPORTED_MODULE_2__["Storage"], _ionic_native_barcode_scanner_ngx__WEBPACK_IMPORTED_MODULE_3__["BarcodeScanner"], _api_upcv3service_service__WEBPACK_IMPORTED_MODULE_4__["Upcv3serviceService"], _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["ModalController"], _api_global_service__WEBPACK_IMPORTED_MODULE_8__["GlobalService"], _ionic_angular__WEBPACK_IMPORTED_MODULE_5__["AlertController"]])
     ], StockPage);
     return StockPage;
 }());

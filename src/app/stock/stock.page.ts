@@ -73,9 +73,7 @@ export class StockPage implements OnInit {
           }
         })
         
-        /*this.upcv3Service.removeRack(res.text,this.token).subscribe(res=>{
-
-        })*/
+        
       }
       
     })

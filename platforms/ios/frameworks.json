@@ -6,6 +6,6 @@
     "SystemConfiguration.framework": 2,
     "CoreTelephony.framework": 1,
     "AVFoundation.framework": 1,
-    "AudioToolbox.framework": 1,
+    "AudioToolbox.framework": 2,
     "NetworkExtension.framework": 1
 }

@@ -1,7 +1,12 @@
 import { ModbusClient, UPCDiffCo2Program, UPCDiffCo2Sun } from './modbus';
-import { LoadingController } from '@ionic/angular';
+import { Events, LoadingController } from '@ionic/angular';
 import { GeneralParameters } from './generalParameters';
 import { DiffusionParameters } from './diffusionParameters';
+import { CommunicationParameters } from './communicationParameters';
+import { AlarmsParameters } from './alarmsParameters';
+import { ReservesParameters } from './reservesParameters';
+import { Dialogs } from '@ionic-native/dialogs/ngx';
+import { CorrespondancesRegistres } from './correspondancesRegistres'; 
 
 export class UPCModbus {
   // Attributes
@@ -12,6 +17,7 @@ export class UPCModbus {
   static litterToKilograms: number    = 0.001974;
 
   client: ModbusClient = null;
+ 
 
   nameId:         string = '';
   mode:           number = 0;
@@ -19,6 +25,8 @@ export class UPCModbus {
   trapNum:        number = 0;
   general : GeneralParameters = new GeneralParameters();
   diffusions : DiffusionParameters = new DiffusionParameters();
+  alarm : AlarmsParameters = new AlarmsParameters();
+  reserves : ReservesParameters = new ReservesParameters();
   co2FlowRefTrap: number = 0;
   co2Res1ActVol:    number = 0;
   co2Res2ActVol:    number = 0;
@@ -36,8 +44,13 @@ export class UPCModbus {
     new UPCDiffCo2Program(),
     new UPCDiffCo2Program()
   ];
+  communicationParameters: CommunicationParameters = new CommunicationParameters();
+
   diffCo2Sunrise: UPCDiffCo2Sun = new UPCDiffCo2Sun();
   diffCo2Sunset:  UPCDiffCo2Sun = new UPCDiffCo2Sun();
+
+  modeChoisi; //Intervention sur ceinture ou mouvement de bouteilles ou mode test
+  answer: number;
 
   /**
    * Constructor
@@ -46,6 +59,1800 @@ export class UPCModbus {
     this.stateChangeCallback = stateChangeCallback;
     this.init();
   }
+  int2ip (ipInt) {
+    return ( (ipInt>>>24) +'.' + (ipInt>>16 & 255) +'.' + (ipInt>>8 & 255) +'.' + (ipInt & 255) );
+  }
+  toZero4(d) {
+    
+    return ("0000" + (+d).toString(16)).substr(-4);
+
+  }
+  async onReadCyclique(upcNameId:string, mode:string, page:string) { 
+    var success;
+    var error;
+    var correspondanceRegistres = new CorrespondancesRegistres()
+    switch(page){
+      case "namepiege":
+        success = true
+        break;
+
+      case "cdiff": 
+        try{ 
+          //40435 40464
+          var res = await this.client.readHoldingRegisters(correspondanceRegistres.co2PressInpAvg.adr,29)
+
+          //40435 
+          this.diffusions.co2PresInpAvg = this.client.registerToFloat([res[0],res[1]]);
+          //40437
+          this.diffusions.co2PresOutAvg = this.client.registerToFloat([res[2],res[3]]); 
+          //40451  
+          this.diffusions.co2TempAvg = this.client.registerToFloat([res[16],res[17]]);
+          //40463 
+          this.diffusions.co2PressOutComp = this.client.registerToFloat([res[28],res[29]]);
+          
+          success = true
+
+          break;         
+        }
+        catch(err){
+          success = false
+          error = err
+
+          break;
+        } 
+
+      case "comunicationparam":
+        success = true
+        break;
+
+      case "addbottleceint":
+        success = true
+        break;
+    }  
+    if(success == true){
+      return true;
+    } 
+    else{
+      return error;
+    }
+  }
+
+  async onReadStatique(upcNameId:string, mode:string, page:string){
+    var success;
+    var error;
+    var correspondancesRegistres = new CorrespondancesRegistres()
+    const opt = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',hour: 'numeric',
+    minute: 'numeric',
+    dayPeriod: 'short' }; 
+    switch(page){
+      case "namepiege":
+        try{
+          //40001 40015
+          var res1 = await this.client.readHoldingRegisters(correspondancesRegistres.upcNameId.adr,15)
+
+          //40001 40010                
+          var tabname = [];
+          for(var i = 0;i<10;i++){
+            tabname.push(res1[i]);
+          } 
+          var nameId = this.client.registerToString(tabname).replace(/[^a-zA-Z0-9]/g,'');
+
+          if(mode != "modeTest"){ //on n'est pas en mode test   
+
+            if(nameId != upcNameId){ //changement d'UPC
+              
+
+              if (window.confirm("Une intervention est en cours sur l'upc "+upcNameId+". Voulez-vous néanmoins continuer sur l'upc "+nameId+"?")) {            
+                if (window.confirm("Voulez-vous terminer l'intervention ? (OK) ou l'abandonner ? (Annuler)")) {              
+                  return {success: true, object:"Terminer l'intervention en cours"};                                       
+                }
+                else{
+                  return {success: true, object:"Abandonner l'intervention en cours"};
+                }                                  
+              }
+              else{
+                alert("Rapprochez-vous de l'upc "+upcNameId+" puis appuyez sur 'OK'.")
+                return {success: true, object:"Se rapprocher de l'upc"};
+              }                
+            }
+            else{
+              this.nameId = nameId;
+
+              //40012 40013                  
+              this.general.upcClock = new Date(this.client.registerToUint32([res1[11],res1[12]])*1000).toLocaleDateString("fr-FR",opt); 
+
+              //40015
+              this.general.upcTrapNum = res1[14];
+
+
+              //40168
+              var res2 = await this.client.readHoldingRegisters(correspondancesRegistres.upcFwVer.adr,1)
+
+              //40168
+              this.general.upcFwVer = this.client.registerToUint32([res2[0]]);
+
+              //40401 40449 
+              var res3 = await this.client.readHoldingRegisters(correspondancesRegistres.upcTimeZone.adr,48)
+
+              //40401 40402
+              this.general.upcTimeZone = this.client.registerToUint32([res3[0],res3[1]]);
+
+              //40441 40449 48 56
+              var tabuuid = "";
+              for(var i = 48;i<56;i++){
+                tabuuid += this.toZero4(res3[i])
+              }
+              this.general.upcMcuUid = tabuuid;
+
+              success = true
+
+              break; 
+            }
+          }
+          else{
+            this.nameId = nameId;
+
+            //40012 40013                  
+            this.general.upcClock = new Date(this.client.registerToUint32([res1[11],res1[12]])*1000).toLocaleDateString("fr-FR",opt); 
+
+            //40015
+            this.general.upcTrapNum = res1[14];
+
+            //40168
+            var res2 = await this.client.readHoldingRegisters(correspondancesRegistres.upcFwVer.adr,1)
+
+            //40168
+            this.general.upcFwVer = this.client.registerToUint32([res2[0]]);
+
+            //40401 40449 
+            var res3 = await this.client.readHoldingRegisters(correspondancesRegistres.upcTimeZone.adr,48)
+
+            //40401 40402
+            this.general.upcTimeZone = this.client.registerToUint32([res3[0],res3[1]]);
+
+            //40441 40449  48 56
+            var tabuuid = "";
+            for(var i = 48;i<56;i++){
+              tabuuid += this.toZero4(res3[i])
+            }
+            this.general.upcMcuUid = tabuuid;
+
+            success = true
+
+            break; 
+          }
+
+        }
+        catch(err){
+          success = false
+          error = err
+
+          break;
+        } 
+      case "cdiff": 
+        try{ 
+          //40001 40065
+          var res1 = await this.client.readHoldingRegisters(correspondancesRegistres.upcNameId.adr,65)
+
+          //40001 40010                
+          var tabname = [];
+          for(var i = 0;i<10;i++){
+            tabname.push(res1[i]);
+          }
+          
+          var nameId = this.client.registerToString(tabname).replace(/[^a-zA-Z0-9]/g,'');
+
+          if(mode != "modeTest"){ //on n'est pas en mode test   
+
+            if(nameId != upcNameId){ //changement d'UPC
+              
+
+              if (window.confirm("Une intervention est en cours sur l'upc "+upcNameId+". Voulez-vous néanmoins continuer sur l'upc "+nameId+"?")) {            
+                if (window.confirm("Voulez-vous terminer l'intervention ? (OK) ou l'abandonner ? (Annuler)")) {              
+                  return {success: true, object:"Terminer l'intervention en cours"};                                       
+                }
+                else{
+                  return {success: true, object:"Abandonner l'intervention en cours"};
+                }                                  
+              }
+              else{
+                alert("Rapprochez-vous de l'upc "+upcNameId+" puis appuyez sur 'OK'.")
+                return {success: true, object:"Se rapprocher de l'upc"};
+              }                
+            }
+            else{
+
+              this.general.co2FlowRefAdj = this.client.registerToFloat([res1[17],res1[18]]);
+
+              this.diffusions.upcDiffLvlAdj = res1[64]
+
+              //40150
+              var res2 = await this.client.readHoldingRegisters(correspondancesRegistres.co2ResActAdj.adr,1)
+              this.reserves.co2ResActAdj = res2[0]
+
+              //40376 40464
+              var res3 = await this.client.readHoldingRegisters(correspondancesRegistres.upcStatus.adr,89)
+
+              //40376
+              this.general.upcStatus = res3[0]
+              //40435 
+              this.diffusions.co2PresInpAvg = this.client.registerToFloat([res3[58],res3[59]]);
+              //40437
+              this.diffusions.co2PresOutAvg = this.client.registerToFloat([res3[60],res3[61]]); 
+
+              //40439 40440               
+              this.diffusions.co2FlowAvg = this.client.registerToFloat([res3[62],res3[63]]);
+
+              //40451  
+              this.diffusions.co2TempAvg = this.client.registerToFloat([res3[75],res3[76]]);
+
+              //40455 40456
+              this.diffusions.co2PressInpOffs = this.client.registerToFloat([res3[79],res3[80]]);
+              
+              //40457 40458
+              this.diffusions.co2PressOutOffs = this.client.registerToFloat([res3[81],res3[82]]);
+
+              //40459 40460
+              this.diffusions.co2FlowOffs = this.client.registerToFloat([res3[83],res3[84]]);
+
+              //40463 
+              this.diffusions.co2PressOutComp = this.client.registerToFloat([res3[87],res3[88]]);
+              
+              success = true
+
+              break;         
+            }
+          }
+          else{ //on est en mode test
+            this.general.co2FlowRefAdj = this.client.registerToFloat([res1[17],res1[18]]);
+
+              this.diffusions.upcDiffLvlAdj = res1[64]
+
+              //40150
+              var res2 = await this.client.readHoldingRegisters(correspondancesRegistres.co2ResActAdj.adr,1)
+              this.reserves.co2ResActAdj = res2[0]
+
+              //40376 40464
+              var res3 = await this.client.readHoldingRegisters(correspondancesRegistres.upcStatus.adr,89)
+
+              //40376
+              this.general.upcStatus = res3[0]
+              //40435 
+              this.diffusions.co2PresInpAvg = this.client.registerToFloat([res3[58],res3[59]]);
+              //40437
+              this.diffusions.co2PresOutAvg = this.client.registerToFloat([res3[60],res3[61]]); 
+
+              //40439 40440               
+              this.diffusions.co2FlowAvg = this.client.registerToFloat([res3[63],res3[64]]);
+
+              //40451  
+              this.diffusions.co2TempAvg = this.client.registerToFloat([res3[75],res3[76]]);
+
+              //40455 40456
+              this.diffusions.co2PressInpOffs = this.client.registerToFloat([res3[79],res3[80]]);
+              
+              //40457 40458
+              this.diffusions.co2PressOutOffs = this.client.registerToFloat([res3[81],res3[82]]);
+
+              //40459 40460
+              this.diffusions.co2FlowOffs = this.client.registerToFloat([res3[83],res3[84]]);
+
+              //40463 
+              this.diffusions.co2PressOutComp = this.client.registerToFloat([res3[87],res3[88]]);
+              
+              
+              success = true
+
+              break;         
+          }
+        }
+        catch(err){
+          success = false
+          error = err
+
+          break;
+        }
+      case "comunicationparam":
+        try{
+
+          //40001 40064
+          var res1 = await this.client.readHoldingRegisters(correspondancesRegistres.upcNameId.adr, 64)
+
+          //40001 40010                
+          var tabname = [];
+          for(var i = 0;i<10;i++){
+            tabname.push(res1[i]);
+          }
+
+          var nameId = this.client.registerToString(tabname).replace(/[^a-zA-Z0-9]/g,'');
+
+          if(mode != "modeTest"){ //on n'est pas en mode test   
+
+            if(nameId != upcNameId){ //changement d'UPC
+              
+
+              if (window.confirm("Une intervention est en cours sur l'upc "+upcNameId+". Voulez-vous néanmoins continuer sur l'upc "+nameId+"?")) {            
+                if (window.confirm("Voulez-vous terminer l'intervention ? (OK) ou l'abandonner ? (Annuler)")) {              
+                  return {success: true, object:"Terminer l'intervention en cours"};                                       
+                }
+                else{
+                  return {success: true, object:"Abandonner l'intervention en cours"};
+                }                                  
+              }
+              else{
+                alert("Rapprochez-vous de l'upc "+upcNameId+" puis appuyez sur 'OK'.")
+                return {success: true, object:"Se rapprocher de l'upc"};
+              }                
+            }
+            else{
+              
+              //40022 40023
+              this.communicationParameters.comGsmIpAdr = this.int2ip(this.client.registerToUint32([res1[21],res1[22]]));
+
+              //40024 40033
+              var tabMdmName = [];
+              for (var i = 23;i<33;i++){
+              tabMdmName.push(res1[i]);
+              }
+              this.communicationParameters.comMdmName = this.client.registerToString(tabMdmName)
+
+              //40034 40043
+              var tabMdmPass = [];
+              for(var i =33;i<43;i++){
+                tabMdmPass.push(res1[i]);
+              }
+              this.communicationParameters.comGsmPass = this.client.registerToString(tabMdmPass)
+
+              //40045 40053
+              var tabssid = [];
+              for (var i =44;i<54;i++){
+                tabssid.push(res1[i]);
+              }
+              this.communicationParameters.comGsmName = this.client.registerToString(tabssid)
+
+              //40055 40064
+              var tabpassword = [];
+              for(var i = 54;i<64;i++){
+                tabpassword.push(res1[i]);
+              }
+              this.communicationParameters.comWiFiPass = this.client.registerToString(tabpassword).replace(/[^a-zA-Z0-9-.-]/g,'');
+
+              var res2 = await this.client.readHoldingRegisters(correspondancesRegistres.comWebSrvUrl.adr,46)
+
+              //40295 40310
+              var taburl = [];
+              for(var i =0;i<14;i++){
+                taburl.push(res2[i]);
+              }
+              this.communicationParameters.comWebSrvUrl = this.client.registerToString(taburl).replace(/[^a-zA-Z0-9-.-]/g,'');
+              
+              //40320 40329
+              var tabapnuser = [];
+              for (var i = 24;i<34;i++){
+                tabapnuser.push(res2[i]);
+              }
+              this.communicationParameters.comMdmApnUser = this.client.registerToString(tabapnuser).replace(/[^a-zA-Z0-9]/g,'');
+
+              //40330 40339
+              var tabapnpass = [];
+              for(var i = 34;i<44;i++){
+                tabapnpass.push(res2[i]);
+              }
+              this.communicationParameters.comMdmApnPass = this.client.registerToString(tabapnpass).replace(/[^a-zA-Z0-9]/g,'');
+
+              //40340 
+              this.communicationParameters.comWifiApCh = this.client.registerToUint32([res2[45]])
+
+              var res3 = await this.client.readHoldingRegisters(correspondancesRegistres.comMdmApnId2.adr,51)
+
+              //40467 40517 0 50 
+              var tabapn2 = [];
+              for(var i =0;i<50;i++){
+                tabapn2.push(res3[i]);
+              }
+              this.communicationParameters.comMdmApnId2 = this.client.registerToString(tabapn2).replace(/[^a-zA-Z0-9-.-]/g,'');
+              
+              success = true
+
+              break;         
+            }
+          }
+          else{ //on est en mode test
+
+            //40022 40023
+            this.communicationParameters.comGsmIpAdr = this.int2ip(this.client.registerToUint32([res1[21],res1[22]]));
+
+            //40024 40033
+            var tabMdmName = [];
+            for (var i = 23;i<33;i++){
+            tabMdmName.push(res1[i]);
+            }
+            this.communicationParameters.comMdmName = this.client.registerToString(tabMdmName)
+
+            //40034 40043
+            var tabMdmPass = [];
+            for(var i =33;i<43;i++){
+              tabMdmPass.push(res1[i]);
+            }
+            this.communicationParameters.comGsmPass = this.client.registerToString(tabMdmPass)
+
+            //40045 40053
+            var tabssid = [];
+            for (var i =44;i<54;i++){
+              tabssid.push(res1[i]);
+            }
+            this.communicationParameters.comGsmName = this.client.registerToString(tabssid)
+
+            //40055 40064
+            var tabpassword = [];
+            for(var i = 54;i<64;i++){
+              tabpassword.push(res1[i]);
+            }
+            this.communicationParameters.comWiFiPass = this.client.registerToString(tabpassword).replace(/[^a-zA-Z0-9-.-]/g,'');
+
+            var res2 = await this.client.readHoldingRegisters(correspondancesRegistres.comWebSrvUrl.adr,46)
+
+            //40295 40310
+            var taburl = [];
+            for(var i =0;i<14;i++){
+              taburl.push(res2[i]);
+            }
+            this.communicationParameters.comWebSrvUrl = this.client.registerToString(taburl).replace(/[^a-zA-Z0-9-.-]/g,'');
+            
+            //40320 40329
+            var tabapnuser = [];
+            for (var i = 24;i<34;i++){
+              tabapnuser.push(res2[i]);
+            }
+            this.communicationParameters.comMdmApnUser = this.client.registerToString(tabapnuser).replace(/[^a-zA-Z0-9]/g,'');
+
+            //40330 40339
+            var tabapnpass = [];
+            for(var i = 34;i<44;i++){
+              tabapnpass.push(res2[i]);
+            }
+            this.communicationParameters.comMdmApnPass = this.client.registerToString(tabapnpass).replace(/[^a-zA-Z0-9]/g,'');
+
+            //40340 
+            this.communicationParameters.comWifiApCh = this.client.registerToUint32([res2[45]])
+
+            var res3 = await this.client.readHoldingRegisters(correspondancesRegistres.comMdmApnId2.adr,51)
+
+            //40467 40517 0 50 
+            var tabapn2 = [];
+            for(var i =0;i<50;i++){
+              tabapn2.push(res3[i]);
+            }
+            this.communicationParameters.comMdmApnId2 = this.client.registerToString(tabapn2).replace(/[^a-zA-Z0-9-.-]/g,'');
+            
+            success = true
+
+            break;         
+          }
+        } 
+        catch(err){
+          success = false
+          error = err
+
+          break;
+        } 
+        
+      case "addbottleceint":
+        try{
+          var res1 = await this.client.readHoldingRegisters(correspondancesRegistres.upcNameId.adr, 10)
+          
+           //40001 40010                
+           var tabname = [];
+           for(var i = 0;i<10;i++){
+             tabname.push(res1[i]);
+           }
+ 
+           var nameId = this.client.registerToString(tabname).replace(/[^a-zA-Z0-9]/g,'');
+ 
+           if(mode != "modeTest"){ //on n'est pas en mode test   
+ 
+             if(nameId != upcNameId){ //changement d'UPC
+               
+ 
+               if (window.confirm("Une intervention est en cours sur l'upc "+upcNameId+". Voulez-vous néanmoins continuer sur l'upc "+nameId+"?")) {            
+                 if (window.confirm("Voulez-vous terminer l'intervention ? (OK) ou l'abandonner ? (Annuler)")) {              
+                   return {success: true, object:"Terminer l'intervention en cours"};                                       
+                 }
+                 else{
+                   return {success: true, object:"Abandonner l'intervention en cours"};
+                 }                                  
+               }
+               else{
+                 alert("Rapprochez-vous de l'upc "+upcNameId+" puis appuyez sur 'OK'.")
+                 return {success: true, object:"Se rapprocher de l'upc"};
+               }                
+             }
+             else{
+              this.reserves.bottlesB1 = [];
+              this.reserves.bottlesB2 = [];
+              var res2 = await this.client.readHoldingRegisters(correspondancesRegistres.co2ResActive.adr,16)
+
+              //40151
+              this.reserves.co2ResActive = this.client.registerToUint32([res2[0]]);
+
+              //40157 40158
+              this.reserves.co2Res1ActVol =  Math.round((this.client.registerToFloat([res2[6],res2[7]])* 0.001974) * 100) / 100 ;
+              
+              //40165 40166
+              this.reserves.co2Res2ActVol = Math.round((this.client.registerToFloat([res2[14],res2[15]])* 0.001974) * 100) / 100 ;
+
+                   
+              //40376 40450
+              var res3 = await this.client.readHoldingRegisters(correspondancesRegistres.upcStatus.adr,75)
+
+              //40376
+              this.general.upcStatus = res3[0]
+              
+                
+              //40381
+              this.reserves.co2Res1Status = this.client.registerToUint32([res3[5]]);
+
+              //40383
+              this.reserves.co2Res2Status = this.client.registerToUint32([res3[6]]);
+
+              //40421 40422 
+              this.reserves.co2Res1StartVol = Math.round((this.client.registerToFloat([res3[45],res3[46]])* 0.001974) * 100) / 100;
+
+              //40449 40450  Math.round((this.client.registerToFloat([res[87],res[88]])* 0.001974) * 100) / 100
+              this.reserves.co2Res2StartVol = Math.round((this.client.registerToFloat([res3[73],res3[74]])* 0.001974) * 100) / 100;
+              
+              var res4 = await this.client.readHoldingRegisters(correspondancesRegistres.xCo2Res1CodesBarres.adr,90)
+
+              //41124 41128
+              var tabB11 = [];
+              for(var i =0; i<5;i++){
+                tabB11.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB11));
+              //41129 41133
+              var tabB12 = [];
+              for (var i = 5;i<10;i++){
+                tabB12.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB12));
+              //41134 41138
+              var tabB13 = [];
+              for (var i = 10;i<15;i++){
+                tabB13.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB13));
+              //41139 41143
+              var tabB14 = [];
+              for (var i = 15;i<20;i++){
+                tabB14.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB14));
+              //41144 41148
+              var tabB15 = [];
+              for (var i = 20;i<25;i++){
+                tabB15.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB15));
+              //41149 41153
+              var tabB16 = [];
+              for(var i = 25;i<30;i++){
+                tabB16.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB16));
+              //41154 41158
+              var tabB17 = [];
+              for (var i = 30;i<35;i++){
+                tabB17.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB17));
+              //41159 41163
+              var tabB18 = [];
+              for(var i = 35;i<40;i++){
+                tabB18.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB18));
+              //41164 41168
+              var tabB19 = [];
+              for(var i = 40;i<45;i++){
+                tabB19.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB19));
+              //41169 41173
+              var tabB21 = [];
+              for(var i = 45;i<50;i++){
+                tabB21.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB21));
+              
+              //41174 41178
+              var tabB22 = [];
+              for(var i = 50;i<55;i++){
+                tabB22.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB22));
+              //41179 41183
+              var tabB23 = [];
+              for(var i = 55;i<60;i++){
+                tabB23.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB23));
+              //41184 41188
+              var tabB24 = [];
+              for(var i=60;i<65;i++){
+                tabB24.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB24));
+              //41189 41193
+              var tabB25 = [];
+              for(var i = 65;i<70;i++){
+                tabB25.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB25));
+              //41194 41198
+              var tabB26 = [];
+              for(var i = 70;i<75;i++){
+                tabB26.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB26));
+              //41199 41203
+              var tabB27 = [];
+              for(var i = 75;i<80;i++){
+                tabB27.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB27));
+              
+              //41204 41208
+              var tabB28 = [];
+              for(var i = 80;i<85;i++){
+                tabB28.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB28));
+              //41209 41213
+              var tabB29 = [];
+              for(var i = 85;i<90;i++){
+                tabB29.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB29));
+
+              success = true
+
+              break;  
+            }
+          }
+          else{ //on est en mode test
+
+            this.reserves.bottlesB1 = [];
+              this.reserves.bottlesB2 = [];
+            var res2 = await this.client.readHoldingRegisters(correspondancesRegistres.co2ResActive.adr,16)
+
+            //40151
+            this.reserves.co2ResActive = this.client.registerToUint32([res2[0]]);
+
+            //40157 40158
+            this.reserves.co2Res1ActVol =  Math.round((this.client.registerToFloat([res2[6],res2[7]])* 0.001974) * 100) / 100 ;
+            
+            //40165 40166
+            this.reserves.co2Res2ActVol = Math.round((this.client.registerToFloat([res2[14],res2[15]])* 0.001974) * 100) / 100 ;
+            
+            //40376 40450
+            var res3 = await this.client.readHoldingRegisters(correspondancesRegistres.upcStatus.adr,75)
+
+            //40376
+            this.general.upcStatus = res3[0]
+          
+            
+            //40381
+            this.reserves.co2Res1Status = this.client.registerToUint32([res3[5]]);
+
+            //40383
+            this.reserves.co2Res2Status = this.client.registerToUint32([res3[6]]);
+
+            //40421 40422 
+            this.reserves.co2Res1StartVol = Math.round((this.client.registerToFloat([res3[45],res3[46]])* 0.001974) * 100) / 100;
+
+            //40449 40450  Math.round((this.client.registerToFloat([res[87],res[88]])* 0.001974) * 100) / 100
+            this.reserves.co2Res2StartVol = Math.round((this.client.registerToFloat([res3[73],res3[74]])* 0.001974) * 100) / 100;
+            
+            var res4 = await this.client.readHoldingRegisters(correspondancesRegistres.xCo2Res1CodesBarres.adr,90)
+
+            
+              //41124 41128
+              var tabB11 = [];
+              for(var i =0; i<5;i++){
+                tabB11.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB11));
+              //41129 41133
+              var tabB12 = [];
+              for (var i = 5;i<10;i++){
+                tabB12.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB12));
+              //41134 41138
+              var tabB13 = [];
+              for (var i = 10;i<15;i++){
+                tabB13.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB13));
+              //41139 41143
+              var tabB14 = [];
+              for (var i = 15;i<20;i++){
+                tabB14.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB14));
+              //41144 41148
+              var tabB15 = [];
+              for (var i = 20;i<25;i++){
+                tabB15.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB15));
+              //41149 41153
+              var tabB16 = [];
+              for(var i = 25;i<30;i++){
+                tabB16.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB16));
+              //41154 41158
+              var tabB17 = [];
+              for (var i = 30;i<35;i++){
+                tabB17.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB17));
+              //41159 41163
+              var tabB18 = [];
+              for(var i = 35;i<40;i++){
+                tabB18.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB18));
+              //41164 41168
+              var tabB19 = [];
+              for(var i = 40;i<45;i++){
+                tabB19.push(res4[i]);
+              }
+              this.reserves.bottlesB1.push(this.client.registerToString(tabB19));
+              //41169 41173
+              var tabB21 = [];
+              for(var i = 45;i<50;i++){
+                tabB21.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB21));
+              
+              //41174 41178
+              var tabB22 = [];
+              for(var i = 50;i<55;i++){
+                tabB22.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB22));
+              //41179 41183
+              var tabB23 = [];
+              for(var i = 55;i<60;i++){
+                tabB23.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB23));
+              //41184 41188
+              var tabB24 = [];
+              for(var i=60;i<65;i++){
+                tabB24.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB24));
+              //41189 41193
+              var tabB25 = [];
+              for(var i = 65;i<70;i++){
+                tabB25.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB25));
+              //41194 41198
+              var tabB26 = [];
+              for(var i = 70;i<75;i++){
+                tabB26.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB26));
+              //41199 41203
+              var tabB27 = [];
+              for(var i = 75;i<80;i++){
+                tabB27.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB27));
+              
+              //41204 41208
+              var tabB28 = [];
+              for(var i = 80;i<85;i++){
+                tabB28.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB28));
+              //41209 41213
+              var tabB29 = [];
+              for(var i = 85;i<90;i++){
+                tabB29.push(res4[i]);
+              }
+              this.reserves.bottlesB2.push(this.client.registerToString(tabB29));
+
+            success = true
+
+            break;  
+          }  
+        }
+        catch(err){
+          success = false
+          error = err
+
+          break;
+        } 
+    } 
+    if(success == true){
+      return true;
+    } 
+    else{
+      return error;
+    }
+  }
+
+  async readAllRegOld(upcNameId:string, mode:string, page:string) {  
+    
+    var repBloc1 = await this.readBloc1(upcNameId, mode)
+    if(repBloc1.success == true){      
+        return true;
+        if(repBloc1.object == "Terminer l'intervention en cours"){
+          return "Terminer l'intervention en cours"
+        }
+        else{
+          if(repBloc1.object == "Abandonner l'intervention en cours"){
+            return "Abandonner l'intervention en cours"
+          }
+          else{
+            if(repBloc1.object == "Se rapprocher de l'upc"){
+              return "Se rapprocher de l'upc"
+            }
+            else{              
+              var repBloc2 = await this.readBloc2()
+              if(repBloc2.success == true){                
+                var repBloc3 = await this.readBloc3()
+                if(repBloc3.success == true){                  
+                  var repBloc4 = await this.readBloc4()
+                  if(repBloc4.success == true){                    
+                    var repBloc5 = await this.readBloc5()
+                    if(repBloc5.success == true){                      
+                      var repBloc6 = await this.readBloc6()
+                      if(repBloc6.success == true){
+                        return true;
+                      }
+                      else{
+                        return repBloc6; //retourne l'erreur du bloc 6
+                      }
+                    }
+                    else{
+                      return repBloc5; //retourne l'erreur du bloc 5
+                    }
+                  }
+                  else{
+                    return repBloc4; //retourne l'erreur du bloc 4
+                  }
+                }
+                else{
+                  return repBloc3; //retourne l'erreur du bloc 3
+                }
+              }
+              else{
+                return repBloc2; //retourne l'erreur du bloc 2
+              }      
+            }
+          }
+        }
+               
+    }
+    else{ 
+      return repBloc1; //retourne l'erreur du bloc 1
+    }
+    
+        
+      
+    
+      
+      
+      
+     
+
+
+
+ 
+      
+     
+      
+      
+      
+      /*this.client.readHoldingRegisters(40600,120).then(res=>{
+        //0 to 99 sms not necessary
+        //100 to 120 not necessary
+      }).catch(err=>{
+        alert(JSON.stringify(err));
+      })*/
+      /*this.client.readHoldingRegisters(40720,120).then(res=>{
+        //0 to 19 not necessary
+        //20 to 39 not necessary
+        //40 to 69 not necessary
+        //70 to 99 not necessary
+        //100 to 119 nothing 
+        // 120 not necessary
+      }).catch(err=>{
+        alert(JSON.stringify(err));
+      })*/
+      /*this.client.readHoldingRegisters(40840,120).then(res=>{
+        // 0 to 29 not necessary
+  
+        alert(JSON.stringify(res));
+      }).catch(err=>{
+        alert(JSON.stringify(err));
+      })*/
+      /*this.client.readHoldingRegisters(40961,120).then(res=>{
+        alert(JSON.stringify(res));
+  
+      }).catch(err=>{
+        alert(JSON.stringify(err));
+      })*/
+      /*this.client.readHoldingRegisters(41081,120).then(res=>{
+        alert(JSON.stringify(res));
+      }).catch(err=>{
+        alert(JSON.stringify(err));
+      })*/
+      
+
+      //if(bool1 && bool2 && bool3 && bool4 && bool5 && bool6 ){
+        //var itm = await this.readAllReg();
+      
+      //}
+      
+      
+  
+    
+  }
+
+  onConfirm(buttonIndex) {
+    if(buttonIndex == 0){
+      this.answer = 0;
+    }
+    if(buttonIndex==1){
+      this.answer = 1;
+    }
+    if(buttonIndex==2){
+      this.answer = 2;
+    }
+    if(buttonIndex==3){
+      this.answer = 3;
+    }
+    
+}
+
+  async readBloc1(upcNameId, mode){
+    const opt = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',hour: 'numeric',
+    minute: 'numeric',
+    dayPeriod: 'short' }; 
+    try{ 
+      var res = await this.client.readHoldingRegisters(40168,1)
+      
+      //40001 40010
+      
+      var tabname = [];
+      for(var i = 0;i<10;i++){
+        tabname.push(res[i]);
+      }
+      
+      var nameId = this.client.registerToString(tabname).replace(/[^a-zA-Z0-9]/g,'');
+
+      if(mode != "modeTest"){ //on n'est pas en mode test   
+
+        if(nameId != upcNameId){ //changement d'UPC
+         
+
+          if (window.confirm("Une intervention est en cours sur l'upc "+upcNameId+". Voulez-vous néanmoins continuer sur l'upc "+nameId+"?")) {            
+            if (window.confirm("Voulez-vous terminer l'intervention ? (OK) ou l'abandonner ? (Annuler)")) {              
+              return {success: true, object:"Terminer l'intervention en cours"};                                       
+            }
+            else{
+              return {success: true, object:"Abandonner l'intervention en cours"};
+            }                                  
+          }
+          else{
+            alert("Rapprochez-vous de l'upc "+upcNameId+" puis appuyez sur 'OK'.")
+            return {success: true, object:"Se rapprocher de l'upc"};
+          }                
+        }
+        else{
+          this.nameId = nameId;
+          //40011
+          this.general.upcMode = this.client.registerToUint32(res[10]);
+          //40012 40013
+                  
+          this.general.upcClock = new Date(this.client.registerToUint32([res[11],res[12]])*1000).toLocaleDateString("fr-FR",opt); 
+          
+          //40014
+          this.general.upcLanguage = this.client.registerToUint32(res[13]);
+          //40015
+          this.general.upcTrapNum = res[14];
+          //40016 40017
+          this.general.co2FlowRefTrap = this.client.registerToFloat([res[15],res[16]]);
+          //40018 40019
+          this.general.co2FlowRefAdj = this.client.registerToFloat([res[17],res[18]]);
+          //40020 40021
+          this.general.co2FlowRefNom = this.client.registerToFloat([res[19],res[20]]);
+          //40022 40023
+          this.communicationParameters.comGsmIpAdr = this.int2ip(this.client.registerToUint32([res[21],res[22]]));
+          //40024 40033
+          var tabMdmName = [];
+          for (var i = 23;i<33;i++){
+          tabMdmName.push(res[i]);
+          }
+          this.communicationParameters.comMdmName = this.client.registerToString(tabMdmName)
+          //40034 40043
+          var tabMdmPass = [];
+          for(var i =33;i<43;i++){
+            tabMdmPass.push(res[i]);
+          }
+          this.communicationParameters.comGsmPass = this.client.registerToString(tabMdmPass)
+      
+          //43 ne pas lire 40044
+          //40045 40053
+          var tabssid = [];
+          for (var i =44;i<54;i++){
+            tabssid.push(res[i]);
+          }
+          this.communicationParameters.comGsmName = this.client.registerToString(tabssid)
+          //40055 40064
+          var tabpassword = [];
+          for(var i = 54;i<64;i++){
+            tabpassword.push(res[i]);
+          }
+          this.communicationParameters.comWiFiPass = this.client.registerToString(tabpassword).replace(/[^a-zA-Z0-9-.-]/g,'');
+          //40065
+          this.diffusions.upcDiffLvlAdj = res[64];
+          //40066
+          this.alarm.alrResLowEn = res[65] == 1;
+
+          //66 à ne pas lire 40067
+          //40068 40069
+          this.diffHourSunrise = this.client.registerToUint32([res[67],res[68]]);
+          //40070 40071
+          this.diffHourSunset = this.client.registerToUint32([res[69],res[70]]);
+      
+          //40072 40073
+          this.diffCo2Program[0].start = this.client.registerToUint32([res[71],res[72]]);
+          //40074 40075
+          this.diffCo2Program[0].stop = this.client.registerToUint32([res[73],res[74]]);
+          //40076
+          this.diffCo2Program[0].mode = this.client.registerToUint32([res[75]]);
+          //40077
+          this.diffCo2Program[0].intensity = this.client.registerToUint32([res[76]]);
+      
+          //40078 40079
+          this.diffCo2Program[1].start = this.client.registerToUint32([res[77],res[78]]);
+          //40080 40081
+          this.diffCo2Program[1].stop = this.client.registerToUint32([res[79],res[80]]);
+          // 40082
+          this.diffCo2Program[1].mode = this.client.registerToUint32([res[81]]);
+          //40083
+          this.diffCo2Program[1].intensity = this.client.registerToUint32([res[82]]);
+      
+          //40084 40085
+          this.diffCo2Program[2].start = this.client.registerToUint32([res[83],res[84]]);
+          //40086 40087
+          this.diffCo2Program[2].stop = this.client.registerToUint32([res[85],res[86]]);
+          //40088
+          this.diffCo2Program[2].mode = this.client.registerToUint32([res[87]]);
+          //40089
+          this.diffCo2Program[2].intensity = this.client.registerToUint32([res[88]]);
+      
+          //40090 40091
+          this.diffCo2Program[3].start = this.client.registerToUint32([res[89],res[90]]);
+          //40092 40093
+          this.diffCo2Program[3].stop = this.client.registerToUint32([res[91],res[92]]);
+          //40094 
+          this.diffCo2Program[3].mode = this.client.registerToUint32([res[93]]);
+          //40095
+          this.diffCo2Program[3].intensity = this.client.registerToUint32(res[94]);
+      
+          //40096 40097
+          this.diffCo2Program[4].start = this.client.registerToUint32([res[95],res[96]]);
+          //40098 40099
+          this.diffCo2Program[4].stop = this.client.registerToUint32([res[97],res[98]]);
+          //40100
+          this.diffCo2Program[4].mode = this.client.registerToUint32([res[99]]);
+          //40101
+          this.diffCo2Program[4].intensity = this.client.registerToUint32(res[100]);
+      
+          //40102 40103
+          this.diffCo2Program[5].start = this.client.registerToUint32([res[101],res[102]]);
+          //40104 40105
+          this.diffCo2Program[5].stop = this.client.registerToUint32([res[103],res[104]]);
+          //40106
+          this.diffCo2Program[5].mode = this.client.registerToUint32([res[105]]);
+          //40107
+          this.diffCo2Program[5].intensity = this.client.registerToUint32([res[106]]);
+      
+          //40108 40109
+          this.diffCo2Program[6].start = this.client.registerToUint32([res[107],res[108]]);
+          //40110 40111
+          this.diffCo2Program[6].stop = this.client.registerToUint32([res[109],res[110]]);
+          //40112 
+          this.diffCo2Program[6].mode = this.client.registerToUint32([res[111]]);
+          //40113
+          this.diffCo2Program[6].intensity = this.client.registerToUint32([res[112]]);
+      
+          //40114 40115
+          this.diffCo2Program[7].start = this.client.registerToUint32([res[113],res[114]]);
+          //40116 40117
+          this.diffCo2Program[7].stop = this.client.registerToUint32([res[115],res[116]]);
+          //40118 
+          this.diffCo2Program[7].mode = this.client.registerToUint32([res[117]]);
+          //40119
+          this.diffCo2Program[7].intensity = this.client.registerToUint32([res[118]]);
+      
+          //40120 40121
+          this.diffCo2Program[8].start = this.client.registerToUint32([res[119],res[120]]);
+
+          return {success:true,object:res};       
+          
+        }
+      }
+      else{ //on est en mode test
+        this.nameId = nameId;
+        //40011
+        this.general.upcMode = this.client.registerToUint32(res[10]);
+        //40012 40013
+        this.general.upcClock = new Date(this.client.registerToUint32([res[11],res[12]])*1000).toLocaleDateString("fr-FR",opt);
+        //40014
+        this.general.upcLanguage = this.client.registerToUint32(res[13]);
+        //40015
+        this.general.upcTrapNum = res[14];
+        //40016 40017
+        this.general.co2FlowRefTrap = this.client.registerToFloat([res[15],res[16]]);
+        //40018 40019
+        this.general.co2FlowRefAdj = this.client.registerToFloat([res[17],res[18]]);
+        //40020 40021
+        this.general.co2FlowRefNom = this.client.registerToFloat([res[19],res[20]]);
+        //40022 40023
+        this.communicationParameters.comGsmIpAdr = this.int2ip(this.client.registerToUint32([res[21],res[22]]));
+        //40024 40033
+        var tabMdmName = [];
+        for (var i = 23;i<33;i++){
+        tabMdmName.push(res[i]);
+        }
+        this.communicationParameters.comMdmName = this.client.registerToString(tabMdmName);
+        //40034 40043
+        var tabMdmPass = [];
+        for(var i =33;i<43;i++){
+          tabMdmPass.push(res[i]);
+        }
+        this.communicationParameters.comGsmPass = this.client.registerToString(tabMdmPass);
+    
+        //43 ne pas lire 40044
+        //40045 40053
+        var tabssid = [];
+        for (var i =44;i<54;i++){
+          tabssid.push(res[i]);
+        }
+        this.communicationParameters.comGsmName = this.client.registerToString(tabssid);
+        //40055 40064
+        var tabpassword = [];
+        for(var i = 54;i<64;i++){
+          tabpassword.push(res[i]);
+        }
+        this.communicationParameters.comWiFiPass = this.client.registerToString(tabpassword);
+        //40065
+        this.diffusions.upcDiffLvlAdj = res[64];
+        //40066
+        this.alarm.alrResLowEn = res[65] == 1;
+
+        //66 à ne pas lire 40067
+        //40068 40069
+        this.diffHourSunrise = this.client.registerToUint32([res[67],res[68]]);
+        //40070 40071
+        this.diffHourSunset = this.client.registerToUint32([res[69],res[70]]);
+    
+        //40072 40073
+        this.diffCo2Program[0].start = this.client.registerToUint32([res[71],res[72]]);
+        //40074 40075
+        this.diffCo2Program[0].stop = this.client.registerToUint32([res[73],res[74]]);
+        //40076
+        this.diffCo2Program[0].mode = this.client.registerToUint32([res[75]]);
+        //40077
+        this.diffCo2Program[0].intensity = this.client.registerToUint32([res[76]]);
+    
+        //40078 40079
+        this.diffCo2Program[1].start = this.client.registerToUint32([res[77],res[78]]);
+        //40080 40081
+        this.diffCo2Program[1].stop = this.client.registerToUint32([res[79],res[80]]);
+        // 40082
+        this.diffCo2Program[1].mode = this.client.registerToUint32([res[81]]);
+        //40083
+        this.diffCo2Program[1].intensity = this.client.registerToUint32([res[82]]);
+    
+        //40084 40085
+        this.diffCo2Program[2].start = this.client.registerToUint32([res[83],res[84]]);
+        //40086 40087
+        this.diffCo2Program[2].stop = this.client.registerToUint32([res[85],res[86]]);
+        //40088
+        this.diffCo2Program[2].mode = this.client.registerToUint32([res[87]]);
+        //40089
+        this.diffCo2Program[2].intensity = this.client.registerToUint32([res[88]]);
+    
+        //40090 40091
+        this.diffCo2Program[3].start = this.client.registerToUint32([res[89],res[90]]);
+        //40092 40093
+        this.diffCo2Program[3].stop = this.client.registerToUint32([res[91],res[92]]);
+        //40094 
+        this.diffCo2Program[3].mode = this.client.registerToUint32([res[93]]);
+        //40095
+        this.diffCo2Program[3].intensity = this.client.registerToUint32(res[94]);
+    
+        //40096 40097
+        this.diffCo2Program[4].start = this.client.registerToUint32([res[95],res[96]]);
+        //40098 40099
+        this.diffCo2Program[4].stop = this.client.registerToUint32([res[97],res[98]]);
+        //40100
+        this.diffCo2Program[4].mode = this.client.registerToUint32([res[99]]);
+        //40101
+        this.diffCo2Program[4].intensity = this.client.registerToUint32(res[100]);
+    
+        //40102 40103
+        this.diffCo2Program[5].start = this.client.registerToUint32([res[101],res[102]]);
+        //40104 40105
+        this.diffCo2Program[5].stop = this.client.registerToUint32([res[103],res[104]]);
+        //40106
+        this.diffCo2Program[5].mode = this.client.registerToUint32([res[105]]);
+        //40107
+        this.diffCo2Program[5].intensity = this.client.registerToUint32([res[106]]);
+    
+        //40108 40109
+        this.diffCo2Program[6].start = this.client.registerToUint32([res[107],res[108]]);
+        //40110 40111
+        this.diffCo2Program[6].stop = this.client.registerToUint32([res[109],res[110]]);
+        //40112 
+        this.diffCo2Program[6].mode = this.client.registerToUint32([res[111]]);
+        //40113
+        this.diffCo2Program[6].intensity = this.client.registerToUint32([res[112]]);
+    
+        //40114 40115
+        this.diffCo2Program[7].start = this.client.registerToUint32([res[113],res[114]]);
+        //40116 40117
+        this.diffCo2Program[7].stop = this.client.registerToUint32([res[115],res[116]]);
+        //40118 
+        this.diffCo2Program[7].mode = this.client.registerToUint32([res[117]]);
+        //40119
+        this.diffCo2Program[7].intensity = this.client.registerToUint32([res[118]]);
+    
+        //40120 40121
+        this.diffCo2Program[8].start = this.client.registerToUint32([res[119],res[120]]);
+        
+
+        var d = new Date()
+        var t = d.getTime()
+
+        return {success:true,object:res,bloc:1, time: t};       
+        
+      
+      }
+    }catch(err){
+      return {success:false,object:err,bloc:1};
+    } 
+  }
+
+  async readBloc2(){
+    var res = await this.client.readHoldingRegisters(40122,120)
+    try{
+      //40122 40123
+      this.diffCo2Program[8].stop = this.client.registerToUint32([res[0],res[1]]);
+      //40124 
+      this.diffCo2Program[8].mode = this.client.registerToUint32([res[2]]);
+      //40125
+      this.diffCo2Program[8].intensity = this.client.registerToUint32([res[3]]);
+
+      //40126 40127
+      this.diffCo2Program[9].start = this.client.registerToUint32([res[4],res[5]]);
+      //40128 40129
+      this.diffCo2Program[9].stop = this.client.registerToUint32([res[6],res[7]]);
+      //40130
+      this.diffCo2Program[9].mode = this.client.registerToUint32([res[8]]);
+      //40131
+      this.diffCo2Program[9].intensity = this.client.registerToUint32(res[9]);
+
+      //40132 40133
+      this.diffCo2Sunrise.offset = this.client.registerToUint32([res[10],res[11]]);
+      //40134 40135
+      this.diffCo2Sunrise.duration = this.client.registerToUint32([res[12],res[13]]);
+      //40137
+      this.diffCo2Sunrise.intensity = this.client.registerToUint32([res[15]]);
+
+      //40138 40139
+      this.diffCo2Sunset.offset = this.client.registerToUint32([res[16],res[17]]);
+      //40140 40141
+      this.diffCo2Sunset.duration = this.client.registerToUint32([res[18],res[19]]);
+      //40143
+      this.diffCo2Sunset.intensity = this.client.registerToUint32([res[21]]);
+
+      //40144 40145
+      this.diffusions.diffCo2Instant.delay = this.client.registerToUint32([res[22],res[23]]);
+      //40146 40147
+      this.diffusions.diffCo2Instant.duration = this.client.registerToUint32([res[24],res[25]]);
+      //40149
+      this.diffusions.diffCo2Instant.intensity = this.client.registerToUint32([res[27]]);
+      
+      //40150
+      this.reserves.co2ResActAdj = this.client.registerToUint32([res[28]]);
+      //40151
+      this.reserves.co2ResActive = this.client.registerToUint32([res[29]]);
+
+      //30 Non utilisé 40152
+      
+      //40153 40154
+      this.reserves.co2Res1FillVol = this.client.registerToFloat([res[31],res[32]]);
+      //40155 40156
+      this.reserves.co2Res1FillTime = this.client.registerToUint32([res[33],res[34]]);
+      //40157 40158
+      this.reserves.co2Res1ActVol =  Math.round((this.client.registerToFloat([res[35],res[36]])* 0.001974) * 100) / 100 ;
+      //40159
+      this.reserves.co2Res1ActDur = this.client.registerToUint32([res[37]]);
+      //40160 libre 38
+
+      //40161 40162
+      this.reserves.co2Res2FillVol = this.client.registerToFloat([res[39],res[40]]);
+      //40163 40164
+      this.reserves.co2Res2FillTime = this.client.registerToUint32([res[41],res[42]]);
+      //40165 40166
+      this.reserves.co2Res2ActVol = Math.round((this.client.registerToFloat([res[43],res[44]])* 0.001974) * 100) / 100 ;
+      //40167
+      this.reserves.co2Res2ActDur = this.client.registerToUint32([res[45]]);
+
+      //40168
+      this.general.upcFwVer = this.client.registerToUint32([res[46]]);
+      
+      //40169
+      this.alarm.alrResEmptyEn = res[47] == 1;
+      //40170
+      this.alarm.alrPresInpEn = res[48] == 1;
+      //40171
+      this.alarm.alrPresOutEn = res[49] == 1;
+      //40172
+      this.alarm.alrFlowAvgEn = res[50] == 1;
+      //40173
+      this.alarm.alrPowDownEn = res[51] == 1;
+      //40174
+      this.alarm.alrPowBackEn = res[52] == 1;
+
+      // 53-102 SMS non necessaire 40175 40224
+
+      //40225 40226
+      this.alarm.alrResEmptyFlow = this.client.registerToFloat([res[103],res[104]]);
+      //40227 40228
+      this.alarm.alrResLowLevel = this.client.registerToFloat([res[105],res[106]]);
+      
+      //40229 40230
+      this.alarm.alrPressInpSet1_1 = this.client.registerToFloat([res[107],res[108]]);
+      //40231 40232
+      this.alarm.alrPressInpSet1_2 = this.client.registerToFloat([res[109],res[110]]);
+      //40233 40234
+      this.alarm.alrPressInpSet1_3 = this.client.registerToFloat([res[111],res[112]]);
+      //40235 40236
+      this.alarm.alrPressInpSet1_4 = this.client.registerToFloat([res[113],res[114]]);
+      //40237 40238
+      this.alarm.alrPressInpSet1_5 = this.client.registerToFloat([res[115],res[116]]);
+      //40239 40240
+      this.alarm.alrPressInpSet1_6 = this.client.registerToFloat([res[117],res[118]]);
+
+      return {success: true, object: res,bloc:2}
+    }catch(err){  
+      return {success: false, object: err,bloc:2}
+    }
+    
+  }
+
+  async readBloc3(){
+    try{
+      var res = await this.client.readHoldingRegisters(40241,120)
+      //40241 40242
+      this.alarm.alrPressInpSet1_7 = this.client.registerToFloat([res[0],res[1]]);
+      //40243 40244
+      this.alarm.alrPressInpSet1_8 = this.client.registerToFloat([res[2],res[3]]);
+      //40245 40246
+      this.alarm.alrPressInpSet1_9 = this.client.registerToFloat([res[4],res[5]]);
+      //40247 40248
+      this.alarm.alrPressInpSet1_10 = this.client.registerToFloat([res[6],res[7]]);
+
+      //40249 40250
+      this.alarm.alrPressInpSet2_1 = this.client.registerToFloat([res[8],res[9]]);
+      //40251 40252
+      this.alarm.alrPressInpSet2_2 = this.client.registerToFloat([res[10],res[11]]);
+      //40253 40254
+      this.alarm.alrPressInpSet2_3 = this.client.registerToFloat([res[12],res[13]]);
+      //40255 40256
+      this.alarm.alrPressInpSet2_4 = this.client.registerToFloat([res[14],res[15]]);
+      //40257 40258
+      this.alarm.alrPressInpSet2_5 = this.client.registerToFloat([res[16],res[17]]);
+      //40259 40260
+      this.alarm.alrPressInpSet2_6 = this.client.registerToFloat([res[18],res[19]]);
+      //40261 40262
+      this.alarm.alrPressInpSet2_7 = this.client.registerToFloat([res[20],res[21]]);
+      //40263 40264
+      this.alarm.alrPressInpSet2_8 = this.client.registerToFloat([res[22],res[23]]);
+      //40265 40266
+      this.alarm.alrPressInpSet2_9 = this.client.registerToFloat([res[24],res[25]]);
+      //40267 40268
+      this.alarm.alrPressInpSet2_10 = this.client.registerToFloat([res[26],res[27]]);
+
+      //40269 40270
+      this.alarm.alrPresInpTol = this.client.registerToFloat([res[28],res[29]]);
+
+      //40271 40272
+      this.general.co2PresOutRef1 = this.client.registerToFloat([res[30],res[31]]);
+      //40273 40274
+      this.general.co2PresOutRef2 = this.client.registerToFloat([res[32],res[33]]);
+      //40275 40276
+      this.general.co2PresOutRef3 = this.client.registerToFloat([res[34],res[35]]);
+      //40277 40278
+      this.general.co2PresOutRef4 = this.client.registerToFloat([res[36],res[37]]);
+      //40279 40280
+      this.general.co2PresOutRef5 = this.client.registerToFloat([res[38],res[39]]);
+      //40281 40282
+      this.general.co2PresOutRef6 = this.client.registerToFloat([res[40],res[41]]);
+      //40283 40284
+      this.general.co2PresOutRef7 = this.client.registerToFloat([res[42],res[43]]);
+      //40285 40286
+      this.general.co2PresOutRef8 = this.client.registerToFloat([res[44],res[45]]);
+      //40287 40288
+      this.general.co2PresOutRef9 = this.client.registerToFloat([res[46],res[47]]);
+      //40289 40290
+      this.general.co2PresOutRef10 = this.client.registerToFloat([res[48],res[49]]);
+
+      //40291 40292
+      this.alarm.alrPresOutTol = this.client.registerToFloat([res[50],res[51]]);
+
+      //40293 40294
+      this.alarm.alrFlowSetTol = this.client.registerToFloat([res[52],res[53]]);
+
+      //40295 40310
+      var taburl = [];
+      for(var i =54;i<69;i++){
+        taburl.push(res[i]);
+      }
+      this.communicationParameters.comWebSrvUrl = this.client.registerToString(taburl).replace(/[^a-zA-Z0-9-.-]/g,'');
+
+      //40320
+      var tabapnuser = [];
+      for (var i = 79;i<89;i++){
+        tabapnuser.push(res[i]);
+      }
+      this.communicationParameters.comMdmApnUser = this.client.registerToString(tabapnuser).replace(/[^a-zA-Z0-9]/g,'');
+
+      //40330 40339
+      var tabapnpass = [];
+      for(var i = 89;i<99;i++){
+        tabapnpass.push(res[i]);
+      }
+      this.communicationParameters.comMdmApnPass = this.client.registerToString(tabapnpass).replace(/[^a-zA-Z0-9]/g,'');
+
+      //40340 
+      this.communicationParameters.comWifiApCh = this.client.registerToUint32([res[99]])
+
+      //40341 Non utilisé 100
+
+      //40342 40346
+      var tabResBottles = [];
+      for(var i = 101;i<106;i++){
+        tabResBottles.push(res[i]);
+      }
+      this.reserves.co2Res1Bottle = this.client.registerToUint32(tabResBottles);
+
+      //40347 40348
+      this.reserves.co2Res1AuxVol = this.client.registerToFloat([res[106],res[107]]);
+
+      //40349 40353
+      var tabResBottles2 = [];
+      for(var i = 107;i<112;i++){
+        tabResBottles2.push(res[i]);
+      }
+      this.reserves.co2Res2Bottle = this.client.registerToUint32(tabResBottles2);
+
+      //40354 40355
+      this.reserves.co2Res2AuxVol = this.client.registerToFloat([res[112],res[113]]);
+
+      //40356 40357
+      this.alarm.alrPressOutSet_1 = this.client.registerToFloat([res[114],res[115]]);
+      //40358 40359
+      this.alarm.alrPressOutSet_2 = this.client.registerToFloat([res[116],res[117]]);
+      //40360 40361
+      this.alarm.alrPressOutSet_3 = this.client.registerToFloat([res[118],res[119]]);
+
+      return {success: true, object: res,bloc:3};
+
+
+    }catch(err){      
+      return {success: false, object: err,bloc:3};
+    }
+  }
+
+  async readBloc4(){
+    try{
+      var res = await this.client.readHoldingRegisters(40362,105)
+        //40362 40263
+        this.alarm.alrPressOutSet_4 = this.client.registerToFloat([res[0],res[1]]);
+        //40364 402365
+        this.alarm.alrPressOutSet_5 = this.client.registerToFloat([res[2],res[3]]);
+        //40366 40367
+        this.alarm.alrPressOutSet_6 = this.client.registerToFloat([res[4],res[5]]);
+        //40368 40369
+        this.alarm.alrPressOutSet_7 = this.client.registerToFloat([res[6],res[7]]);
+        //40370 40371
+        this.alarm.alrPressOutSet_8 = this.client.registerToFloat([res[8],res[9]]);
+        //40372 40373
+        this.alarm.alrPressOutSet_9 = this.client.registerToFloat([res[10],res[11]]);
+        //40374 40375
+        this.alarm.alrPressOutSet_10 = this.client.registerToFloat([res[12],res[13]]);
+  
+        //40376
+        this.general.upcStatus = this.client.registerToUint32([res[14]]);
+        //40377 40378
+        this.general.upcCo2PidInteg = this.client.registerToFloat([res[15],res[16]]);
+        //40379 40380
+        this.general.upcCo2PidDiff = this.client.registerToFloat([res[17],res[18]]);
+        
+        //40381
+        this.reserves.co2Res1Status = this.client.registerToUint32([res[19]]);
+        //40382
+        this.reserves.co2ResType = this.client.registerToUint32([res[20]]);
+        //40383
+        this.reserves.co2Res2Status = this.client.registerToUint32([res[21]]);
+        //40384 40385
+        this.reserves.co2Res1FillNew = this.client.registerToFloat([res[22],res[23]]);
+        //40386 40387
+        this.reserves.co2Res2FillNew = this.client.registerToFloat([res[24],res[25]]);
+  
+        //40388 40389
+        this.alarm.alrResEmptyTest = this.client.registerToUint32([res[26],res[27]]);
+  
+        //40390 40391
+        this.diffusions.co2FlowGain = this.client.registerToFloat([res[28],res[29]]);
+  
+        //40392 40400 non alloué 30 38
+  
+        //40401 40402
+        this.general.upcTimeZone = this.client.registerToUint32([res[39],res[40]]);
+  
+        //40403 40414 event 40 51
+        
+        //40414
+        this.communicationParameters.comMdmMode = this.client.registerToUint32([res[52]]);
+        //40415
+        this.communicationParameters.comGsmLevel = this.client.registerToUint32([res[53]]);
+        //40416
+        this.diffusions.upcCo2DiffLvl = this.client.registerToUint32([res[54]]);
+        
+        //40417 40418
+        this.reserves.co2ResActPrev = this.client.registerToUint32([res[55],res[56]]);
+        //40419 40420
+        this.reserves.co2ResInactPrev = this.client.registerToUint32([res[57],res[58]]);
+        //40421 40422 
+        this.reserves.co2Res1StartVol = Math.round((this.client.registerToFloat([res[59],res[60]])* 0.001974) * 100) / 100;
+        
+        //40423 40424
+        this.general.upcBattChrg = this.client.registerToFloat([res[61],res[62]]);
+        //40425 40426
+        this.general.upcBattTemp = this.client.registerToFloat([res[63],res[64]]);
+  
+        //40427 40428
+        this.diffusions.co2PresInpMeas1 = this.client.registerToFloat([res[65],res[66]]);
+        //40429 40430
+        this.diffusions.co2PresInpMeas2 = this.client.registerToFloat([res[67],res[68]]);
+        //40431 40432
+        this.diffusions.co2PresOutMeas = this.client.registerToFloat([res[69],res[70]]);
+        //40433 40434
+        this.diffusions.co2FlowMeas = this.client.registerToFloat([res[71],res[72]]);
+        //40435 40436
+        this.diffusions.co2PresInpAvg = this.client.registerToFloat([res[73],res[74]]);
+        //40437 40438
+        this.diffusions.co2PresOutAvg = this.client.registerToFloat([res[75],res[76]]);
+        //40439 40440
+        this.diffusions.co2FlowAvg = this.client.registerToFloat([res[77],res[78]]);
+  
+        //40441 40449 79 87
+        var tabuuid = "";
+        for(var i = 79;i<87;i++){
+          tabuuid += this.toZero4(res[i])
+        }
+        this.general.upcMcuUid = tabuuid;
+  
+        //40449 40450  Math.round((this.client.registerToFloat([res[87],res[88]])* 0.001974) * 100) / 100
+        this.reserves.co2Res2StartVol = Math.round((this.client.registerToFloat([res[87],res[88]])* 0.001974) * 100) / 100;
+        
+        //40451 40452
+        this.diffusions.co2TempAvg = this.client.registerToFloat([res[89],res[90]]);
+  
+        //40453 40454
+        this.general.upcCo2PidProp = this.client.registerToFloat([res[91],res[92]]);
+  
+        //40455 40456
+        this.diffusions.co2PressInpOffs = this.client.registerToFloat([res[93],res[94]]);
+        //40457 40458
+        this.diffusions.co2PressOutOffs = this.client.registerToFloat([res[95],res[96]]);
+        //40459 40460
+        this.diffusions.co2FlowOffs = this.client.registerToFloat([res[97],res[98]]);
+        //40461 40462
+        this.general.co2PressOutTemp = this.client.registerToFloat([res[99],res[100]]);
+        //40463 40464
+        this.diffusions.co2PressOutComp = this.client.registerToFloat([res[101],res[102]]);
+  
+        //40465 40466
+        this.alarm.alrPressSetTemp = this.client.registerToFloat([res[103],res[104]]);
+        
+        return {success: true, object: res,bloc:4};
+
+    }catch(err){
+      return {success: false, object: err,bloc:4};
+    }
+  }
+
+  async readBloc5(){
+    try{
+      var res = await this.client.readHoldingRegisters(40467,120)
+        //40467 40517 0 50 
+        var tabapn2 = [];
+        for(var i =0;i<50;i++){
+          tabapn2.push(res[i]);
+        }
+        this.communicationParameters.comMdmApnId2 = this.client.registerToString(tabapn2).replace(/[^a-zA-Z0-9]/g,'');
+        
+        return {success: true, object:res,bloc:5};        
+      
+    }catch(err){
+      return {success: false, object: err,bloc:5};
+    }
+  }
+
+  async readBloc6(){
+    try{
+      var res = await this.client.readHoldingRegisters(41124,120)
+        //41124 41128
+        var tabB11 = [];
+        for(var i =0; i<5;i++){
+           tabB11.push(res[i]);
+        }
+        this.reserves.bottlesB1.push(this.client.registerToString(tabB11));
+        //41129 41133
+        var tabB12 = [];
+        for (var i = 5;i<10;i++){
+          tabB12.push(res[i]);
+        }
+        this.reserves.bottlesB1.push(this.client.registerToString(tabB12));
+        //41134 41138
+        var tabB13 = [];
+        for (var i = 10;i<15;i++){
+          tabB13.push(res[i]);
+        }
+        this.reserves.bottlesB1.push(this.client.registerToString(tabB13));
+        //41139 41143
+        var tabB14 = [];
+        for (var i = 15;i<20;i++){
+          tabB14.push(res[i]);
+        }
+        this.reserves.bottlesB1.push(this.client.registerToString(tabB14));
+        //41144 41148
+        var tabB15 = [];
+        for (var i = 20;i<25;i++){
+          tabB15.push(res[i]);
+        }
+        this.reserves.bottlesB1.push(this.client.registerToString(tabB15));
+        //41149 41153
+        var tabB16 = [];
+        for(var i = 25;i<30;i++){
+          tabB16.push(res[i]);
+        }
+        this.reserves.bottlesB1.push(this.client.registerToString(tabB16));
+        //41154 41158
+        var tabB17 = [];
+        for (var i = 30;i<35;i++){
+          tabB17.push(res[i]);
+        }
+        this.reserves.bottlesB1.push(this.client.registerToString(tabB17));
+        //41159 41163
+        var tabB18 = [];
+        for(var i = 35;i<40;i++){
+          tabB18.push(res[i]);
+        }
+        this.reserves.bottlesB1.push(this.client.registerToString(tabB18));
+        //41164 41168
+        var tabB19 = [];
+        for(var i = 40;i<45;i++){
+          tabB19.push(res[i]);
+        }
+        this.reserves.bottlesB1.push(this.client.registerToString(tabB19));
+        //41169 41173
+        var tabB21 = [];
+        for(var i = 45;i<50;i++){
+          tabB21.push(res[i]);
+        }
+        this.reserves.bottlesB2.push(this.client.registerToString(tabB21));
+        
+        //41174 41178
+        var tabB22 = [];
+        for(var i = 50;i<55;i++){
+          tabB22.push(res[i]);
+        }
+        this.reserves.bottlesB2.push(this.client.registerToString(tabB22));
+        //41179 41183
+        var tabB23 = [];
+        for(var i = 55;i<60;i++){
+          tabB23.push(res[i]);
+        }
+        this.reserves.bottlesB2.push(this.client.registerToString(tabB23));
+        //41184 41188
+        var tabB24 = [];
+        for(var i=60;i<65;i++){
+          tabB24.push(res[i]);
+        }
+        this.reserves.bottlesB2.push(this.client.registerToString(tabB24));
+        //41189 41193
+        var tabB25 = [];
+        for(var i = 65;i<70;i++){
+          tabB25.push(res[i]);
+        }
+        this.reserves.bottlesB2.push(this.client.registerToString(tabB25));
+        //41194 41198
+        var tabB26 = [];
+        for(var i = 70;i<75;i++){
+          tabB26.push(res[i]);
+        }
+        this.reserves.bottlesB2.push(this.client.registerToString(tabB26));
+        //41199 41203
+        var tabB27 = [];
+        for(var i = 75;i<80;i++){
+          tabB27.push(res[i]);
+        }
+        this.reserves.bottlesB2.push(this.client.registerToString(tabB27));
+        
+        //41204 41208
+        var tabB28 = [];
+        for(var i = 80;i<85;i++){
+          tabB28.push(res[i]);
+        }
+        this.reserves.bottlesB2.push(this.client.registerToString(tabB28));
+        //41209 41213
+        var tabB29 = [];
+        for(var i = 85;i<90;i++){
+          tabB29.push(res[i]);
+        }
+        this.reserves.bottlesB2.push(this.client.registerToString(tabB29));
+ 
+        //41214 41219 90 95
+        //41219
+       this.communicationParameters.xComMdmRssuMoyen2G = this.client.registerToFloat([res[95],res[96]]);
+       //41221
+       this.communicationParameters.xComMdmRssuMoyen3G = this.client.registerToFloat([res[97],res[98]]);
+       //41223
+       this.communicationParameters.xComMdmRssuMoyen4G = this.client.registerToFloat([res[99],res[100]]);
+ 
+        //41225
+        this.communicationParameters.xComMdmQualMoyen2GGPRS = this.client.registerToFloat([res[101],res[102]]);
+        //41227
+        this.communicationParameters.xComMdmQualMoyen2GEDGE = this.client.registerToFloat([res[103],res[104]]);
+        //41229
+        this.communicationParameters.xComMdmQualMoyen3G = this.client.registerToFloat([res[105],res[106]]);
+        //41231
+        this.communicationParameters.xComMdmQualMoyen4G = this.client.registerToFloat([res[107],res[108]]);
+        
+        //41233
+        this.communicationParameters.xComMdmRatioTimeIn2G = this.client.registerToFloat([res[109],res[110]]);
+        //41235
+        this.communicationParameters.xComMdmRatioTimeIn3G = this.client.registerToFloat([res[111],res[112]]);
+        //41237
+        this.communicationParameters.xComMdmRatioTimeIn4G = this.client.registerToFloat([res[113],res[114]]);
+        //41239
+        this.communicationParameters.xComMdmRatioTimeOffline = this.client.registerToFloat([res[115],res[116]]);
+        
+
+        return {success: true, object:res,bloc:6};
+    
+    }catch(err){
+      return {success: false, object: err,bloc:6};
+    }
+  }
+
   readGeneralParameters() {
       
       this.client.getIntFromHoldingRegister(40015,1).then(res=>{
@@ -138,7 +1945,7 @@ export class UPCModbus {
   init() {
     // Init Client
     
-    this.client = new ModbusClient(15000, false);
+    this.client = new ModbusClient(32000, false);
     this.client.on('reconnecting', function () {
       this.state = UPCState.RECONNECTING;
      
@@ -159,10 +1966,21 @@ export class UPCModbus {
      
       this.stateChangeCallback(this.state);
     }.bind(this));
-    this.client.setHost(this.host);
-    this.client.setPort(this.port);
-    this.client.connect();
-    this.client.reconnect();
+    //this.client.createSocket().then(res=>{
+      /*setTimeout(()=>{
+        this.client.setHost(this.host);
+        this.client.setPort(this.port);
+        this.client.connect();
+        //this.client.reconnect();
+      },1000)*/
+      
+      //this.client.reconnect();
+    //})
+    
+    //setTimeout(()=>{
+      
+    //},1000)
+    
   }
   
   
@@ -443,6 +2261,7 @@ export class UPCModbus {
       };
     });
   }
+  
   reset() {
     return Promise.all([ this.client.setIntInHoldingRegister(40011, 1, 0xffff) ]);
   }
